@@ -1,8 +1,15 @@
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Model/user_model.dart';
+import 'package:academia_admin_panel/Screen/Home/home_page.dart';
 import 'package:academia_admin_panel/Screen/sinup.dart';
+import 'package:academia_admin_panel/utils/utils.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'dart:html' show window;
+import 'dart:convert' show json, base64, ascii;
 
 class Login extends StatefulWidget {
   @override
@@ -11,8 +18,13 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool exit = true;
+
   @override
   Widget build(BuildContext context) {
+    String email;
+    String password;
+    TextEditingController _emailTextController = TextEditingController();
+    TextEditingController _passwordTextController = TextEditingController();
     return Scaffold(
       backgroundColor: Color(0xffF0F2F5),
       body: Container(
@@ -30,12 +42,15 @@ class _LoginState extends State<Login> {
 
             SizedBox(height: 10,),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Spacer(),
+
 
                 boxContainer(
                   leftRadius: 30,
-                  child: SizedBox(),
+                  child: Hero(
+                      tag: "appLogo",
+                      child: Image.asset('Assets/images/visionLogo.png')),
                   context: context
                 ),
 
@@ -50,56 +65,36 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
 
-                        MouseRegion(
-                          onEnter: (value){
-                            setState(() {
-                              exit = false;
-                            });
-                          },
-                          onExit: (value){
-                            setState(() {
-                              exit = true;
-                            });
-
-                          },
-                          child: RichText(text:
-                          TextSpan(text:"Don't have an account? ",style: TextStyle(color: Colors.black,),
-                          children: <TextSpan>[
-                            TextSpan(text: ' Sign up', style: TextStyle(color: Colors.blueAccent,
-                              decoration: !exit ? TextDecoration.underline:TextDecoration.none,
-                              fontSize: !exit ? 15:14,
-                            ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => SignUP()),
-                                    );
-                                  }
-                            )
-                          ]),),
-                        ),
+                        AnchorText(),
 
                         SizedBox(height:MediaQuery.of(context).size.height * .05 ,),
 
                         TextField(
+                          onChanged: (value){
+                            email = value;
+                          },
+                          controller: _emailTextController,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius: const BorderRadius.all(Radius.circular(20.0))
                               ),
-                              labelText: "Email Id"
+                              hintText: "Email Id"
                           ),
                         ),
 
                         SizedBox(height: 15,),
 
                         TextField(
+                          onChanged: (value){
+                            password = value;
+                          },
+                          controller: _passwordTextController,
                           obscureText: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                             ),
-                            labelText: "Password",
+                            hintText: "Password",
                           ),
                         ),
 
@@ -116,7 +111,33 @@ class _LoginState extends State<Login> {
                         SizedBox(height: 15,),
 
                         InkWell(
-                         onTap: ()=> print("clicked"),
+                         onTap: () async{
+                           try {
+                             email.trim();
+                             if(email.isNotEmpty && password.isNotEmpty && password.length >= 8){
+                               var jwt = await attemptLogin(email: email,password: password);
+                               print("token = $jwt");
+                               if(jwt != null) {
+                                 window.localStorage["token"] = jwt;
+                                 Navigator.push(
+                                     context,
+                                     MaterialPageRoute(
+                                         builder: (context) => HomePage()
+                                     )
+                                 );
+                               } else {
+                                 //  displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
+                               }
+                               _emailTextController.clear();
+                               _passwordTextController.clear();
+
+                             }
+
+                           } catch (error, stacktrace) {
+                             print("Exception occured: $error stackTrace: $stacktrace");
+
+                           }
+                         },
                           child: Container(
                             height: 60,
                             //width: double.infinity,
@@ -137,7 +158,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                Spacer(),
+
               ],
             ),
           ],
@@ -159,3 +180,60 @@ Widget boxContainer({@required Widget child,double rightRadius, double leftRadiu
     child:  child,
   );
 }
+
+
+
+
+class AnchorText extends StatefulWidget {
+  @override
+  _AnchorTextState createState() => _AnchorTextState();
+}
+
+class _AnchorTextState extends State<AnchorText> {
+  bool exit = true;
+  @override
+  Widget build(BuildContext context) {
+    return   MouseRegion(
+      onEnter: (value){
+        setState(() {
+          exit = false;
+        });
+      },
+      onExit: (value){
+        setState(() {
+          exit = true;
+        });
+
+      },
+      child: RichText(text:
+      TextSpan(text:"Don't have an account? ",style: TextStyle(color: Colors.black,),
+          children: <TextSpan>[
+            TextSpan(text: ' Sign up', style: TextStyle(color: Colors.blueAccent,
+              decoration: !exit ? TextDecoration.underline:TextDecoration.none,
+              fontSize: !exit ? 15:14,
+            ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUP()),
+                    );
+                  }
+            )
+          ]),),
+    );
+  }
+}
+
+Future<dynamic> checkHttp () async {
+  try {
+    var dio = Dio();
+    Response response = await dio.get('https://dog.ceo/api/breeds/image/random');
+    return response.data;
+  } catch (error, stacktrace) {
+    print("Exception occured: $error stackTrace: $stacktrace");
+    return error;
+  }
+
+}
+

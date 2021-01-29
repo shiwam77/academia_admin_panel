@@ -1,56 +1,89 @@
-import 'package:academia_admin_panel/Color.dart';
-import 'package:academia_admin_panel/Responsive.dart';
+import 'dart:async';
+import 'dart:html' show window;
+import 'package:academia_admin_panel/Screen/Home/home_page.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
+import 'package:academia_admin_panel/utils/utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 
 void main() {
-  runApp(MyApp());
+
+  mainDelegate();
 }
+
+
+void mainDelegate() async {
+
+ 
+  /// register global error handler
+  FlutterError.onError = (FlutterErrorDetails details) async {
+    if (isInDebugMode) {
+      // In development mode simply print to console.
+      FlutterError.dumpErrorToConsole(details);
+    } else {
+      // FirebaseCrashlytics.instance.recordFlutterError;
+      Zone.current.handleUncaughtError(details.exception, details.stack);
+    }
+  };
+  // Errors will never cross error-zone boundaries by themselves.
+  // Errors that try to cross error-zone boundaries are considered uncaught in their originating error zone.
+  //
+  // More about zones:
+  // - https://api.flutter.dev/flutter/dart-async/runZonedGuarded.html
+
+  runZonedGuarded<Future<void>>(() async {
+    runApp(MyApp());
+  }, (error, stackTrace) {
+    // Whenever an error occurs, call the `_reportError` function. This sends
+    // Dart errors to the dev console or Sentry depending on the environment.
+    try {
+     // reportErrorToSentry(error, stacktrace: stackTrace);
+    } catch (e) {
+      logger.e(e);
+    }
+  });
+
+}
+
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: Academia(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class Academia extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _AcademiaState createState() => _AcademiaState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AcademiaState extends State<Academia> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      backgroundColor: Color(0xffF0F2F5),
-      body: Login(),
-     // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    var token = window.localStorage.containsKey("token") ? window.localStorage["token"] : "";
+    if(token != "") {
+      print(token);
+        return  HomePage();
+    }
+    else{
+      window.localStorage.remove("token");
+      return Login();
+    }
+
   }
 }
+
+
 
