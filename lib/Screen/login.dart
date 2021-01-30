@@ -4,6 +4,7 @@ import 'package:academia_admin_panel/Screen/Home/home_page.dart';
 import 'package:academia_admin_panel/Screen/sinup.dart';
 import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:dio/dio.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool exit = true;
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     String email;
@@ -26,7 +27,7 @@ class _LoginState extends State<Login> {
     TextEditingController _emailTextController = TextEditingController();
     TextEditingController _passwordTextController = TextEditingController();
     return Scaffold(
-      backgroundColor: Color(0xffF0F2F5),
+      backgroundColor: AppColors.appBackgroundColor,
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -34,11 +35,13 @@ class _LoginState extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
-            Text("Admin Login",style: TextStyle(
+            Text("Admin Login",
+              style: TextStyle(
                 color: AppColors.textColorBlackBlue,
                 fontSize: MediaQuery.of(context).size.width * .025,
                 fontWeight: FontWeight.bold
-            ),),
+            ),
+            ),
 
             SizedBox(height: 10,),
             Row(
@@ -61,100 +64,120 @@ class _LoginState extends State<Login> {
                   context: context,
                   child: Padding(
                     padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * .07),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
 
-                        AnchorText(),
+                          AnchorText(),
 
-                        SizedBox(height:MediaQuery.of(context).size.height * .05 ,),
+                          SizedBox(height:MediaQuery.of(context).size.height * .05 ,),
 
-                        TextField(
-                          onChanged: (value){
-                            email = value;
-                          },
-                          controller: _emailTextController,
-                          decoration: InputDecoration(
+                          TextFormField(
+                            onChanged: (value){
+                              email = value;
+                            },
+                            controller: _emailTextController,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                                    borderSide: BorderSide(color: AppColors.gray400)
+                                ),
+                                hintText: "Email Id"
+                            ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter email id';
+                              }
+
+                              else if(value.isNotEmpty){
+                                return emailValidator(value);
+                              }
+                              return null;
+                            },
+                          ),
+
+                          SizedBox(height: 15,),
+
+                          TextFormField(
+                            onChanged: (value){
+                              password = value;
+                            },
+                            controller: _passwordTextController,
+                            obscureText: true,
+                            decoration: InputDecoration(
                               border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(Radius.circular(20.0))
+                                borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                                  borderSide: BorderSide(color: AppColors.gray400)
                               ),
-                              hintText: "Email Id"
-                          ),
-                        ),
 
-                        SizedBox(height: 15,),
-
-                        TextField(
-                          onChanged: (value){
-                            password = value;
-                          },
-                          controller: _passwordTextController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                              hintText: "Password",
                             ),
-                            hintText: "Password",
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter password';
+                              }
+                              return null;
+                            },
                           ),
-                        ),
 
-                        SizedBox(height: 15,),
+                          SizedBox(height: 15,),
 
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Text("Forgot password ?",style: TextStyle(
-                              color: AppColors.blue,
-                              fontSize: MediaQuery.of(context).size.width * .010,
-                              fontWeight: FontWeight.w500
-                          ),),
-                        ),
-                        SizedBox(height: 15,),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text("Forgot password ?",style: TextStyle(
+                                color: AppColors.blue,
+                                fontSize: MediaQuery.of(context).size.width * .010,
+                                fontWeight: FontWeight.w500
+                            ),),
+                          ),
+                          SizedBox(height: 15,),
 
-                        InkWell(
-                         onTap: () async{
-                           try {
-                             email.trim();
-                             if(email.isNotEmpty && password.isNotEmpty && password.length >= 8){
-                               var jwt = await attemptLogin(email: email,password: password);
-                               print("token = $jwt");
-                               if(jwt != null) {
-                                 window.localStorage["token"] = jwt;
-                                 Navigator.push(
-                                     context,
-                                     MaterialPageRoute(
-                                         builder: (context) => HomePage()
-                                     )
-                                 );
-                               } else {
-                                 //  displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
-                               }
-                               _emailTextController.clear();
-                               _passwordTextController.clear();
+                          InkWell(
+                           onTap: () async{
 
-                             }
+                                if (_formKey.currentState.validate()) {
+                                    var jwt = await attemptLogin(
+                                        email: email, password: password);
 
-                           } catch (error, stacktrace) {
-                             print("Exception occured: $error stackTrace: $stacktrace");
-
-                           }
-                         },
-                          child: Container(
-                            height: 60,
-                            //width: double.infinity,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: AppColors.blue,
+                                    if (jwt != null) {
+                                      window.localStorage["token"] = jwt;
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => HomePage()
+                                          )
+                                      );
+                                      _emailTextController.clear();
+                                      _passwordTextController.clear();
+                                    } else {
+                                     ScaffoldMessenger.of(context).showSnackBar(
+                                       const SnackBar(
+                                         content: Text('An Error Occurred,No account was found matching that username and password'),
+                                       ),
+                                     );
+                                    }
+                                }
+                           },
+                            child: Container(
+                              height: 60,
+                              //width: double.infinity,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: AppColors.blue,
+                              ),
+                              child: Text("Sign in",style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: MediaQuery.of(context).size.width * .01,
+                                  fontWeight: FontWeight.bold
+                              )),
                             ),
-                            child: Text("Sign in",style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: MediaQuery.of(context).size.width * .01,
-                                fontWeight: FontWeight.bold
-                            )),
                           ),
-                        ),
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -167,12 +190,14 @@ class _LoginState extends State<Login> {
     );
   }
 }
-Widget boxContainer({@required Widget child,double rightRadius, double leftRadius,BuildContext context}){
+Widget boxContainer({@required Widget child,double rightRadius, double leftRadius,BuildContext context,double height,double width}){
   rightRadius = rightRadius == null? 0 : rightRadius;
   leftRadius = leftRadius  == null? 0 : leftRadius;
+  height = height  == null?  MediaQuery.of(context).size.height * .5 : height;
+  width = width  == null?  MediaQuery.of(context).size.width * .4 : width;
   return Container(
-    width: MediaQuery.of(context).size.width * .4,
-    height: MediaQuery.of(context).size.height * .5,
+    width: width,
+    height: height,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.horizontal(right: Radius.circular(rightRadius),left: Radius.circular(leftRadius),),
       color: AppColors.white,

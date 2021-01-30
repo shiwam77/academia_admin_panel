@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:html' show window;
+import 'package:academia_admin_panel/Screen/DashBoard/dashboard.dart';
 import 'package:academia_admin_panel/Screen/Home/home_page.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:academia_admin_panel/utils/utils.dart';
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Academia(),
+      home: DashBoardPage(),
     );
   }
 }
@@ -75,7 +76,7 @@ class _AcademiaState extends State<Academia> {
     var token = window.localStorage.containsKey("token") ? window.localStorage["token"] : "";
     if(token != "") {
       print(token);
-        return  HomePage();
+        return  DashBoardPage();
     }
     else{
       window.localStorage.remove("token");

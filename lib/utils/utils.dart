@@ -4,10 +4,12 @@ import 'dart:html';
 import 'package:academia_admin_panel/Model/user_model.dart';
 import 'package:academia_admin_panel/services/endpoint.dart';
 import 'package:dio/dio.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 var logger = Logger();
+var dio = Dio();
 bool get isInDebugMode {
   // Assume you're in production mode.
   bool inDebugMode = false;
@@ -33,16 +35,20 @@ Future<String> getAppVersion() async {
 Future<String> attemptLogin({String email,String password}) async{
 
     UserModel user = UserModel(password, email);
-    var dio = Dio();
-    Response response = await dio.post('${AuthApi.login}',data: user.toJson());
 
-    if(response.statusCode == 200){
-      var data = GetUserAuth.fromJson(response.data);
-      return data.token;
-    }
-    else{
-      return "";
-    }
+
+     await dio.post('${AuthApi.login}',data: user.toJson()).then((response) {
+       if(response.statusCode == 200){
+         var data = GetUserAuth.fromJson(response.data);
+         return data.token;
+       }
+       else if(response.statusCode == 401){
+         return "";
+       }
+    }).catchError((err){
+       return "";
+    });
+    return"";
 }
 
 Future<String> attemptSignUp({String email,String password,String passwordConfirm,String name}) async{
@@ -53,17 +59,21 @@ Future<String> attemptSignUp({String email,String password,String passwordConfir
     "name":name,
   };
   print(email);
-  var dio = Dio();
-  print(AuthApi.signUp);
-  Response response = await dio.post('${AuthApi.signUp}',data: user);
 
-  if(response.statusCode == 201){
-    var data = GetUserAuth.fromJson(response.data);
-    return data.token;
-  }
-  else{
+  print(AuthApi.signUp);
+   await dio.post('${AuthApi.signUp}',data: user).then((response) {
+    if(response.statusCode == 201){
+      var data = GetUserAuth.fromJson(response.data);
+      return data.token;
+    }
+    else{
+      return "";
+    }
+  }).catchError((error){
+    print(error);
     return "";
-  }
+  });
+   return "";
 }
 
 String getAccessToken(){
@@ -73,5 +83,22 @@ String getAccessToken(){
   }
   else{
     return "";
+  }
+}
+
+String emailValidator(String email){
+
+  bool isValid = EmailValidator.validate(email);
+  if(isValid == true){
+    return null;
+  }
+  else{
+    return "Please provide a valid email address";
+  }
+}
+
+logout(){
+  if(window.localStorage.containsKey("token")){
+    window.localStorage.remove("token");
   }
 }

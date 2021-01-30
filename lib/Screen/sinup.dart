@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Screen/DashBoard/dashboard.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:flutter/gestures.dart';
@@ -16,6 +17,7 @@ class SignUP extends StatefulWidget {
 class _SignUPState extends State<SignUP> {
   bool exit = true;
   bool isSignUpBtnHover = false;
+  final _formKey = GlobalKey<FormState>();
   String email;
   String password;
   String conformPassword;
@@ -28,7 +30,7 @@ class _SignUPState extends State<SignUP> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF0F2F5),
+      backgroundColor: AppColors.appBackgroundColor,
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -49,6 +51,7 @@ class _SignUPState extends State<SignUP> {
 
 
                 boxContainer(
+                  height: MediaQuery.of(context).size.height * .6 ,
                   leftRadius: 30,
                   context: context,
                   child: Hero(
@@ -59,6 +62,7 @@ class _SignUPState extends State<SignUP> {
                 SizedBox(width: 2,),
 
                 boxContainer(
+                  height: MediaQuery.of(context).size.height * .6 ,
                   rightRadius: 30,
                   context: context,
                   child: Padding(
@@ -77,80 +81,107 @@ class _SignUPState extends State<SignUP> {
   Widget loginField(){
     return Stack(
       children: [
-        Column(
-          children: [
-            SizedBox(height: 20,),
-            TextField(
-              controller: _nameTextController,
-              decoration: InputDecoration(
+        Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              SizedBox(height: 20,),
+              TextFormField(
+                controller: _nameTextController,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(Radius.circular(20.0))
+                    ),
+                    hintText: "Organization name"
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Organization name field can not be empty';
+                  }
+                  return null;
+                },
+              ),
+
+              SizedBox(height: 20,),
+              TextFormField(
+                controller: _emailTextController,
+                decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(20.0))
+                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                   ),
-                  hintText: "Full Name"
-              ),
-            ),
-
-            SizedBox(height: 20,),
-            TextField(
-              controller: _emailTextController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  hintText: "Email Id",
                 ),
-                hintText: "Email Id",
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Email address field can not be empty';
+                  }
+                  else if(value.isNotEmpty){
+                    return emailValidator(value);
+                  }
+                  return null;
+                },
               ),
-            ),
 
-            SizedBox(height: 20,),
-            TextField(
-              controller: _passwordTextController,
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+              SizedBox(height: 20,),
+              TextFormField(
+                controller: _passwordTextController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  hintText: "Password",
                 ),
-                hintText: "Password",
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Password field can not be empty';
+                  }
+                  return null;
+                },
               ),
-            ),
 
-            SizedBox(height: 20,),
-            TextField(
-              controller: _conformPasswordTextController,
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+              SizedBox(height: 20,),
+              TextFormField(
+                controller: _conformPasswordTextController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  hintText: "Confirm Password",
                 ),
-                hintText: "Confirm Password",
+                validator: (value) {
+                 return confirmPasswordValidation(password: _passwordTextController.text,confirmPassword: value);
+                },
               ),
-            ),
-            SizedBox(height: 20,),
-            Text("Sign up with"),
-            SizedBox(height: 20,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Icon(Icons.home,size: 35,),
-                    Text('Google')
-                  ],
-                ),
-                SizedBox(width: 20,),
-                Column(
-                  children: [
-                    Icon(Icons.home,size: 35,),
-                    Text('Facebook')
-                  ],
-                )
-              ],
-            ),
+              SizedBox(height: 20,),
+              Text("Sign up with"),
+              SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Icon(Icons.home,size: 35,),
+                      Text('Google')
+                    ],
+                  ),
+                  SizedBox(width: 20,),
+                  Column(
+                    children: [
+                      Icon(Icons.home,size: 35,),
+                      Text('Facebook')
+                    ],
+                  )
+                ],
+              ),
 
-            SizedBox(height: 20,),
+              SizedBox(height: 20,),
 
-            AnchorTextSignIn()
+              AnchorTextSignIn()
 
-          ],
+            ],
+          ),
         ),
 
         Positioned(
@@ -158,21 +189,24 @@ class _SignUPState extends State<SignUP> {
           right: 0,
           child: InkWell(
             onTap: () async{
-              if(_passwordTextController.text == _conformPasswordTextController.text && _emailTextController.text != "" && _emailTextController.text.isNotEmpty
-              && _passwordTextController.text.length >= 8 && _nameTextController.text != "" && _nameTextController.text.isNotEmpty){
+              if(_formKey.currentState.validate()){
                 var token = await attemptSignUp(email: _emailTextController.text,password: _passwordTextController.text,passwordConfirm: _conformPasswordTextController.text,
                     name: _nameTextController.text);
-                if(token != null) {
+                if(token != "") {
                   print(token);
                   window.localStorage["token"] = token;
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HomePage()
+                          builder: (context) => DashBoardPage()
                       )
                   );
                 } else {
-                  //  displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('An Error Occurred,'),
+                    ),
+                  );
                 }
               }
             },
@@ -236,8 +270,6 @@ class _AnchorTextSignInState extends State<AnchorTextSignIn> {
         setState(() {
           exit = false;
         });
-
-        print(exit);
       },
       onExit: (value){
         setState(() {
@@ -263,3 +295,16 @@ class _AnchorTextSignInState extends State<AnchorTextSignIn> {
   }
 }
 
+
+String confirmPasswordValidation({String password,String confirmPassword}){
+  if (confirmPassword.isEmpty) {
+    return 'Confirm password field can not be empty';
+  }
+  else if(confirmPassword.isNotEmpty){
+    if(confirmPassword != password){
+      return "Passwords are not the same!";
+    }
+    return null;
+  }
+  return null;
+}

@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  static const Color appBackgroundColor = const Color(0xffF0F2F5);
   static const Color loginBackgroundColor = const Color(0xff17223B);
   static const Color white = const Color(0xffFFFFFF);
+  static const Color white100 = const Color(0xffF0F2F5);
+
   static const Color redAccent = const Color(0xffFF6768);
   static const Color textColor = const Color(0xFF424242);
   static const Color textColorLight = const Color(0xFF595959);
   static const Color textColorDark = const Color(0xFF212121);
-  static const Color textColorLighter = const Color(0xFF616161);
+  static const Color textColorLighter = const Color(0xFFFF0F2F5);
   static const Color textColorBlackBlue = const Color(0xff484848);
+  static const Color textColorBlack = const Color(0xff434445);
+
   static const Color textColorLight_2 = const Color(0xBB595959);
   static const Color blue = const Color(0xff0077B5);
   static const Color transparent = const Color(0xFFFFFF);
-
+  static const Color lineSeparatorColor = const Color(0xFF707070);
   static const Color backgroundColor = const Color(0xFFF9FAFF);
   static const Color whiteBackgroundColor = const Color(0xFFFFFFFF);
 
@@ -46,6 +51,7 @@ class AppColors {
   static const Color gray100 = const Color(0xFFF7FAFC);
   static const Color gray200 = const Color(0xFFEDF2F7);
   static const Color gray300 = const Color(0xFFE2E8F0);
+  static const Color gray400 = const Color(0xFFDDDFE2);
   static const Color gray600 = const Color(0xFF718096);
 
 
@@ -53,6 +59,7 @@ class AppColors {
   static const Color premiumSliver = const Color(0xFFD6D6D6);
   static const Color silentGrey = const Color(0xFFEAECFF);
 
+  static const Color gray = const Color(0xFF9D949C);
   static const Color violetColorLight = const Color(0xFFC5CAE9);
   static const Color violetColor = const Color(0xFF5C6BC0);
   static const Color violetAccentColor = const Color(0xFFA4B0F5);
@@ -65,6 +72,7 @@ class AppColors {
   static const Color indigo400 = const Color(0xFF7F9CF5);
   static const Color indigo500 = const Color(0xFF667EEA);
   static const Color indigo600 = const Color(0xFF5A67D8);
+  static const Color indigo700 = const Color(0xff0077B5);
 
   static const Color purple200 = const Color(0xFFE9D8FD);
   static const Color purple300 = const Color(0xFFD6BCFA);
