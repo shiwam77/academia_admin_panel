@@ -39,6 +39,7 @@ class _SignUPState extends State<SignUP> {
           children: [
 
             Text("Create Account",style: TextStyle(
+                fontFamily: 'ProductSans',
                 color: AppColors.textColorBlackBlue,
                 fontSize: MediaQuery.of(context).size.width * .025,
                 fontWeight: FontWeight.bold
@@ -155,7 +156,7 @@ class _SignUPState extends State<SignUP> {
                 },
               ),
               SizedBox(height: 20,),
-              Text("Sign up with"),
+              Text("Sign up with",style: TextStyle(fontFamily: 'ProductSans',fontSize: 20),),
               SizedBox(height: 20,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +179,9 @@ class _SignUPState extends State<SignUP> {
 
               SizedBox(height: 20,),
 
-              AnchorTextSignIn()
+              Align(
+                alignment: Alignment.bottomLeft,
+                  child: AnchorTextSignIn())
 
             ],
           ),
@@ -280,10 +283,13 @@ class _AnchorTextSignInState extends State<AnchorTextSignIn> {
       child: Align(
         alignment: Alignment.bottomLeft,
         child: RichText(text:
-        TextSpan(text:"Already have an account?",style: TextStyle(color: Colors.black,),
+        TextSpan(text:"Already have an account?",style: TextStyle(
+          fontFamily: 'ProductSans',color: Colors.black,fontSize: 20),
             children: <TextSpan>[
-              TextSpan(text: ' Sign in', style: TextStyle(color: Colors.blueAccent,
-                decoration: !exit ? TextDecoration.underline:TextDecoration.none,fontSize: !exit ? 15:14,),
+              TextSpan(text: ' Sign in', style: TextStyle(
+                fontFamily: 'ProductSans',
+                color: Colors.blueAccent,
+                decoration: !exit ? TextDecoration.underline:TextDecoration.none,fontSize: !exit ? 20:19,),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       Navigator.pop(context);

@@ -36,7 +36,8 @@ class OrganizationName extends StatelessWidget {
                Text(
                  'Deenbandhu Chhotu Ram University of Science and Technology',
                  style: TextStyle(
-                   fontWeight: FontWeight.w700,
+                   fontFamily: 'ProductSans',
+                   fontWeight: FontWeight.bold,
                    color: AppColors.textColorBlack,
                    fontSize: MediaQuery.of(context).size.width * .015,
                  ),
@@ -88,6 +89,7 @@ class OrganizationName extends StatelessWidget {
               color: AppColors.lineSeparatorColor,
             ),
           ),
+
         ],
       ),
     );

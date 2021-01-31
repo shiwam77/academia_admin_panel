@@ -1,7 +1,7 @@
 import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Model/user_model.dart';
 import 'package:academia_admin_panel/Screen/Home/home_page.dart';
-import 'package:academia_admin_panel/Screen/sinup.dart';
+import 'package:academia_admin_panel/Screen/signup.dart';
 import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
@@ -37,8 +37,9 @@ class _LoginState extends State<Login> {
 
             Text("Admin Login",
               style: TextStyle(
+                  fontFamily: 'ProductSans',
                 color: AppColors.textColorBlackBlue,
-                fontSize: MediaQuery.of(context).size.width * .025,
+                fontSize:MediaQuery.of(context).size.width * .025,
                 fontWeight: FontWeight.bold
             ),
             ),
@@ -127,9 +128,10 @@ class _LoginState extends State<Login> {
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Text("Forgot password ?",style: TextStyle(
+                                fontFamily: 'ProductSans',
                                 color: AppColors.blue,
-                                fontSize: MediaQuery.of(context).size.width * .010,
-                                fontWeight: FontWeight.w500
+                                fontSize: 25,
+                                fontWeight: FontWeight.normal
                             ),),
                           ),
                           SizedBox(height: 15,),
@@ -168,9 +170,10 @@ class _LoginState extends State<Login> {
                                 borderRadius: BorderRadius.circular(15),
                                 color: AppColors.blue,
                               ),
-                              child: Text("Sign in",style: TextStyle(
+                              child: Text("Login",style: TextStyle(
+                                  fontFamily: 'ProductSans',
                                   color: AppColors.white,
-                                  fontSize: MediaQuery.of(context).size.width * .01,
+                                  fontSize: MediaQuery.of(context).size.width * .015,
                                   fontWeight: FontWeight.bold
                               )),
                             ),
@@ -231,11 +234,14 @@ class _AnchorTextState extends State<AnchorText> {
 
       },
       child: RichText(text:
-      TextSpan(text:"Don't have an account? ",style: TextStyle(color: Colors.black,),
+      TextSpan(text:"Don't have an account? ",style: TextStyle(
+        fontFamily: 'ProductSans',
+        fontSize: 20,
+        color: Colors.black,),
           children: <TextSpan>[
-            TextSpan(text: ' Sign up', style: TextStyle(color: Colors.blueAccent,
+            TextSpan(text: ' Sign up', style: TextStyle(fontFamily: 'ProductSans',color: Colors.blueAccent,
               decoration: !exit ? TextDecoration.underline:TextDecoration.none,
-              fontSize: !exit ? 15:14,
+              fontSize: !exit ? 20:19,
             ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
