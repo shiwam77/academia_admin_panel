@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Screen/AcademicYear/academic_year_screen.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/dashboard.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:academia_admin_panel/utils/utils.dart';
@@ -201,7 +202,7 @@ class _SignUPState extends State<SignUP> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DashBoardPage()
+                          builder: (context) => AcademicYearPage(window.localStorage["userId"])
                       )
                   );
                 } else {

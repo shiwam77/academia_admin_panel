@@ -1,183 +1,202 @@
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Screen/ManageClass/src/class.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/src/clutural_activities.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/src/sport.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/src/student.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/src/subject.dart';
 import 'package:flutter/material.dart';
 
+
 class ManageClassPage extends StatefulWidget {
+  final String yearId;
+  ManageClassPage(this.yearId);
   @override
   _ManageClassPageState createState() => _ManageClassPageState();
 }
 
 class _ManageClassPageState extends State<ManageClassPage> {
+
+  ScrollController _controller;
+  double _offset = 0;
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    print("change");
     return Scaffold(
       backgroundColor: AppColors.appBackgroundColor,
         body: Padding(
           padding: const EdgeInsets.only(top: 10,),
-          child: Column(
+          child: Stack(
             children: [
-              SizedBox(height: 20,),
-              Padding(
-                padding: const EdgeInsets.only(right: 50),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Manage Class',
-                      style: TextStyle(
-                          fontFamily: 'ProductSans',
-                          color: AppColors.indigo700,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Container(
-                          height: 52,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(26),
-                            color: AppColors.white,
-                          ),
-                          child: ClassListViewBuilder(),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: AppColors.indigo700
-                      ),
-                      child: Icon(Icons.add,size: 23,color: AppColors.white,),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 50,),
-              Expanded(
-                child: ListView(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 65),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Subject',
-                            style: TextStyle(
-                                fontFamily: 'ProductSans',
-                                color: AppColors.textColorBlack,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          Row(
-                            children: [
-                            Container(
-                            height: 30,
-                            width: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                  color: AppColors.textColorBlack,
-                                  width: 2,
-                              ),
-                              color: AppColors.appBackgroundColor,
-                            ),
-                            child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
+              Column(
+                children: [
+                  SizedBox(height: 20,),
 
-                              SizedBox(width:  MediaQuery.of(context).size.width * .13,),
-                              Text('Student',
+                  ClassField(widget.yearId),
+
+                  SizedBox(height: 50,),
+
+                  Expanded(
+                    child: ListView(
+                      controller: _controller,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 65),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Subject',
                                 style: TextStyle(
                                     fontFamily: 'ProductSans',
                                     color: AppColors.textColorBlack,
-                                    fontSize:30,
+                                    fontSize: 30,
                                     fontWeight: FontWeight.bold
                                 ),
                               ),
+                              Row(
+                                children: [
+                                Container(
+                                height: 30,
+                                width: 30,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                      color: AppColors.textColorBlack,
+                                      width: 2,
+                                  ),
+                                  color: AppColors.appBackgroundColor,
+                                ),
+                                child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
 
+                                  SizedBox(width:  MediaQuery.of(context).size.width * .13,),
+                                  Text('Student',
+                                    style: TextStyle(
+                                        fontFamily: 'ProductSans',
+                                        color: AppColors.textColorBlack,
+                                        fontSize:30,
+                                        fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+                              Container(
+                                height: 30,
+                                width: 30,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: AppColors.textColorBlack,
+                                    width: 2
+                                  ),
+                                  color: AppColors.appBackgroundColor,
+                                ),
+                                child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
+
+                          ],),
+                        ),
+                        SizedBox(height: 20,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SubjectField(),
+                              StudentField(),
                             ],
                           ),
-                          Container(
-                            height: 30,
-                            width: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: AppColors.textColorBlack,
-                                width: 2
+                        ),
+                        SizedBox(height: 50,),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 65),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Sports',
+                                style: TextStyle(
+                                    fontFamily: 'ProductSans',
+                                    color: AppColors.textColorBlack,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold
+                                ),
                               ),
-                              color: AppColors.appBackgroundColor,
-                            ),
-                            child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
+                              Spacer(),
+                              SizedBox(width: MediaQuery.of(context).size.width * .21,),
+                              Text('Cultural Activites',
+                                style: TextStyle(
+                                    fontFamily: 'ProductSans',
+                                    color: AppColors.textColorBlack,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              Spacer()
+                            ],),
+                        ),
+                        SizedBox(height: 20,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
 
-                      ],),
-                    ),
-                    SizedBox(height: 20,),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                   
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SubjectField(),
-                          StudentField(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 50,),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 65),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Sports',
-                            style: TextStyle(
-                                fontFamily: 'ProductSans',
-                                color: AppColors.textColorBlack,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                             SportsField(),
+                              CulturalActivitiesField(),
+                            ],
                           ),
-                          Spacer(),
-                          SizedBox(width: MediaQuery.of(context).size.width * .21,),
-                          Text('Cultural Activites',
-                            style: TextStyle(
-                                fontFamily: 'ProductSans',
-                                color: AppColors.textColorBlack,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          Spacer()
-                        ],),
-                    ),
-                    SizedBox(height: 20,),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                        ),
+                        SizedBox(height: 300,),
 
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                         SportsField(),
-                          CulturalActivitiesField(),
-                        ],
-                      ),
+                      ],
                     ),
-                    SizedBox(height: 300,),
+                  ),
 
-                  ],
-                ),
+                ],
               ),
-
+              /// ScrollBar
+              // Positioned(
+              //   right: 10,
+              //   child: Container(
+              //       alignment: Alignment.centerRight,
+              //       height: MediaQuery.of(context).size.height,
+              //       width: 20.0,
+              //       margin: EdgeInsets.only(left: MediaQuery.of(context).size.width - 20.0),
+              //       decoration: BoxDecoration(color: Colors.black12),
+              //       child: Container(
+              //         alignment: Alignment.topCenter,
+              //         child: GestureDetector(
+              //           child: Container(
+              //             height: 40.0,
+              //             width: 15.0,
+              //             margin:
+              //             EdgeInsets.only(left: 5.0, right: 5.0, top: _offset),
+              //             decoration: BoxDecoration(
+              //                 color: Colors.grey,
+              //                 borderRadius: BorderRadius.all(Radius.circular(3.0))),
+              //           ),
+              //           onVerticalDragUpdate: (dragUpdate) {
+              //             _controller.position.moveTo(dragUpdate.globalPosition.dy * .8);
+              //
+              //             setState(() {
+              //               if(dragUpdate.globalPosition.dy >= 0) {
+              //                 _offset = dragUpdate.globalPosition.dy;
+              //               }
+              //               print("View offset ${_controller.offset} scroll-bar offset ${_offset}");
+              //             });
+              //           },
+              //         ),
+              //       )
+              //   ),
+              // ),
             ],
           ),
         ));
@@ -264,52 +283,7 @@ class _ManageClassPageState extends State<ManageClassPage> {
     );
   }
 
+
 }
 
 
-class ClassListViewBuilder extends StatefulWidget {
-  @override
-  _ClassListViewBuilderState createState() => _ClassListViewBuilderState();
-}
-
-class _ClassListViewBuilderState extends State<ClassListViewBuilder> {
-  int selectedIndex = 0;
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: 15,
-      itemBuilder: (context,index){
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-          child: InkWell(
-            onTap: (){
-              setState(() {
-                selectedIndex = index;
-              });
-
-            },
-            splashColor: Colors.white,
-            hoverColor: Colors.white12,
-            child: Container(
-              width: 108,
-              height: 39,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                color:  selectedIndex == index ? AppColors.white100:AppColors.white,
-              ),
-              child: Text('Class ${index + 1}',
-                style: TextStyle(
-                    fontFamily: 'ProductSans',
-                    color:  selectedIndex == index ? AppColors.textColorBlack:AppColors.textColorBlack,
-                    fontSize:25,
-                    fontWeight: selectedIndex == index ? FontWeight.w700 : FontWeight.normal
-                ),
-              ),
-            ),
-          ),
-        );
-      },);
-  }
-}

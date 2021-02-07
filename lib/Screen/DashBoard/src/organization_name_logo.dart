@@ -1,11 +1,18 @@
+import 'dart:html';
+
 import 'package:academia_admin_panel/Color.dart';
 import 'package:flutter/material.dart';
 
 class OrganizationName extends StatelessWidget {
+  String schoolName ="";
+
   @override
   Widget build(BuildContext context) {
+    if(window.localStorage.containsKey("userName")){
+      schoolName = window.localStorage["userName"];
+    }
     return Padding(
-      padding: const EdgeInsets.only(left: 40,top: 10,right: 100),
+      padding: const EdgeInsets.only(left: 40,right: 100),
       child: Column(
         children: [
        Row(
@@ -13,28 +20,31 @@ class OrganizationName extends StatelessWidget {
          children: [
            Row(
              children: [
-               Container(
-                 decoration: BoxDecoration(
-                   borderRadius: BorderRadius.circular(100),
-                   border:Border.all(
-                     color: AppColors.indigo700,
-                     width: 2,
-                   ),
-                 ),
-                 child: CircleAvatar(
-                   radius: 25,
-                   backgroundColor: AppColors.transparent,
-                   child: ClipRRect(
+               Padding(
+                 padding: const EdgeInsets.only(top: 10),
+                 child: Container(
+                   decoration: BoxDecoration(
                      borderRadius: BorderRadius.circular(100),
-                     child:Image.asset('Assets/images/visionLogo.png',
-                       fit:BoxFit.fill,width: 70,height: 70,
-                       filterQuality: FilterQuality.high,),
+                     border:Border.all(
+                       color: AppColors.indigo700,
+                       width: 2,
+                     ),
+                   ),
+                   child: CircleAvatar(
+                     radius: 25,
+                     backgroundColor: AppColors.transparent,
+                     child: ClipRRect(
+                       borderRadius: BorderRadius.circular(100),
+                       child:Image.asset('Assets/images/visionLogo.png',
+                         fit:BoxFit.fill,width: 70,height: 70,
+                         filterQuality: FilterQuality.high,),
+                     ),
                    ),
                  ),
                ),
                SizedBox(width: 50,),
                Text(
-                 'Deenbandhu Chhotu Ram University of Science and Technology',
+                 schoolName,
                  style: TextStyle(
                    fontFamily: 'ProductSans',
                    fontWeight: FontWeight.bold,

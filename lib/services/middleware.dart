@@ -6,10 +6,11 @@ class HttpMiddleware {
   Dio dio = new Dio();
 
   Future<Dio> getHttpClient(baseUrl,
-      {responseSerializer,}) async {
+      {responseSerializer,Map<String, String> queryParams}) async {
     var accessToken = getAccessToken();
     dio.options.baseUrl = baseUrl;
-
+    dio.options.connectTimeout = 60000; //60s
+    dio.options.receiveTimeout = 60000;
     dio.interceptors.add(InterceptorsWrapper(
       onRequest:(RequestOptions options) async {
         // Do something before request is sent
@@ -22,19 +23,6 @@ class HttpMiddleware {
         // you can return a `DioError` object or return `dio.reject(errMsg)`
       },
         onError: (DioError error) async {
-          // Do something with response error
-
-          if (error.response != null && error.type == DioErrorType.RESPONSE) {
-            if (error.response.statusCode == 401 && error.response.data != null) {
-              List<String> tokenRefreshErrors = ['EXPIRED_SIGNATURE'];
-              var serverErrorJson = error.response.data;
-              if(serverErrorJson.containsKey('errorCode') &&
-                  serverErrorJson['errorCode'] != null &&
-                  tokenRefreshErrors.contains(serverErrorJson['errorCode'])) {
-                return error;
-              }
-            }
-          }
           return error;
         }
     ));

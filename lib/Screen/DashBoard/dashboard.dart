@@ -3,12 +3,16 @@ import 'package:academia_admin_panel/Screen/DashBoard/Notifier/screen_notifier.d
 import 'package:academia_admin_panel/Screen/DashBoard/src/navigation_bar.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/src/organization_name_logo.dart';
 import 'package:academia_admin_panel/Screen/Home/home_page.dart';
+import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/manage_class_screen.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DashBoardPage extends StatefulWidget {
+  final String yearId;
+  final int year;
+  DashBoardPage(this.yearId,this.year);
   @override
   _DashBoardPageState createState() => _DashBoardPageState();
 }
@@ -19,8 +23,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
     return Scaffold(
        backgroundColor: AppColors.appBackgroundColor,
         body: SafeArea(
-          child:  ChangeNotifierProvider<NavIndex>(
-            create: (_) => NavIndex(),
+          child:  MultiProvider(
+            providers: [
+              ChangeNotifierProvider<NavIndex>(create: (_) => NavIndex()),
+              ChangeNotifierProvider<ClassNotifier>(create: (_) => ClassNotifier()),
+              // Provider<NavIndex>(create: (_) => NavIndex()),
+              // Provider<ClassNotifier>(create: (_) => ClassNotifier()),
+            ],
             child: Container(
               child: Stack(
                 children: [
@@ -61,7 +70,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                     ),
                                   ),
 
-                                  Text('2011',
+                                  Text('${widget.year}',
                                     style: TextStyle(
                                         fontFamily: 'ProductSans',
                                         color: AppColors.textColorBlack,
@@ -123,7 +132,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                 return HomePage();
                               }
                               else if(navIndex.getIndex() == 1){
-                                return ManageClassPage();
+                                return ManageClassPage(widget.yearId);
                               }
                               return Login();
                             })),

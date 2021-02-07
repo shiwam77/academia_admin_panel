@@ -9,8 +9,8 @@ class GetUserAuth extends ApiSchema{
   final String status;
   final String token;
   final String userId;
-  UserModel data;
-  GetUserAuth(this.token,this.status,this.userId,this.data, String message, String errorCode,):super(status,message,errorCode);
+  final UserModel user;
+  GetUserAuth(this.token,this.status,this.userId,this.user, String message, String errorCode,):super(status,message,errorCode);
 
   factory GetUserAuth.fromJson(Map<String, dynamic> json) => _$GetUserAuthFromJson(json);
 
@@ -21,9 +21,9 @@ class GetUserAuth extends ApiSchema{
 class UserModel {
   final String password;
   final String email;
-  String name;
-  String role;
-  UserModel(this.password, this.email);
+  final String name;
+  final String role;
+  UserModel({this.password, this.email,this.name,this.role});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 

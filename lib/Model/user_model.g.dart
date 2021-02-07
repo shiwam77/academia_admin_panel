@@ -11,9 +11,9 @@ GetUserAuth _$GetUserAuthFromJson(Map<String, dynamic> json) {
     json['token'] as String,
     json['status'] as String,
     json['userId'] as String,
-    json['data'] == null
+    json['user'] == null
         ? null
-        : UserModel.fromJson(json['data'] as Map<String, dynamic>),
+        : UserModel.fromJson(json['user'] as Map<String, dynamic>),
     json['message'] as String,
     json['errorCode'] as String,
   );
@@ -26,16 +26,16 @@ Map<String, dynamic> _$GetUserAuthToJson(GetUserAuth instance) =>
       'status': instance.status,
       'token': instance.token,
       'userId': instance.userId,
-      'data': instance.data,
+      'user': instance.user,
     };
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) {
   return UserModel(
-    json['password'] as String,
-    json['email'] as String,
-  )
-    ..name = json['name'] as String
-    ..role = json['role'] as String;
+    password: json['password'] as String,
+    email: json['email'] as String,
+    name: json['name'] as String,
+    role: json['role'] as String,
+  );
 }
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{

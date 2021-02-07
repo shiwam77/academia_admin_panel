@@ -12,6 +12,8 @@ import 'package:flutter/rendering.dart';
 import 'dart:html' show window;
 import 'dart:convert' show json, base64, ascii;
 
+import 'AcademicYear/academic_year_screen.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -142,13 +144,15 @@ class _LoginState extends State<Login> {
                                 if (_formKey.currentState.validate()) {
                                     var jwt = await attemptLogin(
                                         email: email, password: password);
+                                    print("token");
+                                    print(jwt);
+                                    if (jwt.isNotEmpty) {
 
-                                    if (jwt != null) {
                                       window.localStorage["token"] = jwt;
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => HomePage()
+                                              builder: (context) => AcademicYearPage(window.localStorage["userId"])
                                           )
                                       );
                                       _emailTextController.clear();

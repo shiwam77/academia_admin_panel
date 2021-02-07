@@ -30,10 +30,11 @@ class _NavigationBarState extends State<NavigationBar> {
             width: 55.0,
             child: Stack(
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: NavBar(),
-                ),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: NavBar(),
+                // ),
+                NavBar(),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child:  InkWell(

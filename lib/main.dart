@@ -4,13 +4,16 @@ import 'package:academia_admin_panel/Screen/DashBoard/dashboard.dart';
 import 'package:academia_admin_panel/Screen/Home/home_page.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:academia_admin_panel/utils/utils.dart';
+import 'package:academia_admin_panel/vm_service/locator.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import 'Screen/AcademicYear/academic_year_screen.dart';
+
 
 void main() {
-
-  mainDelegate();
+  setupLocator();
+  runApp(MyApp());
 }
 
 
@@ -59,7 +62,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: DashBoardPage(),
+      home: Academia(),
     );
   }
 }
@@ -76,7 +79,7 @@ class _AcademiaState extends State<Academia> {
     var token = window.localStorage.containsKey("token") ? window.localStorage["token"] : "";
     if(token != "") {
       print(token);
-        return  DashBoardPage();
+        return  AcademicYearPage(window.localStorage["userId"]);
     }
     else{
       window.localStorage.remove("token");

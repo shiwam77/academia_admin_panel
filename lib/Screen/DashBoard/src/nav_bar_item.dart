@@ -1,5 +1,6 @@
 import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/Notifier/screen_notifier.dart';
+import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,12 +24,12 @@ class _NavBarItemState extends State<NavBarItem> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Consumer<NavIndex>(
-        builder: (context,navIndex,child){
-
+      child: Consumer2<NavIndex,ClassNotifier>(
+        builder: (context,navIndex,_classNotifier,child){
           return InkWell(
             onTap: () {
               navIndex.changeIndex(widget.index);
+              _classNotifier.setModelId(null);
               widget.touched();
             },
             splashColor: Colors.white,
@@ -39,27 +40,29 @@ class _NavBarItemState extends State<NavBarItem> {
                 children: [
                   Container(
                     height: 60.0,
-                    width: 40.0,
+                    width: 55.0,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 18),
+                          child: Icon(
+                            widget.icon,
+                            color: widget.active ? AppColors.indigo700 : AppColors.gray,
+                            size: 22.0,
+                          ),
+                        ),
                         AnimatedContainer(
+                          alignment: Alignment.bottomRight,
                           duration: Duration(milliseconds: 375),
                           height: 35.0,
                           width: 5.0,
                           decoration: BoxDecoration(
                             color: widget.active ? AppColors.indigo700 : Colors.transparent,
                             borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10.0),
-                              bottomRight: Radius.circular(10.0),
+                              topLeft: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Icon(
-                            widget.icon,
-                            color: widget.active ? AppColors.indigo700 : AppColors.gray,
-                            size: 22.0,
                           ),
                         ),
                       ],

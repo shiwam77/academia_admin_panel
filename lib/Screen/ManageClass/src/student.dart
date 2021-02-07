@@ -1,6 +1,7 @@
 import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/src/widge.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry/sentry.dart';
 class StudentField extends StatefulWidget {
   @override
   _StudentFieldState createState() => _StudentFieldState();
@@ -21,7 +22,9 @@ class _StudentFieldState extends State<StudentField> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
                     child: InkWell(
-                      onTap: (){
+                      hoverColor: AppColors.indigo700,
+                      splashColor: AppColors.indigo700,
+                      onTap: () async{
                         setState(() {
                           selectedIndex = index;
                         });

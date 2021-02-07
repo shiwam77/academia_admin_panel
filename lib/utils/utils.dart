@@ -5,6 +5,7 @@ import 'package:academia_admin_panel/Model/user_model.dart';
 import 'package:academia_admin_panel/services/endpoint.dart';
 import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -33,25 +34,28 @@ Future<String> getAppVersion() async {
 }
 
 Future<String> attemptLogin({String email,String password}) async{
+  var dio = Dio();
+    UserModel user = UserModel(password:password, email:email);
 
-    UserModel user = UserModel(password, email);
-
-
-     await dio.post('${AuthApi.login}',data: user.toJson()).then((response) {
+    return await dio.post('${AuthApi.login}',data: user.toJson()).then((response) {
        if(response.statusCode == 200){
          var data = GetUserAuth.fromJson(response.data);
+         window.localStorage["userId"] = data.userId;
+         window.localStorage["userName"] = data.user.name;
          return data.token;
        }
        else if(response.statusCode == 401){
          return "";
        }
     }).catchError((err){
+      print(err);
        return "";
     });
-    return"";
+
 }
 
 Future<String> attemptSignUp({String email,String password,String passwordConfirm,String name}) async{
+  var dio = Dio();
   Map<String,String> user ={
     "email":email,
     "password":password,
@@ -61,9 +65,11 @@ Future<String> attemptSignUp({String email,String password,String passwordConfir
   print(email);
 
   print(AuthApi.signUp);
-   await dio.post('${AuthApi.signUp}',data: user).then((response) {
+  return await dio.post('${AuthApi.signUp}',data: user).then((response) {
     if(response.statusCode == 201){
       var data = GetUserAuth.fromJson(response.data);
+      window.localStorage["userId"] = data.userId;
+      window.localStorage["userName"] = data.user.name;
       return data.token;
     }
     else{
@@ -73,7 +79,7 @@ Future<String> attemptSignUp({String email,String password,String passwordConfir
     print(error);
     return "";
   });
-   return "";
+
 }
 
 String getAccessToken(){
@@ -100,5 +106,41 @@ String emailValidator(String email){
 logout(){
   if(window.localStorage.containsKey("token")){
     window.localStorage.remove("token");
+  }
+}
+
+void showToast(BuildContext context, String text,
+    {String action = "OK", Color color, Function toastAction }) {
+  // SnackBar not showing? Try: https://stackoverflow.com/a/51304732/5129047
+
+  final scaffold = ScaffoldMessenger.of(context);
+
+  if(color != null){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        backgroundColor: color,
+        action: SnackBarAction(
+          label: action,
+          onPressed:  toastAction != null
+              ? toastAction
+              : scaffold.hideCurrentSnackBar,
+          textColor: Colors.white,
+        ),
+      ),
+    );
+  } else {
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        action: SnackBarAction(
+          label: action,
+          onPressed:  toastAction != null
+              ? toastAction
+              : scaffold.hideCurrentSnackBar,
+        ),
+      ),
+    );
   }
 }

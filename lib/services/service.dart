@@ -11,7 +11,7 @@ import 'package:dio/dio.dart';
 typedef ResponseSerializer = dynamic Function(Map<String, dynamic> json);
 
 Future getHttpServiceFuture(String requestUrl, responseSerializer,
-    {Map<String, String> queryParams,String apiHostedUrl, returnRaw: false, int cacheMaxMin: 15}) async {
+    {Map<String, String> queryParams,String apiHostedUrl, returnRaw: false, }) async {
 
   HttpMiddleware httpMiddleware = HttpMiddleware();
   Response httpResponse;
@@ -22,7 +22,7 @@ Future getHttpServiceFuture(String requestUrl, responseSerializer,
   }
 
   try {
-    Dio http = await httpMiddleware.getHttpClient(apiHostedUrl, );
+    Dio http = await httpMiddleware.getHttpClient(apiHostedUrl,responseSerializer: responseSerializer,);
     httpResponse = await http.get(requestUrl, queryParameters: queryParams,);
 
   } on DioError catch (error) {
@@ -34,8 +34,7 @@ Future getHttpServiceFuture(String requestUrl, responseSerializer,
     if (error.error is ApiError) {
       return Future.error(error.error);
     } else {
-      // logCrashlyticsDioError(error);
-      // reportDioErrorToSentry(error);
+
       print(error);
     }
   }
@@ -52,12 +51,14 @@ Future getHttpServiceFuture(String requestUrl, responseSerializer,
     var responseJson = httpResponse.data, responseObject;
 
     if(returnRaw){
-      return {'responseJson': responseJson,'httpStatusCode': httpStatusCode};
+      print(responseObject);
+      return responseJson;
     }
 
     if (isJson) {
       try {
         responseObject = responseSerializer(responseJson);
+        print(responseObject);
       } catch (error, stackTrace) {
         // Error HTTP Code 5XX
         serviceErrorLogger(error, stackTrace);
@@ -67,6 +68,7 @@ Future getHttpServiceFuture(String requestUrl, responseSerializer,
 
     if (isJson && responseObject != null) {
       if (httpStatusCode == 200 && responseObject.status == "success") {
+
         return responseObject;
       }
       return Future.error(
@@ -74,7 +76,7 @@ Future getHttpServiceFuture(String requestUrl, responseSerializer,
               httpStatusCode,
               dioError.message, dioError.type,
               responseObject.status, responseObject.mess,
-              responseObject.error_code,
+              responseObject.errorCode,
           )
       );
     }
@@ -159,8 +161,8 @@ Future postHttpServiceFuture(String requestUrl, responseSerializer,
           ApiError(
               httpStatusCode,
               dioError.message, dioError.type,
-              responseObject.status, responseObject.msg,
-              responseObject.error_code,
+              responseObject.status, responseObject.message,
+              responseObject.errorCode,
           )
       );
     }
@@ -240,8 +242,8 @@ Future putHttpServiceFuture(String requestUrl, responseSerializer,
           ApiError(
               httpStatusCode,
               dioError.message, dioError.type,
-              responseObject.status, responseObject.msg,
-              responseObject.error_code,
+              responseObject.status, responseObject.message,
+              responseObject.errorCode,
           )
       );
     }
@@ -358,7 +360,7 @@ Future deleteHttpServiceFuture(String requestUrl, responseSerializer,
 
   try {
     Dio http = await httpMiddleware.getHttpClient(apiHostedUrl);
-    httpResponse = await http.delete(requestUrl, data: encodedBody, queryParameters: queryParams);
+    httpResponse = await http.delete(requestUrl, queryParameters: queryParams);
 
   } on DioError catch (error, stackTrace) {
     dioError = error;
@@ -387,15 +389,18 @@ Future deleteHttpServiceFuture(String requestUrl, responseSerializer,
 
     if (isJson) {
       try {
+        print("try");
         responseObject = responseSerializer(responseJson);
       } catch (error, stackTrace) {
+        print("try next");
         serviceErrorLogger(error, stackTrace);
         return Future.error(ApiError(0));
       }
     }
 
     if (isJson && responseObject != null) {
-      if (httpStatusCode == 200 && responseObject.status == "success") {
+      print("isjson");
+      if (httpStatusCode == 204 && responseObject.status == "success") {
         return responseObject;
       }
       return Future.error(
@@ -418,6 +423,7 @@ Future deleteHttpServiceFuture(String requestUrl, responseSerializer,
   }
 
   if (dioError != null) {
+    print("dio erroe");
     logger.e("Dio Error is null");
     return Future.error(ApiError(0, dioError.message, dioError.type));
   }
@@ -463,14 +469,14 @@ class HttpCalls {
 
     // default values
     String status = "";
-    String msg = "";
+    String message = "";
     String errorCode = "NA";
     Map<String,dynamic> errorData = {};
     dynamic data = {};
 
     if(responseJson is Map){
       status = responseJson.containsKey('status') ? responseJson['status'] as String : 'Something went wrong';
-      msg = responseJson.containsKey('message') ? responseJson['message'] as String : 'Something went wrong';
+      message = responseJson.containsKey('message') ? responseJson['message'] as String : 'Something went wrong';
       errorCode = responseJson.containsKey('errorCode') ? responseJson['errorCode'] as String : 'NA';
       data = responseJson.containsKey('data') ? responseJson['data'] : null;
     }
@@ -479,7 +485,7 @@ class HttpCalls {
     if(responseCode >= 200 && responseCode < 300 && status == 'success'){
       return data;
     }else{
-      throw ApiError(responseCode, "", DioErrorType.DEFAULT, status, msg, errorCode,);
+      throw ApiError(responseCode, "", DioErrorType.DEFAULT, status, message, errorCode,);
     }
   }
 
