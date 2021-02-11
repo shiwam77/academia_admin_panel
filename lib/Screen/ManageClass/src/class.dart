@@ -61,7 +61,7 @@ class _ClassFieldState extends State<ClassField> {
           InkWell(
             splashColor: AppColors.gray400,
             onTap: () async{
-              await addSubjectInput(context);
+              await addClassInput(context);
             },
             child: Container(
               height: 40,
@@ -141,7 +141,7 @@ class _ClassFieldState extends State<ClassField> {
     return Center(child: Text("No data"),);
 
   }
-  addSubjectInput(BuildContext context){
+  addClassInput(BuildContext context){
 
     TextEditingController _textEditingController = TextEditingController();
     String subject;

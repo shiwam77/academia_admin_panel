@@ -6,6 +6,7 @@ import 'package:academia_admin_panel/Screen/ManageClass/src/widge.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_subject_vm.dart';
 import 'package:academia_admin_panel/vm_service/base_view.dart';
 import 'package:flutter/material.dart';
+import 'package:kumi_popup_window/kumi_popup_window.dart';
 import 'package:provider/provider.dart';
 
 class SubjectField extends StatefulWidget {
@@ -18,6 +19,7 @@ class _SubjectFieldState extends State<SubjectField> {
   String classId;
   String preClassId;
   List<AcademicSubjectModel> academicSubjectModel =[];
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Consumer<ClassNotifier>(
@@ -42,19 +44,24 @@ class _SubjectFieldState extends State<SubjectField> {
                           fontWeight: FontWeight.bold
                       ),
                     ),
-                    Container(
-                      height: 30,
-                      width: 30,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: AppColors.textColorBlack,
-                          width: 2,
+                    InkWell(
+                      onTap: ()async {
+                        await addSubjectInput(context);
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: AppColors.textColorBlack,
+                            width: 2,
+                          ),
+                          color: AppColors.appBackgroundColor,
                         ),
-                        color: AppColors.appBackgroundColor,
-                      ),
-                      child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
+                        child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
+                    ),
                   ],),
                 ),
                 boxContainer(context: context,
@@ -84,6 +91,146 @@ class _SubjectFieldState extends State<SubjectField> {
             ),
           );
         });
+  }
+  addSubjectInput(BuildContext context){
+
+    TextEditingController _textEditingController = TextEditingController();
+    String subject;
+    return showPopupWindow(
+      context,
+      gravity: KumiPopupGravity.leftBottom,
+      bgColor: Colors.grey.withOpacity(0.5),
+      clickOutDismiss: true,
+      clickBackDismiss: true,
+      customAnimation: false,
+      customPop: false,
+      customPage: false,
+      //targetRenderBox: (btnKey.currentContext.findRenderObject() as RenderBox),
+      //childSize: null,
+      underStatusBar: false,
+      underAppBar: true,
+      offsetX: 800,
+      offsetY: 575,
+      duration: Duration(milliseconds: 200),
+      childFun: (pop) {
+        return  Container(
+          key: GlobalKey(),
+          padding: EdgeInsets.all(10),
+          height: 180,
+          width: 300,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: AppColors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xff707070).withOpacity(.4),
+                  offset: Offset(0, 0),
+                  blurRadius: 10,
+                )
+              ]),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child:Container(
+                    height: 30,
+                    width: 30,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: AppColors.textColorBlack,
+                        width: 2,
+                      ),
+                      color: AppColors.white,
+                    ),
+                    child: Icon(Icons.close,size: 15,color: AppColors.textColorBlack,),),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Column(
+                  children: [
+                    Container(
+                      child:SizedBox(
+                        width:300,
+                        child: Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            controller: _textEditingController,
+                            decoration: InputDecoration(
+                              hintText: "Enter a subject name",
+                            ),
+                            onChanged: (value){
+                              setState(() {
+                                subject = value;
+                              });
+                            },
+                            validator: (value){
+                              if (value.isEmpty || value == "") {
+                                return 'Please provide subject name';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        MaterialButton(
+                          color:AppColors.indigo700,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'Save',
+                            style: TextStyle(fontSize: 25),
+                          ),
+                          onPressed: () async {
+                            if(_formKey.currentState.validate()){
+                             // AcademicClassModel newClass = AcademicClassModel(className: subject,yearId: widget.yearId);
+                              try{
+                                //var response =  await createAcademicClass(newClass.toJson());
+                                // if(response["httpStatusCode"] == 201){
+                                //   String id = response["responseJson"]["data"]["id"];
+                                //   newClass.id = id;
+                                //   setState(() {
+                                //     academicClassModel.add(newClass);
+                                //   });
+                                //   Navigator.of(context).pop();
+                                // }
+                                Navigator.of(context).pop();
+                              }
+                              catch(error){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Something went wrong!'),
+                                    ));
+                              }
+
+                            }
+
+                          },
+                        ),
+                      ],
+                    ),
+
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+
   }
 
   Widget getSubjectField(List<AcademicSubjectModel> listOfSubjects){

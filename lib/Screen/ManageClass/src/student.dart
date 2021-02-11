@@ -132,7 +132,7 @@ class _StudentFieldState extends State<StudentField> {
             alignPanAxis: true,
             minScale: .5,
             child: Container(
-              height: MediaQuery.of(context).size.height * .85,
+              height: MediaQuery.of(context).size.height * .8,
               width:MediaQuery.of(context).size.width * .8,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
@@ -983,7 +983,46 @@ class _StudentFieldState extends State<StudentField> {
                      ],
                    ),
                   )),
+                  Positioned(
+                    top: 700,
+                      left: 100,
+                      right: 50,
+                      child: Row(
+                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Cancel",
+                          style:  TextStyle(
+                              fontFamily: 'ProductSans',
+                              color: AppColors.indigo700,
+                              fontSize: 25,
+                          ),),
+                          Spacer(flex: 5,),
+                          Text("Edit",
+                            style:TextStyle(
+                                fontFamily: 'ProductSans',
+                                color: AppColors.indigo700,
+                                fontSize: 25,
 
+                            ),),
+                          Spacer(flex: 1,),
+                          Container(
+                            height: 53,
+                            width: 260,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.blue,
+                            ),
+                            child: Text("Save",style:
+                            TextStyle(
+                                fontFamily: 'ProductSans',
+                                color: AppColors.white,
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold
+                            ),
+                            ),
+                          )
+                        ],))
                  // Positioned(child: child)
                 ],
               ),

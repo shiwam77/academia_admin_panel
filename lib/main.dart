@@ -81,10 +81,14 @@ class _AcademiaState extends State<Academia> {
     var token = window.localStorage.containsKey("token") ? window.localStorage["token"] : "";
     if(token != "") {
       print(token);
+      if(window.localStorage.containsKey("userId")){
         return  AcademicYearPage(window.localStorage["userId"]);
+      }
+      return Login();
     }
     else{
       window.localStorage.remove("token");
+      window.localStorage.remove("userId");
       return Login();
     }
 
