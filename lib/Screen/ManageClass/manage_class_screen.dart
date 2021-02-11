@@ -57,32 +57,6 @@ class _ManageClassPageState extends State<ManageClassPage> {
                         ),
                         SizedBox(height: 50,),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 65),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Sports',
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              Spacer(),
-                              SizedBox(width: MediaQuery.of(context).size.width * .21,),
-                              Text('Cultural Activites',
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              Spacer()
-                            ],),
-                        ),
                         SizedBox(height: 20,),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30),
