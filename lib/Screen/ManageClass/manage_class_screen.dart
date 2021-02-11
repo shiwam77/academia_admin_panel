@@ -39,73 +39,14 @@ class _ManageClassPageState extends State<ManageClassPage> {
 
                   ClassField(widget.yearId),
 
-                  SizedBox(height: 50,),
+                  SizedBox(height: 20,),
 
                   Expanded(
                     child: ListView(
                       controller: _controller,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 65),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Subject',
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                Container(
-                                height: 30,
-                                width: 30,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  border: Border.all(
-                                      color: AppColors.textColorBlack,
-                                      width: 2,
-                                  ),
-                                  color: AppColors.appBackgroundColor,
-                                ),
-                                child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
-
-                                  SizedBox(width:  MediaQuery.of(context).size.width * .13,),
-                                  Text('Student',
-                                    style: TextStyle(
-                                        fontFamily: 'ProductSans',
-                                        color: AppColors.textColorBlack,
-                                        fontSize:30,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-
-                                ],
-                              ),
-                              Container(
-                                height: 30,
-                                width: 30,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  border: Border.all(
-                                    color: AppColors.textColorBlack,
-                                    width: 2
-                                  ),
-                                  color: AppColors.appBackgroundColor,
-                                ),
-                                child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
-
-                          ],),
-                        ),
-                        SizedBox(height: 20,),
-                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30),
-
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

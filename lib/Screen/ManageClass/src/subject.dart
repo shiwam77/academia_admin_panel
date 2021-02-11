@@ -24,27 +24,63 @@ class _SubjectFieldState extends State<SubjectField> {
         builder: (context,classNotifier,child){
           classId = classNotifier.getModelId();
           print("classId = $classId");
-          return boxContainer(context: context,
-            child: BaseView<ManageSubjectVm>(
-                loaderWidget: Center(child: CircularProgressIndicator()),
-                onVMReady: (ManageSubjectVm vm){
-                  vm.init(classId);
-                },
-                builder: (_, vm, child) {
-                  if(classId == preClassId){
-                    if(vm.isError == false){
-                      academicSubjectModel = vm.academicSubjectModel;
-                      return getSubjectField(academicSubjectModel);
-                    }
-                    return SizedBox();
-                  }
-                  else{
-                    preClassId = classId;
-                    vm.refresh(classId);
-                    return SizedBox();
-                  }
+          return Container(
+            height: 704,
+            width: MediaQuery.of(context).size.width * .39,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    Text('Subject',
+                      style: TextStyle(
+                          fontFamily: 'ProductSans',
+                          color: AppColors.textColorBlack,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Container(
+                      height: 30,
+                      width: 30,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: AppColors.textColorBlack,
+                          width: 2,
+                        ),
+                        color: AppColors.appBackgroundColor,
+                      ),
+                      child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
+                  ],),
+                ),
+                boxContainer(context: context,
+                  child: BaseView<ManageSubjectVm>(
+                      loaderWidget: Center(child: CircularProgressIndicator()),
+                      onVMReady: (ManageSubjectVm vm){
+                        vm.init(classId);
+                      },
+                      builder: (_, vm, child) {
+                        if(classId == preClassId){
+                          if(vm.isError == false){
+                            academicSubjectModel = vm.academicSubjectModel;
+                            return getSubjectField(academicSubjectModel);
+                          }
+                          return SizedBox();
+                        }
+                        else{
+                          preClassId = classId;
+                          vm.refresh(classId);
+                          return SizedBox();
+                        }
 
-                }
+                      }
+                  ),
+                ),
+              ],
             ),
           );
         });

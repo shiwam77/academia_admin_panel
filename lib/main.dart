@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'Screen/AcademicYear/academic_year_screen.dart';
+import 'Screen/ManageClass/src/student.dart';
 
 
 void main() {
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Academia(),
+       home: Academia(),//MaterialApp(home: Scaffold(body: StudentField()))//Academia(),
     );
   }
 }

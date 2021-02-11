@@ -49,6 +49,8 @@ dependencies:
   search_page: ^1.4.0
   get_it: ^5.0.6
   kumi_popup_window: ^1.0.12
+  image_picker_web: ^1.0.9
+
 
 dev_dependencies:
   flutter_test:
