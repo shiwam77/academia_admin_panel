@@ -9,6 +9,8 @@ import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../manage_class.dart';
+
 class DashBoardPage extends StatefulWidget {
   final String yearId;
   final int year;
@@ -133,6 +135,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
                               }
                               else if(navIndex.getIndex() == 1){
                                 return ManageClassPage(widget.yearId);
+                              }
+                              else if(navIndex.getIndex() == 2){
+                                return AddStudent();
                               }
                               return Login();
                             })),
