@@ -121,6 +121,7 @@ Future postHttpServiceFuture(String requestUrl, responseSerializer,
 
   } on DioError catch (error, stackTrace) {
     dioError = error;
+    print("error ${error.error}");
     serviceErrorLogger(error, stackTrace);
     if (dioError.response != null) {
       httpResponse = dioError.response;

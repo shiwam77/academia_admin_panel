@@ -84,3 +84,21 @@ class AcademicSubjectApi{
     return '/{:Id}/deleteSubject';
   }
 }
+
+class AcademicStudentApi{
+  static String get academicStudents{
+    return "/{:Id}/getAllStudents";
+  }
+
+  static String get createStudent{
+    return '/createStudent';
+  }
+
+  static String get updateStudent{
+    return '/{:Id}/updateStudent';
+  }
+
+  static String get deleteStudent{
+    return '/{:Id}/deleteStudent';
+  }
+}

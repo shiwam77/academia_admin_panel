@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
        home: InteractiveViewer(
          minScale: .5,
            alignPanAxis: true,
-           child: DashBoardPage("",2012)),//MaterialApp(home: Scaffold(body: StudentField()))//Academia(),
+           child: Academia(),)//DashBoardPage("",2012)),//MaterialApp(home: Scaffold(body: StudentField()))//Academia(),
     );
   }
 }

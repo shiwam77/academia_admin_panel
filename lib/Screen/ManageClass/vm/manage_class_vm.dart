@@ -33,6 +33,9 @@ class ManageClassVm extends BaseVM{
   Future<bool> fetchAcademicClass(String yearId) async {
 
     try{
+      if(yearId == null){
+        return false;
+      }
     var response = await getAcademicClasses(yearId:yearId);
     GetClassModel _getClassModel = GetClassModel.fromJson(response);
     if(_getClassModel.status == "success"){

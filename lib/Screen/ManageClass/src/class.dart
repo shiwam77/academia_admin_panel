@@ -7,6 +7,7 @@ import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_class_vm.dart';
 
 import 'package:academia_admin_panel/vm_service/base_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,10 @@ class _ClassFieldState extends State<ClassField> {
   String classId;
   List<AcademicClassModel> academicClassModel =[];
   final _formKey = GlobalKey<FormState>();
+  String selectedButton;
+
+  /// A list of lucky numbers.
+  List<String> menuButton = ["Edit","Delete"];
   @override
   Widget build(BuildContext context) {
     return classView();
@@ -96,6 +101,49 @@ class _ClassFieldState extends State<ClassField> {
     );
   }
   Widget listViewBuilder(List<AcademicClassModel> listOfClass){
+    /// The list containing the [PopUpMenuItem]s
+    List<PopupMenuItem> buttons = [];
+
+    // Add each luckyNumber name into the list of PopupMenuItems, [buttons]
+    for (String button in menuButton) {
+      buttons.add(
+          new PopupMenuItem(
+            child: new Text("$button"),
+            value: button,
+          )
+      );
+    }
+
+    /// When a [PopUpMenuItem] is selected, we assign its value to
+    /// selectedLuckyNumber and rebuild the widget.
+    void handlePopUpChanged(String value,String id,int index) async{
+        try {
+          if (value == "Delete") {
+            var response = await deleteAcademicClass(id);
+            if (response["httpStatusCode"] == 204) {
+              setState(() {
+                academicClassModel.removeAt(index);
+                selectedButton = value;
+              });
+            }
+            print("The button you selected was $selectedButton");
+          }
+          else if(value == "Edit"){
+            // ToDo implement edit function here
+            setState(() {
+              selectedButton = value;
+            });
+            print("The button you selected was $selectedButton");
+          }
+        }
+        catch(error){
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Something went wrong!'),
+              ));
+        }
+
+    }
 
     var classNotifierProvider = Provider.of<ClassNotifier>(context);
     print(widget.yearId);
@@ -105,33 +153,54 @@ class _ClassFieldState extends State<ClassField> {
         itemCount:listOfClass.length,
         itemBuilder: (context,index){
           return Padding(
+
             padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
             child: InkWell(
+
               onTap: (){
                 setState(() {
                   classId = listOfClass[index].id;
                   classNotifierProvider.setModelId(classId);
                   selectedIndex = index;
                 });
-
               },
               splashColor: Colors.white,
               hoverColor: Colors.white12,
               child: Container(
-                width: 108,
+                width: 130,
                 height: 39,
+                margin: EdgeInsets.only(left: 15),
+                padding: EdgeInsets.only(left: 15),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7),
                   color:  selectedIndex == index ? AppColors.white100:AppColors.white,
                 ),
-                child: Text('${listOfClass[index].className}',
-                  style: TextStyle(
-                      fontFamily: 'ProductSans',
-                      color:  selectedIndex == index ? AppColors.textColorBlack:AppColors.textColorBlack,
-                      fontSize:25,
-                      fontWeight: selectedIndex == index ? FontWeight.w700 : FontWeight.normal
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${listOfClass[index].className}',
+                      style: TextStyle(
+                          fontFamily: 'ProductSans',
+                          color:  selectedIndex == index ? AppColors.textColorBlack:AppColors.textColorBlack,
+                          fontSize:25,
+                          fontWeight: selectedIndex == index ? FontWeight.w700 : FontWeight.normal
+                      ),
+                    ),
+                    SizedBox(
+                      height: 39,
+                      child: PopupMenuButton(
+                        padding: EdgeInsets.zero,
+                        elevation: 0.0,
+                        icon: Icon(Icons.drag_indicator_sharp),
+                        // key: _menuKey,
+                        color: AppColors.white,
+                        onSelected: (selectedDropDownItem) async => handlePopUpChanged(selectedDropDownItem,listOfClass[index].id,index),
+                        itemBuilder: (BuildContext context) => buttons,
+                        //tooltip: "Tap me to select a number.",
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -149,7 +218,7 @@ class _ClassFieldState extends State<ClassField> {
       context,
       gravity: KumiPopupGravity.leftBottom,
       bgColor: Colors.grey.withOpacity(0.5),
-      clickOutDismiss: true,
+      clickOutDismiss: false,
       clickBackDismiss: true,
       customAnimation: false,
       customPop: false,
@@ -165,8 +234,8 @@ class _ClassFieldState extends State<ClassField> {
         return  Container(
           key: GlobalKey(),
           padding: EdgeInsets.all(10),
-          height: 180,
-          width: 300,
+          height: 160,
+          width: 500,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: AppColors.white,
@@ -185,36 +254,43 @@ class _ClassFieldState extends State<ClassField> {
                   onTap: (){
                     Navigator.pop(context);
                   },
-                  child: Icon(Icons.close),
+                  child: Container(
+                    height: 30,
+                    width: 30,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: AppColors.textColorBlack,
+                        width: 2,
+                      ),
+                      color: AppColors.white,
+                    ),
+                    child: Icon(Icons.close,size: 25,color: AppColors.textColorBlack,),),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 30),
+                padding: EdgeInsets.only(top: 30,left: 20,right: 20),
                 child: Column(
                   children: [
-                    Container(
-                      child:SizedBox(
-                        width:300,
-                        child: Form(
-                          key: _formKey,
-                          child: TextFormField(
-                            controller: _textEditingController,
-                            decoration: InputDecoration(
-                              hintText: "Enter a class",
-                            ),
-                            onChanged: (value){
-                              setState(() {
-                                subject = value;
-                              });
-                            },
-                            validator: (value){
-                              if (value.isEmpty || value == "") {
-                                return 'Please provide class name';
-                              }
-                              return null;
-                            },
-                          ),
+                    Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        controller: _textEditingController,
+                        decoration: InputDecoration(
+                          hintText: "Add class",
                         ),
+                        onChanged: (value){
+                          setState(() {
+                            subject = value;
+                          });
+                        },
+                        validator: (value){
+                          if (value.isEmpty || value == "") {
+                            return 'Please provide class name';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     Spacer(),
@@ -222,6 +298,8 @@ class _ClassFieldState extends State<ClassField> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         MaterialButton(
+                          height: 50.0,
+                          minWidth:150,
                           color:AppColors.indigo700,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),

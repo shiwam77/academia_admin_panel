@@ -4,6 +4,7 @@ import 'package:academia_admin_panel/Screen/ManageClass/ApiEndPoint/subject_api.
 import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/src/widge.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_subject_vm.dart';
+import 'package:academia_admin_panel/error.dart';
 import 'package:academia_admin_panel/vm_service/base_view.dart';
 import 'package:flutter/material.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
@@ -20,6 +21,9 @@ class _SubjectFieldState extends State<SubjectField> {
   String preClassId;
   List<AcademicSubjectModel> academicSubjectModel =[];
   final _formKey = GlobalKey<FormState>();
+  bool isEditable = false;
+  bool isReadOnly = true;
+  int clickedEditIndex;
   @override
   Widget build(BuildContext context) {
     return Consumer<ClassNotifier>(
@@ -100,7 +104,7 @@ class _SubjectFieldState extends State<SubjectField> {
       context,
       gravity: KumiPopupGravity.leftBottom,
       bgColor: Colors.grey.withOpacity(0.5),
-      clickOutDismiss: true,
+      clickOutDismiss: false,
       clickBackDismiss: true,
       customAnimation: false,
       customPop: false,
@@ -109,15 +113,15 @@ class _SubjectFieldState extends State<SubjectField> {
       //childSize: null,
       underStatusBar: false,
       underAppBar: true,
-      offsetX: 800,
+      offsetX: 250,
       offsetY: 575,
       duration: Duration(milliseconds: 200),
       childFun: (pop) {
         return  Container(
           key: GlobalKey(),
           padding: EdgeInsets.all(10),
-          height: 180,
-          width: 300,
+          height: 160,
+          width: 600,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: AppColors.white,
@@ -136,7 +140,7 @@ class _SubjectFieldState extends State<SubjectField> {
                   onTap: (){
                     Navigator.pop(context);
                   },
-                  child:Container(
+                  child: Container(
                     height: 30,
                     width: 30,
                     alignment: Alignment.center,
@@ -148,35 +152,32 @@ class _SubjectFieldState extends State<SubjectField> {
                       ),
                       color: AppColors.white,
                     ),
-                    child: Icon(Icons.close,size: 15,color: AppColors.textColorBlack,),),
+                    child: Icon(Icons.close,size: 25,color: AppColors.textColorBlack,),),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 30),
+                padding: EdgeInsets.only(top: 30,left: 20,right: 20),
                 child: Column(
                   children: [
                     Container(
-                      child:SizedBox(
-                        width:300,
-                        child: Form(
-                          key: _formKey,
-                          child: TextFormField(
-                            controller: _textEditingController,
-                            decoration: InputDecoration(
-                              hintText: "Enter a subject name",
-                            ),
-                            onChanged: (value){
-                              setState(() {
-                                subject = value;
-                              });
-                            },
-                            validator: (value){
-                              if (value.isEmpty || value == "") {
-                                return 'Please provide subject name';
-                              }
-                              return null;
-                            },
+                      child:Form(
+                        key: _formKey,
+                        child: TextFormField(
+                          controller: _textEditingController,
+                          decoration: InputDecoration(
+                            hintText: "Add Subject",
                           ),
+                          onChanged: (value){
+                            setState(() {
+                              subject = value;
+                            });
+                          },
+                          validator: (value){
+                            if (value.isEmpty || value == "") {
+                              return 'Please provide subject name';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ),
@@ -185,6 +186,8 @@ class _SubjectFieldState extends State<SubjectField> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         MaterialButton(
+                          height: 50.0,
+                          minWidth:150,
                           color:AppColors.indigo700,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -195,18 +198,17 @@ class _SubjectFieldState extends State<SubjectField> {
                           ),
                           onPressed: () async {
                             if(_formKey.currentState.validate()){
-                             // AcademicClassModel newClass = AcademicClassModel(className: subject,yearId: widget.yearId);
+                              AcademicSubjectModel newSubject = AcademicSubjectModel(classId: classId,subjectName: subject);
                               try{
-                                //var response =  await createAcademicClass(newClass.toJson());
-                                // if(response["httpStatusCode"] == 201){
-                                //   String id = response["responseJson"]["data"]["id"];
-                                //   newClass.id = id;
-                                //   setState(() {
-                                //     academicClassModel.add(newClass);
-                                //   });
-                                //   Navigator.of(context).pop();
-                                // }
-                                Navigator.of(context).pop();
+                                var response =  await createAcademicSubject(newSubject.toJson());
+                                if(response["httpStatusCode"] == 201){
+                                  String id = response["responseJson"]["data"]["id"];
+                                  newSubject.id = id;
+                                  setState(() {
+                                    academicSubjectModel.add(newSubject);
+                                  });
+                                  Navigator.of(context).pop();
+                                }
                               }
                               catch(error){
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -258,14 +260,69 @@ class _SubjectFieldState extends State<SubjectField> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('${listOfSubjects[index].subjectName}',style: TextStyle(
-                                fontFamily: 'ProductSans',
-                                fontSize: 30,
-                                fontWeight: FontWeight.normal,
-                                color: AppColors.textColorBlack
-                            ),),
+                            // Text('${listOfSubjects[index].subjectName}',style: TextStyle(
+                            //     fontFamily: 'ProductSans',
+                            //     fontSize: 30,
+                            //     fontWeight: FontWeight.normal,
+                            //     color: AppColors.textColorBlack
+                            // ),),
+                            Container(
+                              width: 170,
+                              height: 55,
+                              padding: EdgeInsets.only(left: 10,top: 5),
+                              decoration:  clickedEditIndex == index ? BoxDecoration(
+                                border:Border.all(
+                                  color: AppColors.indigo700, //                   <--- border color
+                                  width: 2.0,
+                                ),
+                              ):BoxDecoration(),
+                              child: EditableText(
+                                cursorHeight: 40,
+                                autofocus: isEditable,
+                                readOnly: clickedEditIndex != index,
+                                cursorColor: AppColors.indigo700,
+                                style: TextStyle(
+                                    fontFamily: 'ProductSans',
+                                    color: AppColors.textColorBlack,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.normal,
+                                ),
+                                focusNode: FocusNode(),
+                                backgroundCursorColor: AppColors.blackeyGray,
+                                controller: TextEditingController(text:"${listOfSubjects[index].subjectName}"),
+
+                                onSubmitted: (value) async{
+                                  try{
+                                    AcademicSubjectModel newSubject = AcademicSubjectModel(classId: classId,subjectName: value,);
+                                    var response = await updateAcademicSubjects(listOfSubjects[index].id,newSubject .toJson());
+                                    newSubject.id = listOfSubjects[index].id;
+                                    setState(() {
+                                      academicSubjectModel.removeAt(index);
+                                      academicSubjectModel.insert(index, newSubject);
+                                      clickedEditIndex = null;
+                                    });
+
+                                  }
+                                  catch(error){
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Something went wrong!'),
+                                        ));
+                                  }
+                                },
+
+                              ),
+                            ),
                             Row(children: [
-                              Icon(Icons.edit,size: 30,),
+                              InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    clickedEditIndex = index;
+                                    isEditable = true;
+                                    isReadOnly = false;
+                                  });
+                                },
+                                  child: Icon(Icons.edit,size: 30,)),
                               SizedBox(width: 50,),
                               InkWell(
                                 onTap: ()async{

@@ -55,6 +55,14 @@ class _ManageClassPageState extends State<ManageClassPage> {
                             ],
                           ),
                         ),
+                        // OverflowBar(
+                        //   spacing: 100,
+                        //   overflowSpacing: 20,
+                        //   children: [
+                        //     SubjectField(),
+                        //     StudentField(),
+                        //   ],
+                        // ),
                         SizedBox(height: 50,),
 
                         SizedBox(height: 20,),
