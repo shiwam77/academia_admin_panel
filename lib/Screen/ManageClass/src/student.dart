@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Model/academic_student_model.dart';
+import 'package:academia_admin_panel/Model/user_model.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/ApiEndPoint/student_api.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/src/widge.dart';
@@ -26,6 +27,34 @@ class _StudentFieldState extends State<StudentField> {
   String preClassId;
   List<AcademicStudentModel> academicStudentModel =[];
   final _formKey = GlobalKey<FormState>();
+  Uint8List bytesFromPicker;
+  String firstName;
+  String middleName;
+  String lastName;
+  String rollNo;
+  String fatherName;
+  String motherName;
+  String motherContact;
+  String fatherContact;
+  String motherDesignation;
+  String fatherDesignation;
+  String password;
+  String confirmPassword;
+  String address;
+  String emailAddress;
+  String studentID;
+  String dateOfBirth = DateTime.now().toString();
+  String contact;
+  String gender = 'Male';
+  String imageUrl;
+  String imagePath;
+
+  List <String> getGender = [
+    'Male',
+    'Female',
+    'Other',
+  ] ;
+  DateTime currentDateTime = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,7 +100,7 @@ class _StudentFieldState extends State<StudentField> {
               child: Consumer<ClassNotifier>(
                  builder: (context,classNotifier,child){
                  classId = classNotifier.getModelId();
-                  print("classId = $classId");
+
                    return  BaseView<ManageStudentVm>(
                      loaderWidget: Center(child: CircularProgressIndicator()),
                      onVMReady: (ManageStudentVm vm){
@@ -134,7 +163,7 @@ class _StudentFieldState extends State<StudentField> {
                              Row(children: [
                                InkWell(
                                  onTap: ()async{
-                                   await editStudentInput(context,academicStudentModel[index]);
+                                   await editStudentInput(context,academicStudentModel[index],index);
                                  },
                                    child: Icon(Icons.edit,size: 30,)),
                                SizedBox(width: 50,),
@@ -172,33 +201,7 @@ class _StudentFieldState extends State<StudentField> {
      return Center(child: Text("No data"),);
    }
   addStudentInput(BuildContext context){
-    Uint8List bytesFromPicker;
-    String firstName;
-    String middleName;
-    String lastName;
-    String rollNo;
-    String fatherName;
-    String motherName;
-    String motherContact;
-    String fatherContact;
-    String motherDesignation;
-    String fatherDesignation;
-    String password;
-    String confirmPassword;
-    String address;
-    String emailAddress;
-    String studentID;
-    String dateOfBirth = DateTime.now().toString();
-    String contact;
-    String gender = 'Male';
-    String imageUrl;
-    String imagePath;
-    List <String> getGender = [
-      'Male',
-      'Female',
-      'Other',
-    ] ;
-    DateTime currentDateTime = DateTime.now();
+    int admissionNo = academicStudentModel.length + 1;
     return showPopupWindow(
       context,
       gravity: KumiPopupGravity.leftBottom,
@@ -264,7 +267,7 @@ class _StudentFieldState extends State<StudentField> {
                                 fontWeight: FontWeight.bold
                             ),),
                           Spacer(flex: 3,),
-                          Text("Admission No:   ${academicStudentModel.length + 1}",
+                          Text("Admission No:   $admissionNo",
                             style: TextStyle(
                               fontFamily: 'ProductSans',
                               color: AppColors.white,
@@ -390,14 +393,9 @@ class _StudentFieldState extends State<StudentField> {
                                   ///First Name
                                   inputField(
                                     onChanged: (value){
-
-                                      studentState(() {
                                         firstName = value;
-                                      });
                                     },
-                                    validator: (value){
 
-                                    }
                                   ),
                                   SizedBox(height: 35,),
                                    ///Gender
@@ -424,9 +422,9 @@ class _StudentFieldState extends State<StudentField> {
                                             color: Colors.transparent,
                                           ),
                                           onChanged: (String data) {
-                                            studentState(() {
-                                              gender = data;
-                                            });
+                                             studentState(() {
+                                               gender = data;
+                                             });
                                           },
                                           items: getGender.map<DropdownMenuItem<String>>((String value) {
                                             return DropdownMenuItem<String>(
@@ -450,18 +448,18 @@ class _StudentFieldState extends State<StudentField> {
                                   inputField(
                                     onChanged: (value){
                                      contact= value;
-                                     studentState(() {
+
                                        contact= value;
-                                     });
+
                                   },),
                                   SizedBox(height: 35,),
                                   ///Email
                                   inputField(
                                    onChanged: (value){
 
-                                     studentState(() {
+
                                        emailAddress = value;
-                                     });
+
                                    }
                                   ),
                                   SizedBox(height: 35,),
@@ -514,9 +512,9 @@ class _StudentFieldState extends State<StudentField> {
                                   ///MiddleNAme
                                   inputField(
                                     onChanged: (value){
-                                     studentState(() {
+
                                        middleName = value;
-                                     });
+
                                     },
                                   ),
                                   SizedBox(height: 35,),
@@ -568,9 +566,9 @@ class _StudentFieldState extends State<StudentField> {
                                   ///Address
                                    inputField(
                                      onChanged: (value){
-                                       studentState(() {
+
                                          address = value;
-                                       });
+
 
                                      },
                                    ),
@@ -578,9 +576,9 @@ class _StudentFieldState extends State<StudentField> {
                                   ///Password
                                    inputField(
                                      onChanged: (value){
-                                       studentState(() {
+
                                         password = value;
-                                      });
+
                                      },
                                    ),
                                   SizedBox(height: 35,),
@@ -633,18 +631,18 @@ class _StudentFieldState extends State<StudentField> {
                                   /// LastName
                                   inputField(
                                     onChanged: (value){
-                                     studentState(() {
+
                                        lastName  = value;
-                                     });
+
                                     },
                                   ),
                                   SizedBox(height: 35,),
                                   ///RollNo
                                   inputField(
                                     onChanged: (value){
-                                      studentState(() {
+
                                         rollNo = value;
-                                      });
+
 
 
                                     },
@@ -653,19 +651,19 @@ class _StudentFieldState extends State<StudentField> {
                                   ///StudentId
                                   inputField(
                                     onChanged: (value){
-                                      studentState(() {
+
                                         studentID = value;
-                                        print(studentID);
-                                      });
+
+
                                     },
                                   ),
                                   SizedBox(height: 35,),
                                   ///ConfirmPassword
                                   inputField(
                                     onChanged: (value){
-                                    studentState(() {
+
                                       confirmPassword = value;
-                                    });
+
                                     },
                                   ),
                                   SizedBox(height: 35,),
@@ -728,26 +726,26 @@ class _StudentFieldState extends State<StudentField> {
                                       /// father NAme
                                       inputField(width: 380,
                                       onChanged: (value){
-                                        studentState(() {
+
                                           fatherName = value;
-                                        });
+
                                       }),
                                       SizedBox(height: 35,),
                                       /// father contact
                                       inputField(width: 300,
                                           onChanged: (value){
 
-                                            studentState(() {
+
                                               fatherContact = value;
-                                            });
+
                                           }),
                                       SizedBox(height: 35,),
                                       ///fatherDesignation
                                       inputField(width: 300,
                                           onChanged: (value){
-                                            studentState(() {
+
                                               fatherDesignation = value;
-                                            });
+
 
                                           }),
                                       SizedBox(height: 35,),
@@ -790,25 +788,25 @@ class _StudentFieldState extends State<StudentField> {
                                     children: [
                                       inputField(width: 380,
                                           onChanged: (value){
-                                            studentState(() {
+
                                               motherName = value;
-                                            });
+
 
                                           }),
                                       SizedBox(height: 35,),
                                       inputField(width: 300,
                                           onChanged: (value){
-                                            studentState(() {
+
                                               motherContact = value;
-                                            });
+
 
                                           }),
                                       SizedBox(height: 35,),
                                       inputField(width: 300,
                                           onChanged: (value){
-                                            studentState(() {
+
                                               motherDesignation = value;
-                                            });
+
 
                                           }),
                                       SizedBox(height: 35,),
@@ -868,30 +866,46 @@ class _StudentFieldState extends State<StudentField> {
                                     motherName: motherName,
                                     motherContact: motherContact,
                                     motherDesignation: motherDesignation,
+                                    admissionNo: admissionNo,
+                                    studentID: studentID
                                   );
-                                  print(newStudent.fatherName);
-                                  var response = await createAcademicStudent(newStudent.toJson());
-                                  print("responce $response");
-                                  if(response["httpStatusCode"] == 201){
-                                    String id = response["responseJson"]["data"]["id"];
-                                    newStudent.id = id;
-                                    setState(() {
-                                      academicStudentModel.add(newStudent);
-                                    });
-                                    Navigator.of(context).pop();
+                                   Map<String,String> user ={
+                                                            "email":emailAddress,
+                                                            "password":password,
+                                                            "passwordConfirm":confirmPassword,
+                                                            "name":"$firstName $middleName $lastName",
+                                                            "userType":"user"
+                                                          };
+                                  var studentAsUserResponse = await createStudentAsUser(user);
+                                  if(studentAsUserResponse["httpStatusCode"] == 201){
+
+                                    var user = GetUserAuth.fromJson(studentAsUserResponse["responseJson"]);
+                                    print(user.userId);
+                                    newStudent.studentAsUserId = user.userId;
+                                    var response = await createAcademicStudent(newStudent.toJson());
+                                    if(response["httpStatusCode"] == 201){
+                                      String id = response["responseJson"]["data"]["id"];
+                                      newStudent.id = id;
+                                      setState(() {
+                                        academicStudentModel.add(newStudent);
+                                      });
+                                      Navigator.of(context).pop();
+                                    }
+                                    else {
+                                      String message = response["responseJson"]['message'];
+                                      showToast(context, message);
+                                    }
                                   }
-                                  else if(response["httpStatusCode"] == 500){
-                                    String message = response["responseJson"]['message'];
+                                  else {
+                                    String message = studentAsUserResponse["responseJson"]['message'];
                                     showToast(context, message);
                                   }
                               }
                               catch(error){
                                 if (error is ApiError) {
                                   logger.e("Api Error: ${error.toString()}");
-                                  print(error);
+
                                 } else {
-                                  // logCrashlyticsError(error, stacktrace: stackTrace);
-                                  // reportErrorToSentry(error, stacktrace: stackTrace);
                                   showToast(context, 'Something went wrong!');
                                 }
 
@@ -929,34 +943,34 @@ class _StudentFieldState extends State<StudentField> {
 
   }
 
-  editStudentInput(BuildContext context, AcademicStudentModel student){
+  editStudentInput(BuildContext context, AcademicStudentModel student,int index){
     Uint8List bytesFromPicker;
     String firstName = student.firstName;
     String middleName = student.middleName;
-    String lastName;
-    String rollNo;
-    String fatherName;
-    String motherName;
-    String motherContact;
-    String fatherContact;
-    String motherDesignation;
-    String fatherDesignation;
-    String password;
-    String confirmPassword;
-    String address;
-    String emailAddress;
-    String studentID;
-    String dateOfBirth = DateTime.now().toString();
-    String contact;
-    String gender = 'Male';
-    String imageUrl;
-    String imagePath;
+    String lastName = student.lastName;
+    String rollNo = student.rollNo;
+    String fatherName = student.fatherName;
+    String motherName =  student.motherName;
+    String motherContact =  student.motherContact;
+    String fatherContact =  student.fatherContact;
+    String motherDesignation =  student.motherDesignation;
+    String fatherDesignation =  student.fatherDesignation;
+    String password =  student.password;
+    String confirmPassword = student.password;
+    String address  =  student.address;
+    String emailAddress =  student.email;
+    String studentID = student.studentID;
+    String contact =  student.contact;
+    String gender=  student.gender;
+    String imageUrl =  student.imageUrl;
+    int admissionNo = student.admissionNo;
     List <String> getGender = [
       'Male',
       'Female',
       'Other',
     ] ;
-    DateTime currentDateTime = DateTime.now();
+
+    DateTime currentDateTime = DateTime.parse(student.dateOfBirth);
     return showPopupWindow(
       context,
       gravity: KumiPopupGravity.leftBottom,
@@ -976,7 +990,7 @@ class _StudentFieldState extends State<StudentField> {
       childFun: (pop) {
         return  StatefulBuilder(
             key: GlobalKey(),
-            builder: (context,StateSetter studentState){
+            builder: (context,StateSetter editStudentState){
               return  Container(
                 height: MediaQuery.of(context).size.height * .8,
                 width:MediaQuery.of(context).size.width * .8,
@@ -1022,7 +1036,7 @@ class _StudentFieldState extends State<StudentField> {
                                     fontWeight: FontWeight.bold
                                 ),),
                               Spacer(flex: 3,),
-                              Text("Admission No:   ${academicStudentModel.length + 1}",
+                              Text("Admission No:   $admissionNo",
                                 style: TextStyle(
                                     fontFamily: 'ProductSans',
                                     color: AppColors.white,
@@ -1053,7 +1067,7 @@ class _StudentFieldState extends State<StudentField> {
                                 await ImagePickerWeb.getImage(outputType: ImageType.bytes);
 
                                 if (bytesPicker != null) {
-                                  studentState(() {
+                                  editStudentState(() {
                                     bytesFromPicker = bytesPicker;
                                   });
 
@@ -1146,13 +1160,10 @@ class _StudentFieldState extends State<StudentField> {
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
                                       ///First Name
-                                      inputField(
-                                        initialText: student.firstName,
+                                      editInputField(
+                                        initialText: firstName,
                                           onChanged: (value){
-
-                                            studentState(() {
                                               firstName = value;
-                                            });
                                           },
                                           validator: (value){
 
@@ -1183,7 +1194,7 @@ class _StudentFieldState extends State<StudentField> {
                                                 color: Colors.transparent,
                                               ),
                                               onChanged: (String data) {
-                                                studentState(() {
+                                                editStudentState(() {
                                                   gender = data;
                                                 });
                                               },
@@ -1206,23 +1217,23 @@ class _StudentFieldState extends State<StudentField> {
                                       ),
                                       SizedBox(height: 35,),
                                       ///Contact
-                                      inputField(
+                                      editInputField(
                                         initialText: student.contact,
                                         onChanged: (value){
                                           contact= value;
-                                          studentState(() {
+
                                             contact= value;
-                                          });
+
                                         },),
                                       SizedBox(height: 35,),
                                       ///Email
-                                      inputField(
-                                          initialText: student.email,
+                                      editInputField(
+                                          initialText: emailAddress,
                                           onChanged: (value){
 
-                                            studentState(() {
+
                                               emailAddress = value;
-                                            });
+
                                           }
                                       ),
                                       SizedBox(height: 35,),
@@ -1273,12 +1284,12 @@ class _StudentFieldState extends State<StudentField> {
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
                                       ///MiddleNAme
-                                      inputField(
-                                        initialText: student.middleName,
+                                      editInputField(
+                                        initialText: middleName,
                                         onChanged: (value){
-                                          studentState(() {
+
                                             middleName = value;
-                                          });
+
                                         },
                                       ),
                                       SizedBox(height: 35,),
@@ -1299,7 +1310,7 @@ class _StudentFieldState extends State<StudentField> {
                                               currentDate:DateTime.now(),
                                             );
                                             if(currentDateTime  != null){
-                                              studentState(() {
+                                              editStudentState(() {
 
                                               });
                                             }
@@ -1328,23 +1339,23 @@ class _StudentFieldState extends State<StudentField> {
                                       ),
                                       SizedBox(height: 35,),
                                       ///Address
-                                      inputField(
-                                        initialText: student.address,
+                                      editInputField(
+                                        initialText: address,
                                         onChanged: (value){
-                                          studentState(() {
+
                                             address = value;
-                                          });
+
 
                                         },
                                       ),
                                       SizedBox(height: 35,),
                                       ///Password
-                                      inputField(
-                                        initialText: student.password,
+                                      editInputField(
+                                        initialText: password,
                                         onChanged: (value){
-                                          studentState(() {
+
                                             password = value;
-                                          });
+
                                         },
                                       ),
                                       SizedBox(height: 35,),
@@ -1395,45 +1406,44 @@ class _StudentFieldState extends State<StudentField> {
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
                                       /// LastName
-                                      inputField(
-                                        initialText: student.lastName,
+                                      editInputField(
+                                        initialText: lastName,
                                         onChanged: (value){
-                                          studentState(() {
+
                                             lastName  = value;
-                                          });
+
                                         },
                                       ),
                                       SizedBox(height: 35,),
                                       ///RollNo
-                                      inputField(
-                                        initialText: student.rollNo,
+                                      editInputField(
+                                        initialText: rollNo,
                                         onChanged: (value){
-                                          studentState(() {
+
                                             rollNo = value;
-                                          });
+
 
 
                                         },
                                       ),
                                       SizedBox(height: 35,),
                                       ///StudentId
-                                      inputField(
-                                        //initialText: student.,
+                                      editInputField(
+                                        initialText: studentID,
                                         onChanged: (value){
-                                          studentState(() {
+
                                             studentID = value;
-                                            print(studentID);
-                                          });
+
                                         },
                                       ),
                                       SizedBox(height: 35,),
                                       ///ConfirmPassword
-                                      inputField(
-                                        initialText: student.password,
+                                      editInputField(
+                                        initialText: confirmPassword,
                                         onChanged: (value){
-                                          studentState(() {
+
                                             confirmPassword = value;
-                                          });
+
                                         },
                                       ),
                                       SizedBox(height: 35,),
@@ -1494,32 +1504,32 @@ class _StudentFieldState extends State<StudentField> {
                                       textBaseline: TextBaseline.alphabetic,
                                       children: [
                                         /// father NAme
-                                        inputField(width: 380,
-                                            initialText: student.fatherName,
+                                        editInputField(width: 380,
+                                            initialText: fatherName,
                                             onChanged: (value){
                                               fatherName = value;
-                                              studentState(() {
+
                                                 fatherName = value;
-                                              });
+
                                             }),
                                         SizedBox(height: 35,),
                                         /// father contact
-                                        inputField(width: 300,
-                                            initialText: student.fatherContact,
+                                        editInputField(width: 300,
+                                            initialText: fatherContact,
                                             onChanged: (value){
 
-                                              studentState(() {
+
                                                 fatherContact = value;
-                                              });
+
                                             }),
                                         SizedBox(height: 35,),
                                         ///fatherDesignation
-                                        inputField(width: 300,
-                                            initialText: student.fatherDesignation,
+                                        editInputField(width: 300,
+                                            initialText: fatherDesignation,
                                             onChanged: (value){
-                                              studentState(() {
+
                                                 fatherDesignation = value;
-                                              });
+
 
                                             }),
                                         SizedBox(height: 35,),
@@ -1561,32 +1571,32 @@ class _StudentFieldState extends State<StudentField> {
                                       textBaseline: TextBaseline.alphabetic,
                                       children: [
                                         ///motherName
-                                        inputField(width: 380,
-                                            initialText: student.motherName,
+                                        editInputField(width: 380,
+                                            initialText: motherName,
                                             onChanged: (value){
-                                              studentState(() {
+
                                                 motherName = value;
-                                              });
+
 
                                             }),
                                         SizedBox(height: 35,),
                                         ///mother contact
-                                        inputField(width: 300,
-                                            initialText: student.motherContact,
+                                        editInputField(width: 300,
+                                            initialText: motherContact,
                                             onChanged: (value){
-                                              studentState(() {
+
                                                 motherContact = value;
-                                              });
+
 
                                             }),
                                         SizedBox(height: 35,),
                                         ///motherDesignation
-                                        inputField(width: 300,
-                                            initialText: student.motherDesignation,
+                                        editInputField(width: 300,
+                                            initialText: motherDesignation,
                                             onChanged: (value){
-                                              studentState(() {
+
                                                 motherDesignation = value;
-                                              });
+
 
                                             }),
                                         SizedBox(height: 35,),
@@ -1630,8 +1640,8 @@ class _StudentFieldState extends State<StudentField> {
                                     AcademicStudentModel newStudent = AcademicStudentModel(
                                       classId: classId,
                                       firstName: firstName,
-                                      middleName: middleName,
-                                      lastName: lastName,
+                                      middleName: middleName ??"",
+                                      lastName: lastName ?? "",
                                       gender: gender,
                                       dateOfBirth: currentDateTime.toString(),
                                       rollNo: rollNo,
@@ -1645,34 +1655,47 @@ class _StudentFieldState extends State<StudentField> {
                                       fatherDesignation: fatherDesignation,
                                       motherName: motherName,
                                       motherContact: motherContact,
+                                      studentID: studentID,
                                       motherDesignation: motherDesignation,
+                                      studentAsUserId: student.studentAsUserId
                                     );
-                                    print(newStudent.fatherName);
-                                    var response = await createAcademicStudent(newStudent.toJson());
-                                    print("responce $response");
-                                    if(response["httpStatusCode"] == 201){
-                                      String id = response["responseJson"]["data"]["id"];
-                                      newStudent.id = id;
-                                      setState(() {
-                                        academicStudentModel.add(newStudent);
-                                      });
-                                      Navigator.of(context).pop();
-                                    }
-                                    else if(response["httpStatusCode"] == 500){
-                                      String message = response["responseJson"]['message'];
-                                      showToast(context, message);
-                                    }
+                                    Map<String,String> user ={
+                                      "email":emailAddress,
+                                      "password":password,
+                                      "passwordConfirm":password,
+                                      "name":"$firstName $middleName $lastName",
+                                      "userType":"user"
+                                    };
+                                    var studentAsUserResponse = await updateStudentAsUser(student.studentAsUserId,user);
+                                    print("user updated");
+                                      if(studentAsUserResponse["httpStatusCode"] == 200){
+                                        var response = await updateAcademicStudent(student.id,newStudent.toJson());
+
+                                        if(response["httpStatusCode"] == 200){
+                                          String id = response["responseJson"]["data"]["id"];
+                                          newStudent.id = id;
+                                          print(id);
+                                          editStudentState(() {
+                                            setState(() {
+                                              academicStudentModel.removeAt(index);
+                                              academicStudentModel.insert(index, newStudent);
+                                            });
+
+                                          });
+                                          Navigator.of(context).pop();
+                                        }
+                                        else if(response["httpStatusCode"] == 500){
+                                          String message = response["responseJson"]['message'];
+                                          showToast(context, message);
+                                        }
+                                     }
+                                      else{
+                                        String message = studentAsUserResponse["responseJson"]['message'];
+                                        showToast(context, message);
+                                      }
                                   }
                                   catch(error){
-                                    if (error is ApiError) {
-                                      logger.e("Api Error: ${error.toString()}");
-                                      print(error);
-                                    } else {
-                                      // logCrashlyticsError(error, stacktrace: stackTrace);
-                                      // reportErrorToSentry(error, stacktrace: stackTrace);
                                       showToast(context, 'Something went wrong!');
-                                    }
-
                                   }
 
 
@@ -1685,7 +1708,7 @@ class _StudentFieldState extends State<StudentField> {
                                     borderRadius: BorderRadius.circular(12),
                                     color: AppColors.blue,
                                   ),
-                                  child: Text("Save",style:
+                                  child: Text("Update",style:
                                   TextStyle(
                                       fontFamily: 'ProductSans',
                                       color: AppColors.white,
@@ -1707,7 +1730,7 @@ class _StudentFieldState extends State<StudentField> {
 
   }
 
-  Widget inputField({Function onChanged,double width,double height,Function validator,String initialText}){
+  Widget editInputField({Function onChanged,double width,double height,Function validator,String initialText}){
     width = width == null ?203:width;
     height = height == null ? 27:height;
     return SizedBox(
@@ -1715,6 +1738,38 @@ class _StudentFieldState extends State<StudentField> {
       width: width,
       child: TextField(
         controller: TextEditingController(text: initialText),
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: AppColors.white100,
+          focusColor: AppColors.white100,
+          hoverColor: AppColors.white100,
+          contentPadding: EdgeInsets.only(top: 5,left: 10),
+          border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+              borderSide: BorderSide(color: AppColors.transparent)
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+            borderSide: const BorderSide(color: AppColors.transparent, width: 0.0),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+            borderSide: const BorderSide(color: AppColors.transparent, width: 0.0),
+          ),
+        ),
+        // validator: validator,
+      ),
+    );
+  }
+  Widget inputField({Function onChanged,double width,double height,Function validator}){
+    width = width == null ?203:width;
+    height = height == null ? 27:height;
+    return SizedBox(
+      height: height,
+      width: width,
+      child: TextField(
+
         onChanged: onChanged,
         decoration: InputDecoration(
           filled: true,

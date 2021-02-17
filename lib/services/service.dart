@@ -51,14 +51,14 @@ Future getHttpServiceFuture(String requestUrl, responseSerializer,
     var responseJson = httpResponse.data, responseObject;
 
     if(returnRaw){
-      print(responseObject);
+
       return responseJson;
     }
 
     if (isJson) {
       try {
         responseObject = responseSerializer(responseJson);
-        print(responseObject);
+
       } catch (error, stackTrace) {
         // Error HTTP Code 5XX
         serviceErrorLogger(error, stackTrace);
@@ -121,7 +121,7 @@ Future postHttpServiceFuture(String requestUrl, responseSerializer,
 
   } on DioError catch (error, stackTrace) {
     dioError = error;
-    print("error ${error.error}");
+
     serviceErrorLogger(error, stackTrace);
     if (dioError.response != null) {
       httpResponse = dioError.response;

@@ -4,6 +4,7 @@ import 'package:academia_admin_panel/Screen/Api/api_end_point.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/dashboard.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:academia_admin_panel/error.dart';
+import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:search_page/search_page.dart';
@@ -105,11 +106,16 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                       try{
                         var response =  await createAcademicYear(newYear.toJson());
                         if(response["httpStatusCode"] == 201){
+                          newYear.id = response["responseJson"]["data"]["id"];
                           setState(() {
                             getListOfYears.add(newYear);
                             print(getListOfYears.length);
                             _yearEditingController.clear();
                           });
+                        }
+                        else if(response["httpStatusCode"] == 500){
+                          String message = response["responseJson"]['message'];
+                          showToast(context, message);
                         }
                       }
                       catch(error){

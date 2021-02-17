@@ -5,6 +5,7 @@ import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.
 import 'package:academia_admin_panel/Screen/ManageClass/src/widge.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_subject_vm.dart';
 import 'package:academia_admin_panel/error.dart';
+import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:academia_admin_panel/vm_service/base_view.dart';
 import 'package:flutter/material.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
@@ -29,7 +30,7 @@ class _SubjectFieldState extends State<SubjectField> {
     return Consumer<ClassNotifier>(
         builder: (context,classNotifier,child){
           classId = classNotifier.getModelId();
-          print("classId = $classId");
+
           return Container(
             height: 704,
             width: MediaQuery.of(context).size.width * .39,
@@ -295,13 +296,19 @@ class _SubjectFieldState extends State<SubjectField> {
                                   try{
                                     AcademicSubjectModel newSubject = AcademicSubjectModel(classId: classId,subjectName: value,);
                                     var response = await updateAcademicSubjects(listOfSubjects[index].id,newSubject .toJson());
-                                    newSubject.id = listOfSubjects[index].id;
-                                    setState(() {
-                                      academicSubjectModel.removeAt(index);
-                                      academicSubjectModel.insert(index, newSubject);
-                                      clickedEditIndex = null;
-                                    });
-
+                                    print("updated subject: $response");
+                                    if(response["httpStatusCode"] == 200){
+                                      newSubject.id = listOfSubjects[index].id;
+                                      setState(() {
+                                        academicSubjectModel.removeAt(index);
+                                        academicSubjectModel.insert(index, newSubject);
+                                        clickedEditIndex = null;
+                                      });
+                                    }
+                                    else if(response["httpStatusCode"] == 500){
+                                      String message = response["responseJson"]['message'];
+                                      showToast(context, message);
+                                    }
                                   }
                                   catch(error){
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -333,6 +340,10 @@ class _SubjectFieldState extends State<SubjectField> {
                                      setState(() {
                                        listOfSubjects.removeAt(index);
                                      });
+                                   }
+                                   else{
+                                     String message = response["responseJson"]['message'];
+                                     showToast(context, message);
                                    }
                                   }
                                   catch(error,stacktrace){

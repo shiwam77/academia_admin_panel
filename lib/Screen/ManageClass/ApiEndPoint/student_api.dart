@@ -15,6 +15,19 @@ Future createAcademicStudent(Map academicStudent) async {
   return postHttpServiceFuture(requestUrl,(json) => ApiResponse.fromJson(json),postData: academicStudent,returnRaw: true);
 }
 
+Future createStudentAsUser(Map academicStudent) async {
+  String requestUrl = AuthApi.signUp;
+  return postHttpServiceFuture(requestUrl,(json) => ApiResponse.fromJson(json),postData: academicStudent,returnRaw: true);
+}
+
+Future deleteStudentAsUser(String id) async {
+  String requestUrl =  AuthApi.deleteUser.replaceAll('{:Id}', id);
+
+  return deleteHttpServiceFuture(
+      requestUrl, (json) => ApiResponse.fromJson(json),returnRaw: true
+  );
+}
+
 Future deleteAcademicStudent(String id) async {
   String requestUrl =  AcademicStudentApi.deleteStudent.replaceAll('{:Id}', id);
 
@@ -25,6 +38,13 @@ Future deleteAcademicStudent(String id) async {
 
 Future updateAcademicStudent(String id,Map updatedStudent) async {
   String requestUrl =  AcademicStudentApi.updateStudent.replaceAll('{:Id}', id);
+
+  return patchHttpServiceFuture(
+      requestUrl, (json) => ApiResponse.fromJson(json),postData: updatedStudent,returnRaw: true
+  );
+}
+Future updateStudentAsUser(String id,Map updatedStudent) async {
+  String requestUrl =  AuthApi.updateUser.replaceAll('{:Id}', id);
 
   return patchHttpServiceFuture(
       requestUrl, (json) => ApiResponse.fromJson(json),postData: updatedStudent,returnRaw: true

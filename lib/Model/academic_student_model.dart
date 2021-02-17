@@ -37,7 +37,10 @@ class AcademicStudentModel{
    String gender;
    String imageUrl;
    String classId;
-  AcademicStudentModel({this.id,this.classId,this.email,this.password,this.address,this.confirmPassword,this.contact,this.dateOfBirth,this.emailAddress,this.fatherContact
+   String studentID;
+   int admissionNo;
+   String studentAsUserId;
+  AcademicStudentModel({this.studentAsUserId,this.studentID,this.admissionNo,this.id,this.classId,this.email,this.password,this.address,this.confirmPassword,this.contact,this.dateOfBirth,this.emailAddress,this.fatherContact
   ,this.fatherDesignation,this.fatherName,this.firstName,this.gender,this.imageUrl,this.lastName,this.middleName,this.motherContact,this.motherDesignation,this.motherName
   ,this.rollNo,});
 

@@ -43,18 +43,19 @@ class ManageClassVm extends BaseVM{
         academicClassModel = _getClassModel.data;
         return true;
       }
+      return true;
+    }
+    else if(_getClassModel.status == "fail"){
+      String message = response["responseJson"]['message'];
+      setErrorMessage(message);
       return false;
     }
     return false;
     }
     catch (error, stackTrace) {
       setErrorMessage("Something went wrong");
-      if (error is ApiError) {
-        logger.e("Api Error: ${error.toString()}");
-      } else {
         // logCrashlyticsError(error, stacktrace: stackTrace);
         // reportErrorToSentry(error, stacktrace: stackTrace);
-      }
       isError = true;
       return false;
     }

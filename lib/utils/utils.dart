@@ -61,6 +61,7 @@ Future<String> attemptSignUp({String email,String password,String passwordConfir
     "password":password,
     "passwordConfirm":passwordConfirm,
     "name":name,
+    "userType":"admin"
   };
   print(email);
 
@@ -82,6 +83,59 @@ Future<String> attemptSignUp({String email,String password,String passwordConfir
 
 }
 
+Future<bool> createUser({String email,String password,String passwordConfirm,String name}) async{
+  var dio = Dio();
+  Map<String,String> user ={
+    "email":email,
+    "password":password,
+    "passwordConfirm":passwordConfirm,
+    "name":name,
+    "userType":"user"
+  };
+  print(email);
+
+  print(AuthApi.signUp);
+  return await dio.post('${AuthApi.signUp}',data: user).then((response) {
+    print(response);
+    if(response.statusCode == 201 ){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }).catchError((error){
+    print(error);
+    return false;
+  });
+
+}
+
+Future<bool> updateUser({String email,String password,String passwordConfirm,String name}) async{
+  var dio = Dio();
+  Map<String,String> user ={
+    "email":email,
+    "password":password,
+    "passwordConfirm":passwordConfirm,
+    "name":name,
+    "userType":"user"
+  };
+  print(email);
+
+  print(AuthApi.signUp);
+  return await dio.post('${AuthApi.signUp}',data: user).then((response) {
+    print(response);
+    if(response.statusCode == 201 ){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }).catchError((error){
+    print(error);
+    return false;
+  });
+
+}
 String getAccessToken(){
   var token = window.localStorage.containsKey("token") ? window.localStorage["token"] : "";
   if(token != ""){
