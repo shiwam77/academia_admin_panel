@@ -174,27 +174,7 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                       suffixIcon: GestureDetector(
                           onTap: (){
                             print("searching...");
-                            showSearch(
-                              context: context,
-                              delegate: SearchPage<AcademicYearModel>(
-                                items: getListOfYears,
-                                searchLabel: 'Search people',
-                                suggestion: Center(
-                                  child: Text('Filter people by name, surname or age'),
-                                ),
-                                failure: Center(
-                                  child: Text('No person found :('),
-                                ),
-                                filter: (person) => [
-                                  person.year.toString()
-                                ],
-                                builder: (person) => ListTile(
-                                  title: Text(person.year.toString()),
-                                  subtitle: Text(person.year.toString()),
-                                  trailing: Text('${person.year.toString()} yo'),
-                                ),
-                              ),
-                            );
+
                             },
                           child: Icon(Icons.search_rounded,color: AppColors.indigo700,)),
                       border: OutlineInputBorder(
@@ -221,7 +201,7 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                 print("future");
                 if(snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null){
                   getIgYears = GetAcademicYear.fromJson(snapshot.data);
-                  if(getIgYears != null){
+                  if(getIgYears.data != null){
                     getListOfYears = getIgYears.data;
 
                     return yearListViewBuilder( getIgYears, getListOfYears,);

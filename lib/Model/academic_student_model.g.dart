@@ -39,7 +39,7 @@ AcademicStudentModel _$AcademicStudentModelFromJson(Map<String, dynamic> json) {
     confirmPassword: json['confirmPassword'] as String,
     contact: json['contact'] as String,
     dateOfBirth: json['dateOfBirth'] as String,
-    emailAddress: json['emailAddress'] as String,
+
     fatherContact: json['fatherContact'] as String,
     fatherDesignation: json['fatherDesignation'] as String,
     fatherName: json['fatherName'] as String,
@@ -76,7 +76,7 @@ Map<String, dynamic> _$AcademicStudentModelToJson(
       'password': instance.password,
       'confirmPassword': instance.confirmPassword,
       'address': instance.address,
-      'emailAddress': instance.emailAddress,
+
       'dateOfBirth': instance.dateOfBirth,
       'contact': instance.contact,
       'gender': instance.gender,

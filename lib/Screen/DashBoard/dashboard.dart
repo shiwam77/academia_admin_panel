@@ -1,4 +1,5 @@
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Screen/AcademicStudent/add_academic_student.dart';
 import 'package:academia_admin_panel/Screen/AddClass/manage_class.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/Notifier/screen_notifier.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/src/navigation_bar.dart';
@@ -137,7 +138,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                                 return ManageClassPage(widget.yearId);
                               }
                               else if(navIndex.getIndex() == 2){
-                                return AddStudent();
+                                return AddAcademicStudent(widget.yearId,widget.year);
                               }
                               return Login();
                             })),

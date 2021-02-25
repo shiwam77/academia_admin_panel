@@ -12,7 +12,18 @@ import 'package:flutter/material.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
 import 'package:provider/provider.dart';
 
-
+Widget _simplePopup() => PopupMenuButton<int>(
+  itemBuilder: (context) => [
+    PopupMenuItem(
+      value: 1,
+      child: Text("Edit"),
+    ),
+    PopupMenuItem(
+      value: 2,
+      child: Text("Delete"),
+    ),
+  ],
+);
 class ClassField extends StatefulWidget {
   final String yearId;
   ClassField(this.yearId);
@@ -160,47 +171,53 @@ class _ClassFieldState extends State<ClassField> {
               onTap: (){
                 setState(() {
                   classId = listOfClass[index].id;
+                  String className = listOfClass[index].className;
+                  print(className);
                   classNotifierProvider.setModelId(classId);
+                  classNotifierProvider.setClassName(className);
                   selectedIndex = index;
                 });
               },
               splashColor: Colors.white,
               hoverColor: Colors.white12,
-              child: Container(
-                width: 130,
-                height: 39,
-                margin: EdgeInsets.only(left: 15),
-                padding: EdgeInsets.only(left: 15),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  color:  selectedIndex == index ? AppColors.white100:AppColors.white,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${listOfClass[index].className}',
-                      style: TextStyle(
-                          fontFamily: 'ProductSans',
-                          color:  selectedIndex == index ? AppColors.textColorBlack:AppColors.textColorBlack,
-                          fontSize:25,
-                          fontWeight: selectedIndex == index ? FontWeight.w700 : FontWeight.normal
+              child: LimitedBox(
+                child: Container(
+                  height: 39,
+                  margin: EdgeInsets.only(left: 15),
+                  padding: EdgeInsets.only(left: 15),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                    color:  selectedIndex == index ? AppColors.white100:AppColors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('${listOfClass[index].className}',
+                        style: TextStyle(
+                            fontFamily: 'ProductSans',
+                            color:  selectedIndex == index ? AppColors.textColorBlack:AppColors.textColorBlack,
+                            fontSize:25,
+                            fontWeight: selectedIndex == index ? FontWeight.w700 : FontWeight.normal
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 39,
-                      child: PopupMenuButton(
-                        padding: EdgeInsets.zero,
-                        elevation: 0.0,
-                        icon: Icon(Icons.drag_indicator_sharp),
-                        // key: _menuKey,
-                        color: AppColors.white,
-                        onSelected: (selectedDropDownItem) async => handlePopUpChanged(selectedDropDownItem,listOfClass[index].id,index),
-                        itemBuilder: (BuildContext context) => buttons,
-                        //tooltip: "Tap me to select a number.",
-                      ),
-                    )
-                  ],
+                      SizedBox(
+                        height: 39,
+                        child:
+                        PopupMenuButton(
+                          padding: EdgeInsets.zero,
+                          elevation: 0.0,
+                          icon: Icon(Icons.adaptive.more),
+                          // key: _menuKey,
+                          color: AppColors.white,
+                          onSelected: (selectedDropDownItem) async => handlePopUpChanged(selectedDropDownItem,listOfClass[index].id,index),
+                          itemBuilder: (BuildContext context) => buttons,
+                          //tooltip: "Tap me to select a number.",
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

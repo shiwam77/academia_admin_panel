@@ -31,7 +31,7 @@ class AcademicStudentModel{
    String password;
    String confirmPassword;
    String address;
-   String emailAddress;
+
    String dateOfBirth;
    String contact;
    String gender;
@@ -40,7 +40,7 @@ class AcademicStudentModel{
    String studentID;
    int admissionNo;
    String studentAsUserId;
-  AcademicStudentModel({this.studentAsUserId,this.studentID,this.admissionNo,this.id,this.classId,this.email,this.password,this.address,this.confirmPassword,this.contact,this.dateOfBirth,this.emailAddress,this.fatherContact
+  AcademicStudentModel({this.studentAsUserId,this.studentID,this.admissionNo,this.id,this.classId,this.email,this.password,this.address,this.confirmPassword,this.contact,this.dateOfBirth,this.fatherContact
   ,this.fatherDesignation,this.fatherName,this.firstName,this.gender,this.imageUrl,this.lastName,this.middleName,this.motherContact,this.motherDesignation,this.motherName
   ,this.rollNo,});
 

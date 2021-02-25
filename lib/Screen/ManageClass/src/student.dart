@@ -24,6 +24,7 @@ class StudentField extends StatefulWidget {
 class _StudentFieldState extends State<StudentField> {
   int selectedIndex;
   String classId;
+  String className;
   String preClassId;
   List<AcademicStudentModel> academicStudentModel =[];
   final _formKey = GlobalKey<FormState>();
@@ -78,7 +79,12 @@ class _StudentFieldState extends State<StudentField> {
                 ),
                 InkWell(
                   onTap: () async{
-                    await addStudentInput(context);
+                    if(classId != null){
+                      await addStudentInput(context);
+                    }
+                    else{
+                    showToast(context, 'Class is not selected,Please select the class!');
+                    }
                   },
                   child: Container(
                     height: 30,
@@ -100,7 +106,7 @@ class _StudentFieldState extends State<StudentField> {
               child: Consumer<ClassNotifier>(
                  builder: (context,classNotifier,child){
                  classId = classNotifier.getModelId();
-
+                  className = classNotifier.getClassNAme();
                    return  BaseView<ManageStudentVm>(
                      loaderWidget: Center(child: CircularProgressIndicator()),
                      onVMReady: (ManageStudentVm vm){
@@ -142,9 +148,17 @@ class _StudentFieldState extends State<StudentField> {
                    child: InkWell(
 
                      onTap: () async{
-                       setState(() {
-                         selectedIndex = index;
-                       });
+                       try{
+                         await viewStudentInput(context,academicStudentModel[index]);
+                         setState(() {
+                           selectedIndex = index;
+
+                         });
+                       }
+                       catch(err){
+                         print(err);
+                       }
+
                      },
                      child: Container(
                        color:selectedIndex == index?AppColors.appBackgroundColor:AppColors.transparent ,
@@ -201,7 +215,7 @@ class _StudentFieldState extends State<StudentField> {
      return Center(child: Text("No data"),);
    }
   addStudentInput(BuildContext context){
-    int admissionNo = academicStudentModel.length + 1;
+      int admissionNo = academicStudentModel.length + 1;
     return showPopupWindow(
       context,
       gravity: KumiPopupGravity.leftBottom,
@@ -251,7 +265,7 @@ class _StudentFieldState extends State<StudentField> {
                       child: Row(
                         children: [
                           Spacer(flex: 1,),
-                          Text("Student ID:  $studentID",
+                          Text("Student ID:  ${studentID ?? ""}",
                             style: TextStyle(
                                 fontFamily: 'ProductSans',
                                 color: AppColors.white,
@@ -513,7 +527,7 @@ class _StudentFieldState extends State<StudentField> {
                                   inputField(
                                     onChanged: (value){
 
-                                       middleName = value;
+                                      middleName = value;
 
                                     },
                                   ),
@@ -1441,9 +1455,8 @@ class _StudentFieldState extends State<StudentField> {
                                       editInputField(
                                         initialText: confirmPassword,
                                         onChanged: (value){
-
+                                          confirmPassword = null;
                                             confirmPassword = value;
-
                                         },
                                       ),
                                       SizedBox(height: 35,),
@@ -1638,6 +1651,7 @@ class _StudentFieldState extends State<StudentField> {
                                 onTap: () async{
                                   try{
                                     AcademicStudentModel newStudent = AcademicStudentModel(
+                                      id: student.id,
                                       classId: classId,
                                       firstName: firstName,
                                       middleName: middleName ??"",
@@ -1657,24 +1671,23 @@ class _StudentFieldState extends State<StudentField> {
                                       motherContact: motherContact,
                                       studentID: studentID,
                                       motherDesignation: motherDesignation,
-                                      studentAsUserId: student.studentAsUserId
+                                      studentAsUserId: student.studentAsUserId,
+                                      admissionNo: student.admissionNo,
                                     );
-                                    Map<String,String> user ={
-                                      "email":emailAddress,
-                                      "password":password,
-                                      "passwordConfirm":password,
-                                      "name":"$firstName $middleName $lastName",
-                                      "userType":"user"
-                                    };
-                                    var studentAsUserResponse = await updateStudentAsUser(student.studentAsUserId,user);
-                                    print("user updated");
-                                      if(studentAsUserResponse["httpStatusCode"] == 200){
-                                        var response = await updateAcademicStudent(student.id,newStudent.toJson());
+                                    print(newStudent.toJson());
+                                    // Map<String,String> user ={
+                                    //   "email":emailAddress,
+                                    //   "password":password,
+                                    //   "passwordConfirm":confirmPassword,
+                                    //   "name":"$firstName $middleName $lastName",
+                                    //   "userType":"user"
+                                    // };
+                                    // var studentAsUserResponse = await updateStudentAsUser(student.studentAsUserId,user);
+                                    //   print("user updated");
+                                    //   if(studentAsUserResponse["httpStatusCode"] == 200){
+                                         var response = await updateAcademicStudent(student.id,newStudent.toJson());
 
                                         if(response["httpStatusCode"] == 200){
-                                          String id = response["responseJson"]["data"]["id"];
-                                          newStudent.id = id;
-                                          print(id);
                                           editStudentState(() {
                                             setState(() {
                                               academicStudentModel.removeAt(index);
@@ -1688,14 +1701,14 @@ class _StudentFieldState extends State<StudentField> {
                                           String message = response["responseJson"]['message'];
                                           showToast(context, message);
                                         }
-                                     }
-                                      else{
-                                        String message = studentAsUserResponse["responseJson"]['message'];
-                                        showToast(context, message);
-                                      }
+                                    // }
+                                    //   else{
+                                    //     String message = studentAsUserResponse["responseJson"]['message'];
+                                    //     showToast(context, message);
+                                    //   }
                                   }
                                   catch(error){
-                                      showToast(context, 'Something went wrong!');
+                                      showToast(context, '$error!');
                                   }
 
 
@@ -1795,4 +1808,470 @@ class _StudentFieldState extends State<StudentField> {
     );
   }
 
+
+  viewStudentInput(BuildContext context, AcademicStudentModel student){
+    Uint8List bytesFromPicker;
+    String firstName = student.firstName;
+    String middleName = student.middleName ?? "";
+    String lastName = student.lastName ?? "";
+    String rollNo = student.rollNo ?? "";
+    String fatherName = student.fatherName ?? "";
+    String motherName =  student.motherName ?? "";
+    String motherContact =  student.motherContact ?? "";
+    String fatherContact =  student.fatherContact ?? "";
+    String motherDesignation =  student.motherDesignation ?? "";
+    String fatherDesignation =  student.fatherDesignation ?? "";
+    String password =  student.password ?? "";
+    String confirmPassword = student.password ?? "";
+    String address  =  student.address ??"";
+    String emailAddress =  student.email ??"";
+    String studentID = student.studentID ??"";
+    String contact =  student.contact ?? "";
+    String gender=  student.gender ?? "";
+    String imageUrl =  student.imageUrl ?? "";
+    int admissionNo = student.admissionNo ?? 0;
+    List <String> getGender = [
+      'Male',
+      'Female',
+      'Other',
+    ] ;
+
+    DateTime currentDateTime = DateTime.parse(student.dateOfBirth);
+    return showPopupWindow(
+      context,
+      gravity: KumiPopupGravity.leftBottom,
+      bgColor: Colors.grey.withOpacity(0.5),
+      clickOutDismiss: false,
+      clickBackDismiss: true,
+      customAnimation: false,
+      customPop: false,
+      customPage: false,
+      //targetRenderBox: (btnKey.currentContext.findRenderObject() as RenderBox),
+      //childSize: null,
+      underStatusBar: false,
+      underAppBar: true,
+      offsetX: 200,
+      offsetY: 50,
+      duration: Duration(milliseconds: 200),
+      childFun: (pop) {
+        return  Container(
+          key: GlobalKey(),
+          height: MediaQuery.of(context).size.height * .8,
+          width:MediaQuery.of(context).size.width * .8,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: AppColors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xff707070).withOpacity(.4),
+                  offset: Offset(0, 0),
+                  blurRadius: 6,
+                )
+              ]),
+
+          child:  Stack(
+            children: [
+              Container(
+                height: 75,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),),
+                  color: AppColors.indigo700,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    children: [
+                      Spacer(flex: 1,),
+                      Text("Student ID:  $studentID",
+                        style: TextStyle(
+                            fontFamily: 'ProductSans',
+                            color: AppColors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                        ),),
+                      Spacer(flex: 4,),
+                      Text("Student Form",
+                        style: TextStyle(
+                            fontFamily: 'ProductSans',
+                            color: AppColors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold
+                        ),),
+                      Spacer(flex: 3,),
+                      Text("Admission No:   $admissionNo",
+                        style: TextStyle(
+                            fontFamily: 'ProductSans',
+                            color: AppColors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      Spacer(flex: 2,),
+                    ],
+                  ),
+                ),
+              ),
+
+              Positioned(
+                top: 150,
+                left: 50,
+                child: Container(
+                  height: 200,
+                  width: 200,
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 185.0,
+                    height: 185.0,
+                    decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:AppColors.indigo700,
+                    ),
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: 180.0,
+                      height: 180.0,
+                      decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:AppColors.white,
+                      ),
+                      alignment: Alignment.center,
+                      child:bytesFromPicker != null ? ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.memory(
+                            bytesFromPicker,
+                            fit:BoxFit.fill,width: 180,height: 180,
+                            filterQuality: FilterQuality.high,
+                          )):Icon(
+                        Icons.add,
+                        size: 48,
+                        color: AppColors.indigo700,),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 140,
+                left: 300,
+                right: 50,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20,),
+                  child: Column(
+                    children: [
+                      Container(
+                       height: 312,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: AppColors.appBackgroundColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xff707070).withOpacity(.4),
+                              offset: Offset(0, 0),
+                              blurRadius: 6,
+                            )
+                          ]
+                      ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 40),
+                          child: Row(
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text("Name :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Date of Birth :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Contact :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Email :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Address :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),)
+                                ],
+                              ),
+                              Spacer(flex: 1,),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text("$firstName $middleName $lastName",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text(dateOfBirth,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text(contact,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text(emailAddress,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text(address,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),)
+                                ],
+                              ),
+                              Spacer(flex: 4,),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text("Gender :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Class :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Batch :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Password :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  SizedBox(),
+                                ],
+                              ),
+                              Spacer(flex: 1,),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(gender,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text(className,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Batch",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text(password,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  SizedBox(),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        height: 245,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: AppColors.appBackgroundColor,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xff707070).withOpacity(.4),
+                                offset: Offset(0, 0),
+                                blurRadius: 6,
+                              )
+                            ]
+                      ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 40),
+                          child: Row(
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text("Father's Name :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Father's Contact : ",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Designation : ",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                ],
+                              ),
+                              Spacer(flex: 1,),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text("$fatherName",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text(fatherContact,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                  Text(fatherDesignation,
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.indigo700,
+                                      fontSize: 30,
+                                    ),),
+                                ],
+                              ),
+                              Spacer(flex: 4,),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text("Mother's Name :",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Mother's Contact : ",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                  Text("Designation : ",
+                                    style:  TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: Color(0xff434445),
+                                      fontSize: 30,
+                                    ),),
+                                ],
+                              ),
+                              Spacer(flex: 1,),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                               Text("$motherName",
+                                style:  TextStyle(
+                                  fontFamily: 'ProductSans',
+                                  color: AppColors.indigo700,
+                                  fontSize: 30,
+                                ),),
+                               Text(motherContact,
+                                style:  TextStyle(
+                                  fontFamily: 'ProductSans',
+                                  color: AppColors.indigo700,
+                                  fontSize: 30,
+                                ),),
+                               Text(motherDesignation,
+                                style:  TextStyle(
+                                  fontFamily: 'ProductSans',
+                                  color: AppColors.indigo700,
+                                  fontSize: 30,
+                                ),),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child:Padding(
+                  padding: const EdgeInsets.only(right: 20,bottom: 20),
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pop(context);
+                    },
+                    child: Text("Cancel",
+                      style:  TextStyle(
+                        fontFamily: 'ProductSans',
+                        color: AppColors.indigo700,
+                        fontSize: 25,
+                      ),),
+                  ),
+                ),
+              ),
+
+              // Positioned(child: child)
+            ],
+          ),
+        );
+      },
+    );
+
+  }
 }

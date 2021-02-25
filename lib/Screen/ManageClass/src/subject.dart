@@ -51,7 +51,13 @@ class _SubjectFieldState extends State<SubjectField> {
                     ),
                     InkWell(
                       onTap: ()async {
-                        await addSubjectInput(context);
+                        if(classId != null){
+                          await addSubjectInput(context);
+                        }
+                        else{
+                          showToast(context, 'Class is not selected,Please select the class!');
+                        }
+
                       },
                       child: Container(
                         height: 30,

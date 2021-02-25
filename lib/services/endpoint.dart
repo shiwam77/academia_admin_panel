@@ -30,11 +30,11 @@ class AuthApi {
     return apiView + Api.apiV1 + "/resetPassword";
   }
   static String get updateUser {
-    return apiView + Api.apiV1 + "/updateUser";
+    return "/{:Id}/updateUser";
   }
 
   static String get deleteUser {
-    return apiView + Api.apiV1 + "/deleteUser";
+    return "/{:Id}/deleteUser";
   }
 }
 
