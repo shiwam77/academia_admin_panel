@@ -553,6 +553,11 @@ class _StudentFieldState extends State<StudentField> {
 
                                           });
                                         }
+                                        else{
+                                          studentState(() {
+                                            currentDateTime = DateTime.now();
+                                          });
+                                        }
 
                                       },
                                       child: Container(
@@ -1327,6 +1332,10 @@ class _StudentFieldState extends State<StudentField> {
                                               editStudentState(() {
 
                                               });
+                                            }else{
+                                               editStudentState(() {
+                                                currentDateTime = DateTime.now();
+                                              });
                                             }
 
                                           },
@@ -1830,6 +1839,7 @@ class _StudentFieldState extends State<StudentField> {
     String gender=  student.gender ?? "";
     String imageUrl =  student.imageUrl ?? "";
     int admissionNo = student.admissionNo ?? 0;
+    String dateOfBirth = student.dateOfBirth;
     List <String> getGender = [
       'Male',
       'Female',

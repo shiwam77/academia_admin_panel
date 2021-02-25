@@ -1,6 +1,6 @@
 import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Screen/AcademicStudent/add_academic_student.dart';
-import 'package:academia_admin_panel/Screen/AddClass/manage_class.dart';
+
 import 'package:academia_admin_panel/Screen/DashBoard/Notifier/screen_notifier.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/src/navigation_bar.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/src/organization_name_logo.dart';
