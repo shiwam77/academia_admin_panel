@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 
 class ManageClassPage extends StatefulWidget {
   final String yearId;
-  ManageClassPage(this.yearId);
+  final int year;
+  ManageClassPage(this.yearId,this.year);
   @override
   _ManageClassPageState createState() => _ManageClassPageState();
 }
@@ -17,7 +18,7 @@ class ManageClassPage extends StatefulWidget {
 class _ManageClassPageState extends State<ManageClassPage> {
 
   ScrollController _controller;
-  double _offset = 0;
+
 
   @override
   void initState() {
@@ -51,7 +52,7 @@ class _ManageClassPageState extends State<ManageClassPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SubjectField(),
-                              StudentField(),
+                              StudentField(widget.year),
                             ],
                           ),
                         ),

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
 
-viewStudentInput(BuildContext context, AcademicStudentModel student,String className){
+viewStudentInput(BuildContext context, AcademicStudentModel student,String className,int batch){
   Uint8List bytesFromPicker;
   String firstName = student.firstName;
   String middleName = student.middleName ?? "";
@@ -295,7 +295,7 @@ viewStudentInput(BuildContext context, AcademicStudentModel student,String class
                                     color: AppColors.indigo700,
                                     fontSize: 30,
                                   ),),
-                                Text("Batch",
+                                Text("$batch",
                                   style:  TextStyle(
                                     fontFamily: 'ProductSans',
                                     color: AppColors.indigo700,
@@ -446,7 +446,7 @@ viewStudentInput(BuildContext context, AcademicStudentModel student,String class
             Align(
               alignment: Alignment.bottomRight,
               child:Padding(
-                padding: const EdgeInsets.only(right: 20,bottom: 20),
+                padding: const EdgeInsets.only(right: 50,bottom: 20),
                 child: InkWell(
                   onTap: (){
                     Navigator.pop(context);

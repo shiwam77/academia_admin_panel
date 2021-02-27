@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:academia_admin_panel/Color.dart';
@@ -14,6 +15,7 @@ import 'package:academia_admin_panel/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
+
 
 class AddAcademicStudent extends StatefulWidget {
   final String yearId;
@@ -91,9 +93,9 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
           return SizedBox();
         }
     );
-  }
-  Widget body(List<AcademicClassModel> academicClassModel){
+  }Widget body(List<AcademicClassModel> academicClassModel){
     if(academicClassModel != null && academicClassModel.length > 0){
+
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 35),
@@ -690,8 +692,9 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           InkWell(
-                            onTap: (){
+                            onTap: () async{
                               clearField();
+
                             },
                             child: Text("Cancel",
                               style:  TextStyle(
@@ -938,7 +941,7 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                                                   SizedBox(width: 10,),
                                                                   InkWell(
                                                                     onTap: (){
-                                                                      viewStudentInput(context,classWiseStudent[index],classes.className);
+                                                                      viewStudentInput(context,classWiseStudent[index],classes.className,widget.year);
                                                                     },
                                                                     child: Text("View",
                                                                       style:  TextStyle(
@@ -1047,32 +1050,34 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
       ),
     );
   }
-  editStudentInput(BuildContext context, AcademicStudentModel student,int index,String classId){
+  editStudentInput(BuildContext context, AcademicStudentModel student,int index,String classId) {
     Uint8List bytesFromPicker;
     String firstName = student.firstName;
     String middleName = student.middleName;
     String lastName = student.lastName;
     String rollNo = student.rollNo;
     String fatherName = student.fatherName;
-    String motherName =  student.motherName;
-    String motherContact =  student.motherContact;
-    String fatherContact =  student.fatherContact;
-    String motherDesignation =  student.motherDesignation;
-    String fatherDesignation =  student.fatherDesignation;
-    String password =  student.password;
+    String motherName = student.motherName;
+    String motherContact = student.motherContact;
+    String fatherContact = student.fatherContact;
+    String motherDesignation = student.motherDesignation;
+    String fatherDesignation = student.fatherDesignation;
+    String password = student.password;
     String confirmPassword = student.password;
-    String address  =  student.address;
-    String emailAddress =  student.email;
+    String address = student.address;
+    String emailAddress = student.email;
     String studentID = student.studentID;
-    String contact =  student.contact;
-    String gender=  student.gender;
-    String imageUrl =  student.imageUrl;
+    String contact = student.contact;
+    String gender = student.gender;
+    String imageUrl = student.imageUrl;
     int admissionNo = student.admissionNo;
+    int batch = student.batch;
+    String className = student.className;
     List <String> getGender = [
       'Male',
       'Female',
       'Other',
-    ] ;
+    ];
 
     DateTime currentDateTime = DateTime.parse(student.dateOfBirth);
     return showPopupWindow(
@@ -1092,12 +1097,18 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
       offsetY: 50,
       duration: Duration(milliseconds: 200),
       childFun: (pop) {
-        return  StatefulBuilder(
+        return StatefulBuilder(
             key: GlobalKey(),
-            builder: (context,StateSetter editStudentState){
-              return  Container(
-                height: MediaQuery.of(context).size.height * .8,
-                width:MediaQuery.of(context).size.width * .8,
+            builder: (context, StateSetter editStudentState) {
+              return Container(
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * .8,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width * .8,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: AppColors.white,
@@ -1109,12 +1120,14 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                       )
                     ]),
 
-                child:  Stack(
+                child: Stack(
                   children: [
                     Container(
                       height: 75,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),),
                         color: AppColors.indigo700,
                       ),
                       child: Padding(
@@ -1160,27 +1173,27 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                         width: 200,
                         alignment: Alignment.center,
                         child: Tooltip(
-                          message:'Tap to insert or edit image',
+                          message: 'Tap to insert or edit image',
                           margin: EdgeInsets.only(top: 10),
                           padding: EdgeInsets.all(4),
                           child: GestureDetector(
-                            onTap:  () async{
+                            onTap: () async {
                               Uint8List bytesPicker =
-                              await ImagePickerWeb.getImage(outputType: ImageType.bytes);
+                              await ImagePickerWeb.getImage(
+                                  outputType: ImageType.bytes);
 
                               if (bytesPicker != null) {
                                 editStudentState(() {
                                   bytesFromPicker = bytesPicker;
                                 });
-
                               }
                             },
-                            child:Container(
+                            child: Container(
                               width: 185.0,
                               height: 185.0,
                               decoration: new BoxDecoration(
                                 shape: BoxShape.circle,
-                                color:AppColors.indigo700,
+                                color: AppColors.indigo700,
                               ),
                               alignment: Alignment.center,
                               child: Container(
@@ -1188,16 +1201,16 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                 height: 180.0,
                                 decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color:AppColors.white,
+                                  color: AppColors.white,
                                 ),
                                 alignment: Alignment.center,
-                                child:bytesFromPicker != null ? ClipRRect(
+                                child: bytesFromPicker != null ? ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
                                     child: Image.memory(
                                       bytesFromPicker,
-                                      fit:BoxFit.fill,width: 180,height: 180,
+                                      fit: BoxFit.fill, width: 180, height: 180,
                                       filterQuality: FilterQuality.high,
-                                    )):Icon(
+                                    )) : Icon(
                                   Icons.add,
                                   size: 48,
                                   color: AppColors.indigo700,),
@@ -1219,7 +1232,8 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
                                     Text("First Name",
@@ -1258,20 +1272,23 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                 ),
 
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
+
                                     ///First Name
                                     editInputField(
                                         initialText: firstName,
-                                        onChanged: (value){
+                                        onChanged: (value) {
                                           firstName = value;
                                         },
-                                        validator: (value){
+                                        validator: (value) {
 
                                         }
                                     ),
                                     SizedBox(height: 35,),
+
                                     ///Gender
                                     Container(
                                       height: 30,
@@ -1281,16 +1298,20 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(25, 0, 4, 0),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              25, 0, 4, 0),
                                           child: DropdownButton<String>(
                                             value: gender,
                                             icon: Padding(
-                                              padding: const EdgeInsets.only(left: 70),
-                                              child: Icon(Icons.arrow_drop_down),
+                                              padding: const EdgeInsets.only(
+                                                  left: 70),
+                                              child: Icon(
+                                                  Icons.arrow_drop_down),
                                             ),
                                             iconSize: 24,
                                             elevation: 16,
-                                            style: TextStyle(color: Colors.red, fontSize: 18),
+                                            style: TextStyle(color: Colors.red,
+                                                fontSize: 18),
                                             underline: Container(
                                               height: 2,
                                               color: Colors.transparent,
@@ -1300,42 +1321,43 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                                 gender = data;
                                               });
                                             },
-                                            items: getGender.map<DropdownMenuItem<String>>((String value) {
+                                            items: getGender.map<
+                                                DropdownMenuItem<String>>((
+                                                String value) {
                                               return DropdownMenuItem<String>(
                                                 value: value,
                                                 child: Text(value,
                                                   style: TextStyle(
                                                       fontFamily: 'ProductSans',
-                                                      color: AppColors.textColorBlack,
+                                                      color: AppColors
+                                                          .textColorBlack,
                                                       fontSize: 20,
-                                                      fontWeight: FontWeight.normal
+                                                      fontWeight: FontWeight
+                                                          .normal
                                                   )
                                                   ,),
                                               );
-
                                             }).toList(),
                                           )
                                       ),
                                     ),
                                     SizedBox(height: 35,),
+
                                     ///Contact
                                     editInputField(
                                       initialText: student.contact,
-                                      onChanged: (value){
-                                        contact= value;
+                                      onChanged: (value) {
+                                        contact = value;
 
-                                        contact= value;
-
+                                        contact = value;
                                       },),
                                     SizedBox(height: 35,),
+
                                     ///Email
                                     editInputField(
                                         initialText: emailAddress,
-                                        onChanged: (value){
-
-
+                                        onChanged: (value) {
                                           emailAddress = value;
-
                                         }
                                     ),
                                     SizedBox(height: 35,),
@@ -1343,7 +1365,8 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                 ),
 
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
                                     Text("Middle Name",
@@ -1382,86 +1405,93 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                 ),
 
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
+
                                     ///MiddleNAme
                                     editInputField(
                                       initialText: middleName,
-                                      onChanged: (value){
-
+                                      onChanged: (value) {
                                         middleName = value;
-
                                       },
                                     ),
                                     SizedBox(height: 35,),
+
                                     ///DOB
                                     Tooltip(
                                       message: 'Select Date',
-                                      decoration:BoxDecoration(
+                                      decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
-                                        gradient:LinearGradient(colors: [AppColors.redAccent,AppColors.loginBackgroundColor,]),
+                                        gradient: LinearGradient(colors: [
+                                          AppColors.redAccent,
+                                          AppColors.loginBackgroundColor,
+                                        ]),
                                       ),
                                       child: InkWell(
                                         onTap: () async {
-                                          currentDateTime = await  showDatePicker(
+                                          currentDateTime =
+                                          await showDatePicker(
                                             context: context,
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime(1900),
                                             lastDate: DateTime(3000),
-                                            currentDate:DateTime.now(),
+                                            currentDate: DateTime.now(),
                                           );
-                                          if(currentDateTime  != null){
+                                          if (currentDateTime != null) {
                                             editStudentState(() {
 
                                             });
-                                          }else{
+                                          } else {
                                             editStudentState(() {
                                               currentDateTime = DateTime.now();
                                             });
                                           }
-
                                         },
                                         child: Container(
                                           width: 203,
                                           height: 27,
                                           decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(20),
+                                              borderRadius: BorderRadius
+                                                  .circular(20),
                                               color: AppColors.white100,
                                               boxShadow: [
                                                 BoxShadow(
-                                                    color: Color(0xff707070).withOpacity(.4),
+                                                    color: Color(0xff707070)
+                                                        .withOpacity(.4),
                                                     offset: Offset(1, 1),
                                                     blurRadius: 1),
                                               ]
                                           ),
                                           alignment: Alignment.center,
-                                          child: Text(toHumanReadableDate(currentDateTime),style: TextStyle(
-                                              color: Color(0xff263859),fontSize: 20,fontWeight: FontWeight.bold
-                                          ),
+                                          child: Text(toHumanReadableDate(
+                                              currentDateTime),
+                                            style: TextStyle(
+                                                color: Color(0xff263859),
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                     SizedBox(height: 35,),
+
                                     ///Address
                                     editInputField(
                                       initialText: address,
-                                      onChanged: (value){
-
+                                      onChanged: (value) {
                                         address = value;
-
-
                                       },
                                     ),
                                     SizedBox(height: 35,),
+
                                     ///Password
                                     editInputField(
                                       initialText: password,
-                                      onChanged: (value){
-
+                                      onChanged: (value) {
                                         password = value;
-
                                       },
                                     ),
                                     SizedBox(height: 35,),
@@ -1469,7 +1499,8 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                 ),
 
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
                                     Text("Last Name",
@@ -1508,45 +1539,42 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                 ),
 
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
+
                                     /// LastName
                                     editInputField(
                                       initialText: lastName,
-                                      onChanged: (value){
-
-                                        lastName  = value;
-
+                                      onChanged: (value) {
+                                        lastName = value;
                                       },
                                     ),
                                     SizedBox(height: 35,),
+
                                     ///RollNo
                                     editInputField(
                                       initialText: rollNo,
-                                      onChanged: (value){
-
+                                      onChanged: (value) {
                                         rollNo = value;
-
-
-
                                       },
                                     ),
                                     SizedBox(height: 35,),
+
                                     ///StudentId
                                     editInputField(
                                       initialText: studentID,
-                                      onChanged: (value){
-
+                                      onChanged: (value) {
                                         studentID = value;
-
                                       },
                                     ),
                                     SizedBox(height: 35,),
+
                                     ///ConfirmPassword
                                     editInputField(
                                       initialText: confirmPassword,
-                                      onChanged: (value){
+                                      onChanged: (value) {
                                         confirmPassword = null;
                                         confirmPassword = value;
                                       },
@@ -1565,17 +1593,19 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                         left: 180,
                         top: 400,
                         right: 50,
-                        child:Container(
+                        child: Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               SizedBox(height: 35,),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .baseline,
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
                                       Text("Father's Name",
@@ -1605,44 +1635,42 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                     ],
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .baseline,
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
+
                                       /// father NAme
                                       editInputField(width: 380,
                                           initialText: fatherName,
-                                          onChanged: (value){
+                                          onChanged: (value) {
                                             fatherName = value;
 
                                             fatherName = value;
-
                                           }),
                                       SizedBox(height: 35,),
+
                                       /// father contact
                                       editInputField(width: 300,
                                           initialText: fatherContact,
-                                          onChanged: (value){
-
-
+                                          onChanged: (value) {
                                             fatherContact = value;
-
                                           }),
                                       SizedBox(height: 35,),
+
                                       ///fatherDesignation
                                       editInputField(width: 300,
                                           initialText: fatherDesignation,
-                                          onChanged: (value){
-
+                                          onChanged: (value) {
                                             fatherDesignation = value;
-
-
                                           }),
                                       SizedBox(height: 35,),
                                     ],
                                   ),
 
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .baseline,
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
                                       Text("Mother's Name",
@@ -1672,37 +1700,32 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                     ],
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .baseline,
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
+
                                       ///motherName
                                       editInputField(width: 380,
                                           initialText: motherName,
-                                          onChanged: (value){
-
+                                          onChanged: (value) {
                                             motherName = value;
-
-
                                           }),
                                       SizedBox(height: 35,),
+
                                       ///mother contact
                                       editInputField(width: 300,
                                           initialText: motherContact,
-                                          onChanged: (value){
-
+                                          onChanged: (value) {
                                             motherContact = value;
-
-
                                           }),
                                       SizedBox(height: 35,),
+
                                       ///motherDesignation
                                       editInputField(width: 300,
                                           initialText: motherDesignation,
-                                          onChanged: (value){
-
+                                          onChanged: (value) {
                                             motherDesignation = value;
-
-
                                           }),
                                       SizedBox(height: 35,),
                                     ],
@@ -1720,11 +1743,11 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             InkWell(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.pop(context);
                               },
                               child: Text("Cancel",
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontFamily: 'ProductSans',
                                   color: AppColors.indigo700,
                                   fontSize: 25,
@@ -1732,7 +1755,7 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                             ),
                             Spacer(flex: 5,),
                             Text("Edit",
-                              style:TextStyle(
+                              style: TextStyle(
                                 fontFamily: 'ProductSans',
                                 color: AppColors.indigo700,
                                 fontSize: 25,
@@ -1740,13 +1763,13 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                               ),),
                             Spacer(flex: 1,),
                             InkWell(
-                              onTap: () async{
-                                try{
+                              onTap: () async {
+                                try {
                                   AcademicStudentModel newStudent = AcademicStudentModel(
                                     id: student.id,
                                     classId: classId,
                                     firstName: firstName,
-                                    middleName: middleName ??"",
+                                    middleName: middleName ?? "",
                                     lastName: lastName ?? "",
                                     gender: gender,
                                     dateOfBirth: currentDateTime.toString(),
@@ -1765,6 +1788,8 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                     motherDesignation: motherDesignation,
                                     studentAsUserId: student.studentAsUserId,
                                     admissionNo: student.admissionNo,
+                                    batch: batch,
+                                    className: className,
                                   );
                                   print(newStudent.toJson());
                                   // Map<String,String> user ={
@@ -1777,30 +1802,28 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                   // var studentAsUserResponse = await updateStudentAsUser(student.studentAsUserId,user);
                                   //   print("user updated");
                                   //   if(studentAsUserResponse["httpStatusCode"] == 200){
-                                  var response = await updateAcademicStudent(student.id,newStudent.toJson());
+                                  var response = await updateAcademicStudent(
+                                      student.id, newStudent.toJson());
 
-                                  if(response["httpStatusCode"] == 200){
+                                  if (response["httpStatusCode"] == 200) {
                                     academicStudentModel.removeAt(index);
                                     setState(() {
                                       academicStudentModel.add(newStudent);
                                     });
                                     Navigator.of(context).pop();
                                   }
-                                  else if(response["httpStatusCode"] == 500){
+                                  else if (response["httpStatusCode"] == 500) {
                                     String message = response["responseJson"]['message'];
                                     showToast(context, message);
                                   }
+                                  // else{
+                                  //   String message = studentAsUserResponse["responseJson"]['message'];
+                                  //   showToast(context, message);
                                   // }
-                                  //   else{
-                                  //     String message = studentAsUserResponse["responseJson"]['message'];
-                                  //     showToast(context, message);
-                                  //   }
                                 }
-                                catch(error){
+                                catch (error) {
                                   showToast(context, '$error!');
                                 }
-
-
                               },
                               child: Container(
                                 height: 53,
@@ -1810,7 +1833,7 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                   borderRadius: BorderRadius.circular(12),
                                   color: AppColors.blue,
                                 ),
-                                child: Text("Update",style:
+                                child: Text("Update", style:
                                 TextStyle(
                                     fontFamily: 'ProductSans',
                                     color: AppColors.white,
@@ -1826,8 +1849,10 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                 ),
               );
             });
-      },
-    );
+      },);
+     }
+
+
+
 
   }
-}

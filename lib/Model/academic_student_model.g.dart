@@ -54,7 +54,9 @@ AcademicStudentModel _$AcademicStudentModelFromJson(Map<String, dynamic> json) {
     rollNo: json['rollNo'] as String,
       studentID:json['studentId'] as String,
     admissionNo:json['admissionNo'] as int,
+    batch:json['batch'] as int,
     studentAsUserId:json['studentAsUserId'] as String,
+    className:json['className'] as String,
   );
 }
 
@@ -85,4 +87,6 @@ Map<String, dynamic> _$AcademicStudentModelToJson(
       'studentId': instance.studentID,
       'admissionNo': instance.admissionNo,
       'studentAsUserId': instance.studentAsUserId,
+      'batch': instance.batch,
+      'className': instance.className,
     };

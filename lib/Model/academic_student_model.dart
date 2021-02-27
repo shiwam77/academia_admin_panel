@@ -39,10 +39,12 @@ class AcademicStudentModel{
    String classId;
    String studentID;
    int admissionNo;
+   int batch;
    String studentAsUserId;
+   String className;
   AcademicStudentModel({this.studentAsUserId,this.studentID,this.admissionNo,this.id,this.classId,this.email,this.password,this.address,this.confirmPassword,this.contact,this.dateOfBirth,this.fatherContact
   ,this.fatherDesignation,this.fatherName,this.firstName,this.gender,this.imageUrl,this.lastName,this.middleName,this.motherContact,this.motherDesignation,this.motherName
-  ,this.rollNo,});
+  ,this.rollNo,this.batch,this.className});
 
   factory AcademicStudentModel.fromJson(Map<String, dynamic> json) => _$AcademicStudentModelFromJson(json);
 

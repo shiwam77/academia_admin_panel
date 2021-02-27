@@ -1,4 +1,7 @@
 import 'package:academia_admin_panel/Color.dart';
+
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/home_task.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/tutor.dart';
 import 'package:academia_admin_panel/Screen/AcademicStudent/add_academic_student.dart';
 
 import 'package:academia_admin_panel/Screen/DashBoard/Notifier/screen_notifier.dart';
@@ -15,6 +18,7 @@ import 'package:provider/provider.dart';
 class DashBoardPage extends StatefulWidget {
   final String yearId;
   final int year;
+
   DashBoardPage(this.yearId,this.year);
   @override
   _DashBoardPageState createState() => _DashBoardPageState();
@@ -131,14 +135,19 @@ class _DashBoardPageState extends State<DashBoardPage> {
                         width: MediaQuery.of(context).size.width,
                         child: Consumer<NavIndex>(
                             builder: (context,navIndex,child){
+                              print(navIndex.getIndex());
                               if(navIndex.getIndex() == 0){
                                 return HomePage();
                               }
                               else if(navIndex.getIndex() == 1){
-                                return ManageClassPage(widget.yearId);
+                                return ManageClassPage(widget.yearId,widget.year);
                               }
                               else if(navIndex.getIndex() == 2){
                                 return AddAcademicStudent(widget.yearId,widget.year);
+                              } else if(navIndex.getIndex() == 3){
+                                return HomeTask(widget.yearId);
+                              }else if(navIndex.getIndex() == 6){
+                                return AcademicTutor(widget.yearId);
                               }
                               return Login();
                             })),
