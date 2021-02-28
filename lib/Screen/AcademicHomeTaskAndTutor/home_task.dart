@@ -2,11 +2,14 @@ import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Model/academic_class_model.dart';
 import 'package:academia_admin_panel/Model/academic_subject_model.dart';
 import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/src/class.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/widget.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_class_vm.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_subject_vm.dart';
 import 'package:academia_admin_panel/vm_service/base_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kumi_popup_window/kumi_popup_window.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 
@@ -23,6 +26,11 @@ class _HomeTaskState extends State<HomeTask> {
   String classId;
   String preClassId;
   DateTime currentDateTime = DateTime.now();
+  int selectedDeleteIndex;
+  int selectedEditIndex;
+  bool isCursor = false;
+  Widget deleteAnimatedIcon = EmptyDeleteIcon();
+  Widget editAnimatedIcon = EmptyEditIcon();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -120,7 +128,7 @@ class _HomeTaskState extends State<HomeTask> {
                             padding: const EdgeInsets.only(left: 40,top: 40),
                             child: InkWell(
                               onTap: () async{
-                                // await addStudentInput(context);
+                               await addHomeTaskAndTutor(context);
                               },
                               child: Container(
                                 height: 30,
@@ -194,9 +202,48 @@ class _HomeTaskState extends State<HomeTask> {
                                           padding: const EdgeInsets.only(bottom: 12),
                                           child: Row(
                                             children: [
-                                              Icon(Icons.edit_outlined,size: 28,color: AppColors.indigo700,),
+                                              MouseRegion(
+                                                onEnter: (value){
+                                                  setState(() {
+                                                    selectedEditIndex = index;
+                                                  });
+
+                                                },
+                                                onExit: (value){
+                                                  setState(() {
+                                                     selectedEditIndex = null;
+                                                  });
+
+                                                },
+                                                child: InkWell(
+                                                  onTap: (){
+                                                    addHomeTaskAndTutor(context);
+                                                  },
+                                                  child: AnimatedSwitcher(
+                                                    duration: Duration(seconds: 1),
+                                                      child: selectedEditIndex == index  ? FilledEditIcon():EmptyEditIcon(),
+                                                  ),
+                                                ),
+                                              ),
                                               SizedBox(width: 40,),
-                                              Icon(Icons.delete_outline,size: 28,color: AppColors.indigo700,),
+                                              MouseRegion(
+                                                onEnter: (value){
+                                                  setState(() {
+                                                    selectedDeleteIndex = index;
+                                                  });
+
+                                                },
+                                                onExit: (value){
+                                                  setState(() {
+                                                    selectedDeleteIndex = null;
+                                                  });
+
+                                                },
+                                                child: AnimatedSwitcher(
+                                                  duration: Duration(milliseconds: 100),
+                                                  child:  selectedDeleteIndex == index ? FilledDeleteIcon() : EmptyDeleteIcon(),
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -215,7 +262,6 @@ class _HomeTaskState extends State<HomeTask> {
               ],
             ),
           ),
-
         ],
       ),
     );
@@ -244,24 +290,75 @@ class _HomeTaskState extends State<HomeTask> {
           vm.init(classId);
         },
         builder: (_, vm, child) {
-          if(classId == preClassId){
-            if(vm.isError == false){
-              academicSubjectModel = vm.academicSubjectModel;
-              return SubjectListViewBuilder(academicSubjectModel);
+          if(classId != null) {
+            if (classId == preClassId) {
+              if (vm.isError == false) {
+                academicSubjectModel = vm.academicSubjectModel;
+                return SubjectListViewBuilder(academicSubjectModel);
+              }
+              return SizedBox();
             }
-            return SizedBox();
+            else {
+              preClassId = classId;
+              vm.refresh(classId);
+              return SizedBox();
+            }
           }
           else{
-            preClassId = classId;
-            vm.refresh(classId);
-            return SizedBox();
+            return SizedBox(
+                height: 60,
+                child: Center(child: Text("Please select the subject!",
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.clip,
+                )));
           }
 
         }
     );
   }
-
+  Widget inputField({Function onChanged,double width,double height,}){
+    width = width == null ?203:width;
+    return Container(
+      width: width,
+      child: TextField(
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: AppColors.white,
+          focusColor: AppColors.white,
+          hoverColor: AppColors.white,
+        ),
+      ),
+    );
+  }
 }
+class EmptyDeleteIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return  Icon(Icons.delete_outline,size: 28,color: AppColors.gray,);
+  }
+}
+class FilledDeleteIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return  Icon(Icons.delete,size: 28,color: AppColors.indigo700,);
+  }
+}
+class EmptyEditIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return  Icon(Icons.edit_outlined,size: 28,color: AppColors.gray,);
+  }
+}
+
+class FilledEditIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return  Icon(Icons.edit,size: 28,color: AppColors.indigo700,);
+  }
+}
+
  class SubjectListViewBuilder extends StatefulWidget {
    final List<AcademicSubjectModel> listOfSubjects;
    SubjectListViewBuilder(this.listOfSubjects);
@@ -329,7 +426,7 @@ class _HomeTaskState extends State<HomeTask> {
      }
      return SizedBox(
          height: 60,
-         child: Center(child: Text("Please select the subject,if subject is empty then create the subject in Manage Class Screen!",
+         child: Center(child: Text("Please create the subject in Manage Class Screen!",
            maxLines: 2,
            softWrap: true,
            overflow: TextOverflow.clip,

@@ -25,6 +25,7 @@ class _SubjectFieldState extends State<SubjectField> {
   bool isEditable = false;
   bool isReadOnly = true;
   int clickedEditIndex;
+  bool isCursor = false;
   @override
   Widget build(BuildContext context) {
     return Consumer<ClassNotifier>(
@@ -243,6 +244,7 @@ class _SubjectFieldState extends State<SubjectField> {
   }
 
   Widget getSubjectField(List<AcademicSubjectModel> listOfSubjects){
+
     if(listOfSubjects != null && listOfSubjects.isNotEmpty){
       return Padding(
         padding: const EdgeInsets.only(bottom: 20),
@@ -251,118 +253,133 @@ class _SubjectFieldState extends State<SubjectField> {
             itemCount: listOfSubjects.length,
             itemBuilder: (context,index){
               return LimitedBox(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
-                  child: InkWell(
-                    onTap: (){
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
-                    child: Container(
-                      color:selectedIndex == index?AppColors.appBackgroundColor:AppColors.transparent ,
-                      height: 86,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Text('${listOfSubjects[index].subjectName}',style: TextStyle(
-                            //     fontFamily: 'ProductSans',
-                            //     fontSize: 30,
-                            //     fontWeight: FontWeight.normal,
-                            //     color: AppColors.textColorBlack
-                            // ),),
-                            Container(
-                              width: 170,
-                              height: 55,
-                              padding: EdgeInsets.only(left: 10,top: 5),
-                              decoration:  clickedEditIndex == index ? BoxDecoration(
-                                border:Border.all(
-                                  color: AppColors.indigo700, //                   <--- border color
-                                  width: 2.0,
-                                ),
-                              ):BoxDecoration(),
-                              child: EditableText(
-                                cursorHeight: 40,
-                                autofocus: isEditable,
-                                readOnly: clickedEditIndex != index,
-                                cursorColor: AppColors.indigo700,
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.normal,
-                                ),
-                                focusNode: FocusNode(),
-                                backgroundCursorColor: AppColors.blackeyGray,
-                                controller: TextEditingController(text:"${listOfSubjects[index].subjectName}"),
+                child: MouseRegion(
+                  onEnter: (value){
+                    setState(() {
+                      isCursor = true;
+                      selectedIndex =index;
+                    });
+                  },
+                  onExit: (value){
+                    setState(() {
+                      isCursor = false;
+                      selectedIndex = null;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
+                    child: InkWell(
+                      onTap: (){
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                      child: Container(
+                        color:isCursor && selectedIndex == index ? AppColors.appBackgroundColor:AppColors.transparent ,
+                        height: 86,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Text('${listOfSubjects[index].subjectName}',style: TextStyle(
+                              //     fontFamily: 'ProductSans',
+                              //     fontSize: 30,
+                              //     fontWeight: FontWeight.normal,
+                              //     color: AppColors.textColorBlack
+                              // ),),
+                              Container(
+                                width: 170,
+                                height: 55,
+                                padding: EdgeInsets.only(left: 10,top: 5),
+                                decoration:  clickedEditIndex == index ? BoxDecoration(
+                                  border:Border.all(
+                                    color: AppColors.indigo700, //                   <--- border color
+                                    width: 2.0,
+                                  ),
+                                ):BoxDecoration(),
+                                child: EditableText(
+                                  cursorHeight: 40,
+                                  autofocus: isEditable,
+                                  readOnly: clickedEditIndex != index,
+                                  cursorColor: AppColors.indigo700,
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.normal,
+                                  ),
+                                  focusNode: FocusNode(),
+                                  backgroundCursorColor: AppColors.blackeyGray,
+                                  controller: TextEditingController(text:"${listOfSubjects[index].subjectName}"),
 
-                                onSubmitted: (value) async{
-                                  try{
-                                    AcademicSubjectModel newSubject = AcademicSubjectModel(classId: classId,subjectName: value,);
-                                    var response = await updateAcademicSubjects(listOfSubjects[index].id,newSubject .toJson());
-                                    print("updated subject: $response");
-                                    if(response["httpStatusCode"] == 200){
-                                      newSubject.id = listOfSubjects[index].id;
-                                      setState(() {
-                                        academicSubjectModel.removeAt(index);
-                                        academicSubjectModel.insert(index, newSubject);
-                                        clickedEditIndex = null;
-                                      });
+                                  onSubmitted: (value) async{
+                                    try{
+                                      AcademicSubjectModel newSubject = AcademicSubjectModel(classId: classId,subjectName: value,);
+                                      var response = await updateAcademicSubjects(listOfSubjects[index].id,newSubject .toJson());
+                                      print("updated subject: $response");
+                                      if(response["httpStatusCode"] == 200){
+                                        newSubject.id = listOfSubjects[index].id;
+                                        setState(() {
+                                          academicSubjectModel.removeAt(index);
+                                          academicSubjectModel.insert(index, newSubject);
+                                          clickedEditIndex = null;
+                                        });
+                                        showToast(context, "Subject updated!");
+                                      }
+                                      else if(response["httpStatusCode"] == 500){
+                                        String message = response["responseJson"]['message'];
+                                        showToast(context, message);
+                                      }
                                     }
-                                    else if(response["httpStatusCode"] == 500){
-                                      String message = response["responseJson"]['message'];
-                                      showToast(context, message);
+                                    catch(error){
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Something went wrong!'),
+                                          ));
                                     }
-                                  }
-                                  catch(error){
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Something went wrong!'),
-                                        ));
-                                  }
-                                },
+                                  },
 
+                                ),
                               ),
-                            ),
-                            Row(children: [
-                              InkWell(
-                                onTap: (){
-                                  setState(() {
-                                    clickedEditIndex = index;
-                                    isEditable = true;
-                                    isReadOnly = false;
-                                  });
-                                },
-                                  child: Icon(Icons.edit,size: 30,)),
-                              SizedBox(width: 50,),
-                              InkWell(
-                                onTap: ()async{
+                              Row(children: [
+                                InkWell(
+                                  onTap: (){
+                                    setState(() {
+                                      clickedEditIndex = index;
+                                      isEditable = true;
+                                      isReadOnly = false;
+                                    });
+                                  },
+                                    child: Icon(Icons.edit,size: 30,)),
+                                SizedBox(width: 50,),
+                                InkWell(
+                                  onTap: ()async{
 
-                                  try{
-                                   var response =  await deleteAcademicSubject(listOfSubjects[index].id);
-                                   if(response["httpStatusCode"] == 204){
-                                     setState(() {
-                                       listOfSubjects.removeAt(index);
-                                     });
-                                   }
-                                   else{
-                                     String message = response["responseJson"]['message'];
-                                     showToast(context, message);
-                                   }
-                                  }
-                                  catch(error,stacktrace){
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Something went wrong!'),
-                                        ));
-                                  }
+                                    try{
+                                     var response =  await deleteAcademicSubject(listOfSubjects[index].id);
+                                     if(response["httpStatusCode"] == 204){
+                                       setState(() {
+                                         listOfSubjects.removeAt(index);
+                                       });
+                                     }
+                                     else{
+                                       String message = response["responseJson"]['message'];
+                                       showToast(context, message);
+                                     }
+                                    }
+                                    catch(error,stacktrace){
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Something went wrong!'),
+                                          ));
+                                    }
 
-                                },
-                                  child: Icon(Icons.delete,size: 30,))
-                            ],)
-                          ],
+                                  },
+                                    child: Icon(Icons.delete,size: 30,))
+                              ],)
+                            ],
+                          ),
                         ),
                       ),
                     ),

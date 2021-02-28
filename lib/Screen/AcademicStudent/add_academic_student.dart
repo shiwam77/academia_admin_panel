@@ -101,490 +101,246 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
           padding: const EdgeInsets.only(top: 35),
           child: Row(
             children: [
-              Container(
-                height: 756,
-                width:MediaQuery.of(context).size.width * .6,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: AppColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xff707070).withOpacity(.4),
-                        offset: Offset(0, 0),
-                        blurRadius: 6,
-                      )
-                    ]),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 70,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),),
-                        color: AppColors.indigo700,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: Row(
-                          children: [
-                            Spacer(flex: 1,),
-                            Text("Student ID: ",
-                              style: TextStyle(
-                                  fontFamily: 'ProductSans',
-                                  color: AppColors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
-                              ),),
-                            Spacer(flex: 4,),
-                            Text("Student Form",
-                              style: TextStyle(
-                                  fontFamily: 'ProductSans',
-                                  color: AppColors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold
-                              ),),
-                            Spacer(flex: 3,),
-                            Text("Admission No:   ",
-                              style: TextStyle(
-                                  fontFamily: 'ProductSans',
-                                  color: AppColors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
+              Flexible(
+                flex: 8,
+                child: Container(
+                  height: 756,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: AppColors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xff707070).withOpacity(.4),
+                          offset: Offset(0, 0),
+                          blurRadius: 6,
+                        )
+                      ]),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 70,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),),
+                          color: AppColors.indigo700,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Row(
+                            children: [
+                              Spacer(flex: 1,),
+                              Text("Student ID: ",
+                                style: TextStyle(
+                                    fontFamily: 'ProductSans',
+                                    color: AppColors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold
+                                ),),
+                              Spacer(flex: 4,),
+                              Text("Student Form",
+                                style: TextStyle(
+                                    fontFamily: 'ProductSans',
+                                    color: AppColors.white,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold
+                                ),),
+                              Spacer(flex: 3,),
+                              Text("Admission No:   ",
+                                style: TextStyle(
+                                    fontFamily: 'ProductSans',
+                                    color: AppColors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold
+                                ),
                               ),
-                            ),
-                            Spacer(flex: 2,),
-                          ],
+                              Spacer(flex: 2,),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50,left: 50,right: 50),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 450),
-                            child: Tooltip(
-                              message:'Tap to insert or edit image',
-                              margin: EdgeInsets.only(top: 10),
-                              padding: EdgeInsets.all(4),
-                              child: GestureDetector(
-                                onTap:  () async{
-                                  Uint8List bytesPicker =
-                                  await ImagePickerWeb.getImage(outputType: ImageType.bytes);
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50,left: 50,right: 50),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 450),
+                              child: Tooltip(
+                                message:'Tap to insert or edit image',
+                                margin: EdgeInsets.only(top: 10),
+                                padding: EdgeInsets.all(4),
+                                child: GestureDetector(
+                                  onTap:  () async{
+                                    Uint8List bytesPicker =
+                                    await ImagePickerWeb.getImage(outputType: ImageType.bytes);
 
-                                  if (bytesPicker != null) {
-                                    setState(() {
-                                      bytesFromPicker = bytesPicker;
-                                    });
+                                    if (bytesPicker != null) {
+                                      setState(() {
+                                        bytesFromPicker = bytesPicker;
+                                      });
 
-                                  }
-                                },
-                                child:Container(
-                                  width: 129.0,
-                                  height: 129.0,
-                                  decoration: new BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color:AppColors.indigo700,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    width: 125.0,
-                                    height: 125.0,
+                                    }
+                                  },
+                                  child:Container(
+                                    width: 129.0,
+                                    height: 129.0,
                                     decoration: new BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color:AppColors.white,
+                                      color:AppColors.indigo700,
                                     ),
                                     alignment: Alignment.center,
-                                    child:bytesFromPicker != null ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(80),
-                                        child: Image.memory(
-                                          bytesFromPicker,
-                                          fit:BoxFit.fill,width: 125,height: 125,
-                                          filterQuality: FilterQuality.high,
-                                        )):Icon(
-                                      Icons.add,
-                                      size: 48,
-                                      color: AppColors.indigo700,),
+                                    child: Container(
+                                      width: 125.0,
+                                      height: 125.0,
+                                      decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:AppColors.white,
+                                      ),
+                                      alignment: Alignment.center,
+                                      child:bytesFromPicker != null ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(80),
+                                          child: Image.memory(
+                                            bytesFromPicker,
+                                            fit:BoxFit.fill,width: 125,height: 125,
+                                            filterQuality: FilterQuality.high,
+                                          )):Icon(
+                                        Icons.add,
+                                        size: 48,
+                                        color: AppColors.indigo700,),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Spacer(flex: 5,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text("First Name",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Middle Name",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Last Name",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Class",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
+                            Spacer(flex: 5,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                Text("First Name",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Middle Name",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Last Name",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Class",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
 
-                              Text("Email",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Address",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Father Name",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Contact",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Designation",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                            ],
-                          ),
+                                Text("Email",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Address",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Father Name",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Contact",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Designation",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                              ],
+                            ),
 
-                          SizedBox(width: 20,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              ///First Name
-                              inputField(
-                                controller: firstNameController,
-                                onChanged: (value){
-                                  firstName = value;
-                                },
+                            SizedBox(width: 20,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                ///First Name
+                                inputField(
+                                  controller: firstNameController,
+                                  onChanged: (value){
+                                    firstName = value;
+                                  },
 
-                              ),
-                              SizedBox(height: 35,),
-                              ///MiddleNAme
-                              inputField(
-                                controller:middleNameController,
-                                onChanged: (value){
-
-                                  middleName = value;
-
-                                },
-                              ),
-                              SizedBox(height: 35,),
-                              /// LastName
-                              inputField(
-                                controller:lastNameController,
-                                onChanged: (value){
-
-                                  lastName  = value;
-
-                                },
-                              ),
-                              SizedBox(height: 35,),
-                              ///class
-                              Container(
-                                height: 30,
-                                width: 203,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFE2E8F0),
-                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(25, 0, 4, 0),
-                                    child: DropdownButton<AcademicClassModel>(
-                                      value: classes,
-                                      hint: Text("Select class"),
-                                      icon: Padding(
-                                        padding: const EdgeInsets.only(left: 50),
-                                        child: Icon(Icons.arrow_drop_down),
-                                      ),
-                                      iconSize: 24,
-                                      elevation: 16,
-                                      style: TextStyle(color: Colors.red, fontSize: 18),
-                                      underline: Container(
-                                        height: 2,
-                                        color: Colors.transparent,
-                                      ),
-                                      onChanged: (AcademicClassModel data) {
-                                        setState(() {
-                                          classes = data;
-                                          classId = data.id;
-                                        });
-                                      },
-                                      items: academicClassModel.map<DropdownMenuItem<AcademicClassModel>>((AcademicClassModel value) {
-                                        return DropdownMenuItem<AcademicClassModel>(
-                                          value: value,
-                                          child: Text(value.className,
-                                            style: TextStyle(
-                                                fontFamily: 'ProductSans',
-                                                color: AppColors.textColorBlack,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.normal
-                                            )
-                                            ,),
-                                        );
-
-                                      }).toList(),
-                                    )
-                                ),
-                              ),
-                              SizedBox(height: 35,),
-
-                              ///email
-                              inputField(
-                                  controller:emailAddressController,
+                                SizedBox(height: 35,),
+                                ///MiddleNAme
+                                inputField(
+                                  controller:middleNameController,
                                   onChanged: (value){
 
-
-                                    emailAddress = value;
-
-                                  }
-                              ),
-                              SizedBox(height: 35,),
-
-                              ///address
-                              inputField(
-                                controller:addressController,
-                                onChanged: (value){
-                                  address = value;
-                                },),
-                              SizedBox(height: 35,),
-                              ///Father Name
-                              inputField(
-                                controller:fatherNameController,
-                                onChanged: (value){
-                                  fatherName = value;
-                                },
-
-                              ),
-                              SizedBox(height: 35,),
-                              ///FatherContact
-                              inputField(
-                                controller:fatherContactController,
-                                onChanged: (value){
-
-                                  fatherContact = value;
-
-                                },
-                              ),
-                              SizedBox(height: 35,),
-                              /// fatherDesignation
-                              inputField(
-                                controller:fatherDesignationController,
-                                onChanged: (value){
-
-                                  fatherDesignation  = value;
-
-                                },
-                              ),
-                              SizedBox(height: 35,),
-                            ],
-                          ),
-
-                          Spacer(flex: 3,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text("Date Of Birth",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Contact",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Gender",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("StudentId",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-
-                              Text("Password",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("RollNo",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Mother Name",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Contact",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                              Text("Designation",
-                                style: TextStyle(
-                                    fontFamily: 'ProductSans',
-                                    color: AppColors.textColorBlack,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.normal
-                                ),),
-                              SizedBox(height: 35,),
-                            ],
-                          ),
-
-                          SizedBox(width: 20,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              ///DOB
-                              Tooltip(
-                                message: 'Select Date',
-                                decoration:BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  gradient:LinearGradient(colors: [AppColors.redAccent,AppColors.loginBackgroundColor,]),
-                                ),
-                                child: InkWell(
-                                  onTap: () async {
-                                    currentDateTime = await  showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(1900),
-                                      lastDate: DateTime(3000),
-                                      currentDate:DateTime.now(),
-                                    );
-                                    if(currentDateTime  != null){
-                                      setState(() {
-
-                                      });
-                                    }
-                                    else{
-                                      currentDateTime = DateTime.now();
-                                      setState(() {
-
-                                      });
-                                    }
+                                    middleName = value;
 
                                   },
-                                  child: Container(
-                                    width: 203,
-                                    height: 27,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: AppColors.white100,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Color(0xff707070).withOpacity(.4),
-                                              offset: Offset(1, 1),
-                                              blurRadius: 1),
-                                        ]
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(toHumanReadableDate(currentDateTime),style: TextStyle(
-                                        color: Color(0xff263859),fontSize: 20,fontWeight: FontWeight.bold
-                                    ),
-                                    ),
+                                ),
+                                SizedBox(height: 35,),
+                                /// LastName
+                                inputField(
+                                  controller:lastNameController,
+                                  onChanged: (value){
+
+                                    lastName  = value;
+
+                                  },
+                                ),
+                                SizedBox(height: 35,),
+                                ///class
+                                Container(
+                                  height: 30,
+                                  width: 203,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFE2E8F0),
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
-                                ),
-                              ),
-                              SizedBox(height: 35,),
-                              ///Contact
-                              inputField(
-                                controller: contactController,
-                                onChanged: (value){
-                                  contact= value;
-                                },),
-                              SizedBox(height: 35,),
-                              ///Gender
-                              Container(
-                                height: 30,
-                                width: 203,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFE2E8F0),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(25, 0, 4, 0),
-                                    child: SizedBox(
-                                      height: 203,
-                                      child: DropdownButton<String>(
-                                        value: gender,
+                                  child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(25, 0, 4, 0),
+                                      child: DropdownButton<AcademicClassModel>(
+                                        value: classes,
+                                        hint: Text("Select class"),
                                         icon: Padding(
-                                          padding: const EdgeInsets.only(left: 70),
+                                          padding: const EdgeInsets.only(left: 50),
                                           child: Icon(Icons.arrow_drop_down),
                                         ),
                                         iconSize: 24,
@@ -594,15 +350,16 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                           height: 2,
                                           color: Colors.transparent,
                                         ),
-                                        onChanged: (String data) {
+                                        onChanged: (AcademicClassModel data) {
                                           setState(() {
-                                            gender = data;
+                                            classes = data;
+                                            classId = data.id;
                                           });
                                         },
-                                        items: getGender.map<DropdownMenuItem<String>>((String value) {
-                                          return DropdownMenuItem<String>(
+                                        items: academicClassModel.map<DropdownMenuItem<AcademicClassModel>>((AcademicClassModel value) {
+                                          return DropdownMenuItem<AcademicClassModel>(
                                             value: value,
-                                            child: Text(value,
+                                            child: Text(value.className,
                                               style: TextStyle(
                                                   fontFamily: 'ProductSans',
                                                   color: AppColors.textColorBlack,
@@ -613,368 +370,616 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                           );
 
                                         }).toList(),
-                                      ),
-                                    )
+                                      )
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 35,),
-                              ///StudentId
-                              inputField(
-                                  controller: studentIDController,
+                                SizedBox(height: 35,),
+
+                                ///email
+                                inputField(
+                                    controller:emailAddressController,
+                                    onChanged: (value){
+
+
+                                      emailAddress = value;
+
+                                    }
+                                ),
+                                SizedBox(height: 35,),
+
+                                ///address
+                                inputField(
+                                  controller:addressController,
+                                  onChanged: (value){
+                                    address = value;
+                                  },),
+                                SizedBox(height: 35,),
+                                ///Father Name
+                                inputField(
+                                  controller:fatherNameController,
+                                  onChanged: (value){
+                                    fatherName = value;
+                                  },
+
+                                ),
+                                SizedBox(height: 35,),
+                                ///FatherContact
+                                inputField(
+                                  controller:fatherContactController,
                                   onChanged: (value){
 
+                                    fatherContact = value;
 
-                                    studentID = value;
-
-                                  }
-                              ),
-                              SizedBox(height: 35,),
-                              ///password
-                              inputField(
-                                  controller: passwordController,
+                                  },
+                                ),
+                                SizedBox(height: 35,),
+                                /// fatherDesignation
+                                inputField(
+                                  controller:fatherDesignationController,
                                   onChanged: (value){
 
+                                    fatherDesignation  = value;
 
-                                    password = value;
+                                  },
+                                ),
+                                SizedBox(height: 35,),
+                              ],
+                            ),
 
-                                  }
-                              ),
-                              SizedBox(height: 35,),
+                            Spacer(flex: 3,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                Text("Date Of Birth",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Contact",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Gender",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("StudentId",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
 
-                              ///RollNo
-                              inputField(
-                                controller: rollNoController,
-                                onChanged: (value){
-                                  rollNo = value;
-                                },
+                                Text("Password",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("RollNo",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Mother Name",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Contact",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                                Text("Designation",
+                                  style: TextStyle(
+                                      fontFamily: 'ProductSans',
+                                      color: AppColors.textColorBlack,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal
+                                  ),),
+                                SizedBox(height: 35,),
+                              ],
+                            ),
 
-                              ),
-                              SizedBox(height: 35,),
+                            SizedBox(width: 20,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                ///DOB
+                                Tooltip(
+                                  message: 'Select Date',
+                                  decoration:BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    gradient:LinearGradient(colors: [AppColors.redAccent,AppColors.loginBackgroundColor,]),
+                                  ),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      currentDateTime = await  showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(1900),
+                                        lastDate: DateTime(3000),
+                                        currentDate:DateTime.now(),
+                                      );
+                                      if(currentDateTime  != null){
+                                        setState(() {
 
-                              ///Mother Name
-                              inputField(
-                                controller: motherNameController,
-                                onChanged: (value){
-                                  motherName = value;
-                                },
+                                        });
+                                      }
+                                      else{
+                                        currentDateTime = DateTime.now();
+                                        setState(() {
 
-                              ),
-                              SizedBox(height: 35,),
-                              ///MotherContact
-                              inputField(
-                                controller: motherContactController,
-                                onChanged: (value){
+                                        });
+                                      }
 
-                                  motherContact = value;
+                                    },
+                                    child: Container(
+                                      width: 203,
+                                      height: 27,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: AppColors.white100,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Color(0xff707070).withOpacity(.4),
+                                                offset: Offset(1, 1),
+                                                blurRadius: 1),
+                                          ]
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(toHumanReadableDate(currentDateTime),style: TextStyle(
+                                          color: Color(0xff263859),fontSize: 20,fontWeight: FontWeight.bold
+                                      ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 35,),
+                                ///Contact
+                                inputField(
+                                  controller: contactController,
+                                  onChanged: (value){
+                                    contact= value;
+                                  },),
+                                SizedBox(height: 35,),
+                                ///Gender
+                                Container(
+                                  height: 30,
+                                  width: 203,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFE2E8F0),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(25, 0, 4, 0),
+                                      child: SizedBox(
+                                        height: 203,
+                                        child: DropdownButton<String>(
+                                          value: gender,
+                                          icon: Padding(
+                                            padding: const EdgeInsets.only(left: 70),
+                                            child: Icon(Icons.arrow_drop_down),
+                                          ),
+                                          iconSize: 24,
+                                          elevation: 16,
+                                          style: TextStyle(color: Colors.red, fontSize: 18),
+                                          underline: Container(
+                                            height: 2,
+                                            color: Colors.transparent,
+                                          ),
+                                          onChanged: (String data) {
+                                            setState(() {
+                                              gender = data;
+                                            });
+                                          },
+                                          items: getGender.map<DropdownMenuItem<String>>((String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value,
+                                                style: TextStyle(
+                                                    fontFamily: 'ProductSans',
+                                                    color: AppColors.textColorBlack,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.normal
+                                                )
+                                                ,),
+                                            );
 
-                                },
-                              ),
-                              SizedBox(height: 35,),
-                              /// MotherDesignation
-                              inputField(
-                                controller: motherDesignationController,
-                                onChanged: (value){
+                                          }).toList(),
+                                        ),
+                                      )
+                                  ),
+                                ),
+                                SizedBox(height: 35,),
+                                ///StudentId
+                                inputField(
+                                    controller: studentIDController,
+                                    onChanged: (value){
 
-                                  motherDesignation  = value;
 
-                                },
-                              ),
-                              SizedBox(height: 35,),
-                            ],
-                          ),
-                        ],
+                                      studentID = value;
+
+                                    }
+                                ),
+                                SizedBox(height: 35,),
+                                ///password
+                                inputField(
+                                    controller: passwordController,
+                                    onChanged: (value){
+
+
+                                      password = value;
+
+                                    }
+                                ),
+                                SizedBox(height: 35,),
+
+                                ///RollNo
+                                inputField(
+                                  controller: rollNoController,
+                                  onChanged: (value){
+                                    rollNo = value;
+                                  },
+
+                                ),
+                                SizedBox(height: 35,),
+
+                                ///Mother Name
+                                inputField(
+                                  controller: motherNameController,
+                                  onChanged: (value){
+                                    motherName = value;
+                                  },
+
+                                ),
+                                SizedBox(height: 35,),
+                                ///MotherContact
+                                inputField(
+                                  controller: motherContactController,
+                                  onChanged: (value){
+
+                                    motherContact = value;
+
+                                  },
+                                ),
+                                SizedBox(height: 35,),
+                                /// MotherDesignation
+                                inputField(
+                                  controller: motherDesignationController,
+                                  onChanged: (value){
+
+                                    motherDesignation  = value;
+
+                                  },
+                                ),
+                                SizedBox(height: 35,),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () async{
-                              clearField();
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () async{
+                                clearField();
 
-                            },
-                            child: Text("Cancel",
-                              style:  TextStyle(
-                                fontFamily: 'ProductSans',
-                                color: AppColors.indigo700,
-                                fontSize: 16,
-                              ),),
-                          ),
-                          InkWell(
-                            onTap: () async{
-                              try{
-                                AcademicStudentModel newStudent = AcademicStudentModel(
-                                    classId: classId,
-                                    firstName: firstName,
-                                    middleName: middleName,
-                                    lastName: lastName,
-                                    gender: gender,
-                                    dateOfBirth: currentDateTime.toString(),
-                                    rollNo: rollNo,
-                                    contact: contact,
-                                    address: address,
-                                    email: emailAddress,
-                                    password: password,
-                                    confirmPassword: confirmPassword,
-                                    fatherName: fatherName,
-                                    fatherContact: fatherContact,
-                                    fatherDesignation: fatherDesignation,
-                                    motherName: motherName,
-                                    motherContact: motherContact,
-                                    motherDesignation: motherDesignation,
-                                    //admissionNo: admissionNo,
-                                    studentID: studentID
-                                );
-                                Map<String,String> user ={
-                                  "email":emailAddress,
-                                  "password":password,
-                                  "passwordConfirm":password,
-                                  "name":"$firstName $middleName $lastName",
-                                  "userType":"user"
-                                };
-                                var studentAsUserResponse = await createStudentAsUser(user);
-                                if(studentAsUserResponse["httpStatusCode"] == 201){
+                              },
+                              child: Text("Cancel",
+                                style:  TextStyle(
+                                  fontFamily: 'ProductSans',
+                                  color: AppColors.indigo700,
+                                  fontSize: 16,
+                                ),),
+                            ),
+                            InkWell(
+                              onTap: () async{
+                                try{
+                                  AcademicStudentModel newStudent = AcademicStudentModel(
+                                      classId: classId,
+                                      firstName: firstName,
+                                      middleName: middleName,
+                                      lastName: lastName,
+                                      gender: gender,
+                                      dateOfBirth: currentDateTime.toString(),
+                                      rollNo: rollNo,
+                                      contact: contact,
+                                      address: address,
+                                      email: emailAddress,
+                                      password: password,
+                                      confirmPassword: confirmPassword,
+                                      fatherName: fatherName,
+                                      fatherContact: fatherContact,
+                                      fatherDesignation: fatherDesignation,
+                                      motherName: motherName,
+                                      motherContact: motherContact,
+                                      motherDesignation: motherDesignation,
+                                      //admissionNo: admissionNo,
+                                      studentID: studentID
+                                  );
+                                  Map<String,String> user ={
+                                    "email":emailAddress,
+                                    "password":password,
+                                    "passwordConfirm":password,
+                                    "name":"$firstName $middleName $lastName",
+                                    "userType":"user"
+                                  };
+                                  var studentAsUserResponse = await createStudentAsUser(user);
+                                  if(studentAsUserResponse["httpStatusCode"] == 201){
 
-                                  var user = GetUserAuth.fromJson(studentAsUserResponse["responseJson"]);
-                                  print(user.userId);
-                                  newStudent.studentAsUserId = user.userId;
-                                  var response = await createAcademicStudent(newStudent.toJson());
-                                  if(response["httpStatusCode"] == 201){
-                                    String id = response["responseJson"]["data"]["id"];
-                                    newStudent.id = id;
-                                    clearField();
-                                    setState(() {
-                                      academicStudentModel.add(newStudent);
-                                    });
+                                    var user = GetUserAuth.fromJson(studentAsUserResponse["responseJson"]);
+                                    print(user.userId);
+                                    newStudent.studentAsUserId = user.userId;
+                                    var response = await createAcademicStudent(newStudent.toJson());
+                                    if(response["httpStatusCode"] == 201){
+                                      String id = response["responseJson"]["data"]["id"];
+                                      newStudent.id = id;
+                                      clearField();
+                                      setState(() {
+                                        academicStudentModel.add(newStudent);
+                                      });
 
+                                    }
+                                    else {
+                                      String message = response["responseJson"]['message'];
+                                      showToast(context, message);
+                                    }
                                   }
                                   else {
-                                    String message = response["responseJson"]['message'];
+                                    String message = studentAsUserResponse["responseJson"]['message'];
                                     showToast(context, message);
                                   }
                                 }
-                                else {
-                                  String message = studentAsUserResponse["responseJson"]['message'];
-                                  showToast(context, message);
+                                catch(error){
+                                  if (error is ApiError) {
+                                    logger.e("Api Error: ${error.toString()}");
+
+                                  } else {
+                                    showToast(context, 'Something went wrong!');
+                                  }
+
+                                }finally{
+
+
                                 }
-                              }
-                              catch(error){
-                                if (error is ApiError) {
-                                  logger.e("Api Error: ${error.toString()}");
 
-                                } else {
-                                  showToast(context, 'Something went wrong!');
-                                }
-
-                              }finally{
-
-
-                              }
-
-                            },
-                            child: Container(
-                              height: 36,
-                              width: 175,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: AppColors.blue,
+                              },
+                              child: Container(
+                                height: 36,
+                                width: 175,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: AppColors.blue,
+                                ),
+                                child: Text("Save",style:
+                                TextStyle(
+                                    fontFamily: 'ProductSans',
+                                    color: AppColors.white,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.bold
+                                ),
+                                ),
                               ),
-                              child: Text("Save",style:
-                              TextStyle(
-                                  fontFamily: 'ProductSans',
-                                  color: AppColors.white,
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.bold
-                              ),
-                              ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              Spacer(),
-              Container(
-                height: 756,
-                width:MediaQuery.of(context).size.width * .25,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: AppColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xff707070).withOpacity(.4),
-                        offset: Offset(0, 0),
-                        blurRadius: 6,
-                      )
-                    ]),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 70,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),),
-                        color: AppColors.indigo700,
+              Flexible(
+                flex: 4,
+                child: Container(
+                  margin: EdgeInsets.only(left: 75),
+                  height: 756,
+                  //width:MediaQuery.of(context).size.width * .25,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: AppColors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xff707070).withOpacity(.4),
+                          offset: Offset(0, 0),
+                          blurRadius: 6,
+                        )
+                      ]),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 70,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),),
+                          color: AppColors.indigo700,
+                        ),
+                        child: Text("Recently Added",
+                          style: TextStyle(
+                              fontFamily: 'ProductSans',
+                              color: AppColors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold
+                          ),),
                       ),
-                      child: Text("Recently Added",
-                        style: TextStyle(
-                            fontFamily: 'ProductSans',
-                            color: AppColors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold
-                        ),),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount:academicClassModel.length,
-                        itemBuilder: (context,index){
-                          List<AcademicStudentModel> classWiseStudent = academicStudentModel.where((student) => student.classId == academicClassModel[index].id).toList();
-                          return classWiseStudent.length != 0 ? LimitedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 30),
-                              child: Container(
-                                height: 200,
-                                width: MediaQuery.of(context).size.width * .25,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 10,),
-                                    Text("${academicClassModel[index].className}",
-                                      style:  TextStyle(
-                                        fontFamily: 'ProductSans',
-                                        color: AppColors.textColorBlack,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold
-                                    ),),
-                                    SizedBox(height: 10,),
-                                    Container(
-                                      height: 150,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                          itemCount: classWiseStudent.length,
-                                          itemBuilder: (context,index){
-                                        return LimitedBox(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(right: 20),
-                                            child: Container(
-                                              height: 130,
-                                              width: 350,
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(30),
-                                                  color: AppColors.appBackgroundColor,
-                                                 ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 30),
-                                                child: Column(
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.fromLTRB(10, 30, 40, 0),
-                                                      child: Row(
-                                                        children: [
-                                                          Container(
-                                                            height: 75.0,
-                                                            decoration: new BoxDecoration(
-                                                              shape: BoxShape.circle,
-                                                              color:AppColors.indigo700,
-                                                            ),
-                                                            alignment: Alignment.center,
-                                                            child: Container(
-                                                              width: 70,
-                                                              height: 70,
+                      Expanded(
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount:academicClassModel.length,
+                          itemBuilder: (context,index){
+                            List<AcademicStudentModel> classWiseStudent = academicStudentModel.where((student) => student.classId == academicClassModel[index].id).toList();
+                            return classWiseStudent.length != 0 ? LimitedBox(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Container(
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width * .25,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 10,),
+                                      Text("${academicClassModel[index].className}",
+                                        style:  TextStyle(
+                                          fontFamily: 'ProductSans',
+                                          color: AppColors.textColorBlack,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold
+                                      ),),
+                                      SizedBox(height: 10,),
+                                      Container(
+                                        height: 150,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                            itemCount: classWiseStudent.length,
+                                            itemBuilder: (context,index){
+                                          return LimitedBox(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(right: 20),
+                                              child: Container(
+                                                height: 130,
+                                                width: 350,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    color: AppColors.appBackgroundColor,
+                                                   ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                  child: Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.fromLTRB(10, 30, 40, 0),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              height: 75.0,
                                                               decoration: new BoxDecoration(
                                                                 shape: BoxShape.circle,
-                                                                color:AppColors.white,
+                                                                color:AppColors.indigo700,
                                                               ),
                                                               alignment: Alignment.center,
-                                                              child:bytesFromPicker != null ? ClipRRect(
-                                                                  borderRadius: BorderRadius.circular(40),
-                                                                  child: Image.memory(
-                                                                    bytesFromPicker,
-                                                                    fit:BoxFit.fill,width: 70,height: 70,
-                                                                    filterQuality: FilterQuality.high,
-                                                                  )):Icon(
-                                                                Icons.add,
-                                                                size: 48,
-                                                                color: AppColors.indigo700,),
-                                                            ),
-                                                          ),
-                                                          SizedBox(width: 40,),
-                                                          Column(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                                                            textBaseline: TextBaseline.alphabetic,
-                                                            children: [
-                                                              Text("${classWiseStudent[index].firstName ?? ""} ${classWiseStudent[index].middleName ?? ""} ${classWiseStudent[index].lastName ?? ""}",
-                                                               maxLines: 3,
-                                                                style:  TextStyle(
-                                                                  fontFamily: 'ProductSans',
-                                                                  color: AppColors.indigo700,
-                                                                  fontSize: 23,
-                                                                  fontWeight: FontWeight.bold
-                                                                ),),
-                                                              Text("31,${classWiseStudent[index].gender}",
-                                                                style:  TextStyle(
-                                                                    fontFamily: 'ProductSans',
-                                                                    color: Color(0xff9D949C),
-                                                                    fontSize: 15,
-                                                                ),),
-                                                               SizedBox(height: 25,),
-                                                              Row(
-                                                                children: [
-                                                                  InkWell(
-                                                                    onTap: (){
-                                                                      editStudentInput(context,classWiseStudent[index],index,classes.id);
-                                                                    },
-                                                                    child: Text("Edit",
-                                                                      style:  TextStyle(
-                                                                        fontFamily: 'ProductSans',
-                                                                        color: AppColors.textColorBlack,
-                                                                        fontSize: 12,
-                                                                      ),),
-                                                                  ),
-                                                                  SizedBox(width: 10,),
-                                                                  InkWell(
-                                                                    onTap: (){
-                                                                      viewStudentInput(context,classWiseStudent[index],classes.className,widget.year);
-                                                                    },
-                                                                    child: Text("View",
-                                                                      style:  TextStyle(
-                                                                        fontFamily: 'ProductSans',
-                                                                        color: AppColors.indigo600,
-                                                                        fontSize: 12,
-                                                                      ),),
-                                                                  ),
-                                                                ],
+                                                              child: Container(
+                                                                width: 70,
+                                                                height: 70,
+                                                                decoration: new BoxDecoration(
+                                                                  shape: BoxShape.circle,
+                                                                  color:AppColors.white,
+                                                                ),
+                                                                alignment: Alignment.center,
+                                                                child:bytesFromPicker != null ? ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(40),
+                                                                    child: Image.memory(
+                                                                      bytesFromPicker,
+                                                                      fit:BoxFit.fill,width: 70,height: 70,
+                                                                      filterQuality: FilterQuality.high,
+                                                                    )):Icon(
+                                                                  Icons.add,
+                                                                  size: 48,
+                                                                  color: AppColors.indigo700,),
                                                               ),
-                                                            ],
-                                                          ),
-                                                        ],
+                                                            ),
+                                                            SizedBox(width: 40,),
+                                                            Column(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                                                              textBaseline: TextBaseline.alphabetic,
+                                                              children: [
+                                                                Text("${classWiseStudent[index].firstName ?? ""} ${classWiseStudent[index].middleName ?? ""} ${classWiseStudent[index].lastName ?? ""}",
+                                                                 maxLines: 3,
+                                                                  style:  TextStyle(
+                                                                    fontFamily: 'ProductSans',
+                                                                    color: AppColors.indigo700,
+                                                                    fontSize: 23,
+                                                                    fontWeight: FontWeight.bold
+                                                                  ),),
+                                                                Text("31,${classWiseStudent[index].gender}",
+                                                                  style:  TextStyle(
+                                                                      fontFamily: 'ProductSans',
+                                                                      color: Color(0xff9D949C),
+                                                                      fontSize: 15,
+                                                                  ),),
+                                                                 SizedBox(height: 25,),
+                                                                Row(
+                                                                  children: [
+                                                                    InkWell(
+                                                                      onTap: (){
+                                                                        editStudentInput(context,classWiseStudent[index],index,classes.id);
+                                                                      },
+                                                                      child: Text("Edit",
+                                                                        style:  TextStyle(
+                                                                          fontFamily: 'ProductSans',
+                                                                          color: AppColors.textColorBlack,
+                                                                          fontSize: 12,
+                                                                        ),),
+                                                                    ),
+                                                                    SizedBox(width: 10,),
+                                                                    InkWell(
+                                                                      onTap: (){
+                                                                        viewStudentInput(context,classWiseStudent[index],classes.className,widget.year);
+                                                                      },
+                                                                      child: Text("View",
+                                                                        style:  TextStyle(
+                                                                          fontFamily: 'ProductSans',
+                                                                          color: AppColors.indigo600,
+                                                                          fontSize: 12,
+                                                                        ),),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      }),
-                                    ),
-                                    SizedBox(height: 10,),
-                                  ],
+                                          );
+                                        }),
+                                      ),
+                                      SizedBox(height: 10,),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ):SizedBox();
-                        },
+                            ):SizedBox();
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

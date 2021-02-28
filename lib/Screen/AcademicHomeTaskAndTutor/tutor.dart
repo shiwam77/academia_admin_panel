@@ -1,9 +1,13 @@
 import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Model/academic_class_model.dart';
 import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/src/class.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/widget.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_class_vm.dart';
 import 'package:academia_admin_panel/vm_service/base_view.dart';
+import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:kumi_popup_window/kumi_popup_window.dart';
 
 class AcademicTutor extends StatefulWidget {
   final String yearId;
@@ -102,10 +106,11 @@ class _AcademicTutorState extends State<AcademicTutor> {
                             ),
                           ),
                         ),
+
                         SizedBox(width: 40,),
                         InkWell(
                           onTap: () async{
-                            // await addStudentInput(context);
+                             await addHomeTaskAndTutor(context);
                           },
                           child: Container(
                             height: 30,
@@ -117,7 +122,6 @@ class _AcademicTutorState extends State<AcademicTutor> {
                                 color: AppColors.textColorBlack,
                                 width: 2,
                               ),
-                              color: AppColors.appBackgroundColor,
                             ),
                             child: Icon(Icons.add,size: 18,color: AppColors.textColorBlack,),),
                         ),
@@ -240,19 +244,24 @@ class _AcademicTutorState extends State<AcademicTutor> {
                               Spacer(flex: 5,),
                               Row(
                                 children: [
-                                  Container(
-                                    height: 30,
-                                    width: 88,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: AppColors.blue,
+                                  InkWell(
+                                    onTap:(){
+                                      addHomeTaskAndTutor(context);
+                                    },
+                                    child: Container(
+                                      height: 30,
+                                      width: 88,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: AppColors.blue,
+                                      ),
+                                      child: Text("Edit",style: TextStyle(
+                                          fontFamily: 'ProductSans',
+                                          color: AppColors.white,
+                                          fontSize: 16,
+                                      )),
                                     ),
-                                    child: Text("Edit",style: TextStyle(
-                                        fontFamily: 'ProductSans',
-                                        color: AppColors.white,
-                                        fontSize: 16,
-                                    )),
                                   ),
                                   SizedBox(width: 20,),
                                   Container(
@@ -301,5 +310,4 @@ class _AcademicTutorState extends State<AcademicTutor> {
         }
     );
   }
-
 }

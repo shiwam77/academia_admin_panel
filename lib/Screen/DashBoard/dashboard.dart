@@ -144,7 +144,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                               }
                               else if(navIndex.getIndex() == 2){
                                 return AddAcademicStudent(widget.yearId,widget.year);
-                              } else if(navIndex.getIndex() == 3){
+                              } else if(navIndex.getIndex() == 4){
                                 return HomeTask(widget.yearId);
                               }else if(navIndex.getIndex() == 6){
                                 return AcademicTutor(widget.yearId);

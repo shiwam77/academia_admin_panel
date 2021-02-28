@@ -26,6 +26,7 @@ class StudentField extends StatefulWidget {
 
 class _StudentFieldState extends State<StudentField> {
   int selectedIndex;
+  bool isCursor = false;
   String classId;
   String className;
   String preClassId;
@@ -147,66 +148,80 @@ class _StudentFieldState extends State<StudentField> {
              itemCount: academicStudentModel.length,
              itemBuilder: (context,index){
                return LimitedBox(
-                 child: Padding(
-                   padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
-                   child: InkWell(
+                 child: MouseRegion(
+                   onEnter: (value){
+                     setState(() {
+                       isCursor = true;
+                       selectedIndex =index;
+                     });
+                   },
+                   onExit: (value){
+                     setState(() {
+                       isCursor = false;
+                       selectedIndex = null;
+                     });
+                   },
+                   child: Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
+                     child: InkWell(
 
-                     onTap: () async{
-                       try{
-                         await viewStudentInput(context,academicStudentModel[index],className,widget.year);
-                         setState(() {
-                           selectedIndex = index;
+                       onTap: () async{
+                         try{
+                           await viewStudentInput(context,academicStudentModel[index],className,widget.year);
+                           setState(() {
+                             selectedIndex = index;
 
-                         });
-                       }
-                       catch(err){
-                         print(err);
-                       }
+                           });
+                         }
+                         catch(err){
+                           print(err);
+                         }
 
-                     },
-                     child: Container(
-                       color:selectedIndex == index?AppColors.appBackgroundColor:AppColors.transparent ,
-                       height: 86,
-                       child: Padding(
-                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                         child: Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: [
-                             Text('${academicStudentModel[index].firstName}',style: TextStyle(
-                                 fontFamily: 'ProductSans',
-                                 fontSize: 30,
-                                 fontWeight: FontWeight.normal,
-                                 color: AppColors.textColorBlack
-                             ),),
-                             Row(children: [
-                               InkWell(
-                                 onTap: ()async{
-                                   await editStudentInput(context,academicStudentModel[index],index);
-                                 },
-                                   child: Icon(Icons.edit,size: 30,)),
-                               SizedBox(width: 50,),
-                               InkWell(
-                                 onTap: () async {
-                                   try{
-                                     var response = await deleteAcademicStudent(academicStudentModel[index].id);
-                                     if(response["httpStatusCode"] == 204){
-                                       setState(() {
-                                         academicStudentModel.removeAt(index);
-                                       });
+                       },
+                       child: Container(
+                         color:selectedIndex == index && isCursor ?AppColors.appBackgroundColor:AppColors.transparent ,
+                         height: 86,
+                         child: Padding(
+                           padding: const EdgeInsets.symmetric(horizontal: 20),
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               Text('${academicStudentModel[index].firstName}',style: TextStyle(
+                                   fontFamily: 'ProductSans',
+                                   fontSize: 30,
+                                   fontWeight: FontWeight.normal,
+                                   color: AppColors.textColorBlack
+                               ),),
+                               Row(children: [
+                                 InkWell(
+                                   onTap: ()async{
+                                     await editStudentInput(context,academicStudentModel[index],index);
+                                   },
+                                     child: Icon(Icons.edit,size: 30,)),
+                                 SizedBox(width: 50,),
+                                 InkWell(
+                                   onTap: () async {
+                                     try{
+                                       var response = await deleteAcademicStudent(academicStudentModel[index].id);
+                                       if(response["httpStatusCode"] == 204){
+                                         setState(() {
+                                           academicStudentModel.removeAt(index);
+                                         });
+                                       }
+                                       else if(response["httpStatusCode"] == 500){
+                                         String message = response["responseJson"]['message'];
+                                         showToast(context, message);
+                                       }
                                      }
-                                     else if(response["httpStatusCode"] == 500){
-                                       String message = response["responseJson"]['message'];
-                                       showToast(context, message);
+                                     catch(error){
+                                       showToast(context, 'something went wrong!');
                                      }
-                                   }
-                                   catch(error){
-                                     showToast(context, 'something went wrong!');
-                                   }
-                                 },
-                                   child: Icon(Icons.delete,size: 30,),
-                               )
-                             ],)
-                           ],
+                                   },
+                                     child: Icon(Icons.delete,size: 30,),
+                                 )
+                               ],)
+                             ],
+                           ),
                          ),
                        ),
                      ),
