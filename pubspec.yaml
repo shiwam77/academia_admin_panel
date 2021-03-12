@@ -55,6 +55,7 @@ dependencies:
   flutter_staggered_animations: "^0.1.2"
   dropdown_search: ^0.4.9
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

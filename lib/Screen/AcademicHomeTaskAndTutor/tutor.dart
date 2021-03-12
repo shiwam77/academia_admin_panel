@@ -110,7 +110,7 @@ class _AcademicTutorState extends State<AcademicTutor> {
                         SizedBox(width: 40,),
                         InkWell(
                           onTap: () async{
-                             await addHomeTaskAndTutor(context);
+                           //  await addHomeTaskAndTutor(context);
                           },
                           child: Container(
                             height: 30,
@@ -246,7 +246,7 @@ class _AcademicTutorState extends State<AcademicTutor> {
                                 children: [
                                   InkWell(
                                     onTap:(){
-                                      addHomeTaskAndTutor(context);
+                                     // addHomeTaskAndTutor(context);
                                     },
                                     child: Container(
                                       height: 30,

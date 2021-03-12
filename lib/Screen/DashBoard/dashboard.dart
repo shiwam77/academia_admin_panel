@@ -1,6 +1,7 @@
 import 'package:academia_admin_panel/Color.dart';
 
 import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/home_task.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/notifier/subjectNotifier.dart';
 import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/tutor.dart';
 import 'package:academia_admin_panel/Screen/AcademicStudent/add_academic_student.dart';
 
@@ -34,6 +35,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
             providers: [
               ChangeNotifierProvider<NavIndex>(create: (_) => NavIndex()),
               ChangeNotifierProvider<ClassNotifier>(create: (_) => ClassNotifier()),
+              ChangeNotifierProvider<SubjectNotifier>(create: (_) => SubjectNotifier()),
               // Provider<NavIndex>(create: (_) => NavIndex()),
               // Provider<ClassNotifier>(create: (_) => ClassNotifier()),
             ],

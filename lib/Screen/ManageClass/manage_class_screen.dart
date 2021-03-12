@@ -32,95 +32,59 @@ class _ManageClassPageState extends State<ManageClassPage> {
       backgroundColor: AppColors.appBackgroundColor,
         body: Padding(
           padding: const EdgeInsets.only(top: 10,),
-          child: Stack(
+          child: Column(
             children: [
-              Column(
-                children: [
-                  SizedBox(height: 20,),
+              SizedBox(height: 20,),
 
-                  ClassField(widget.yearId),
+              ClassField(widget.yearId),
 
-                  SizedBox(height: 20,),
+              SizedBox(height: 20,),
 
-                  Expanded(
-                    child: ListView(
-                      controller: _controller,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SubjectField(),
-                              StudentField(widget.year),
-                            ],
-                          ),
+              Expanded(
+                child: Scrollbar(
+                  controller: _controller,
+                  child: ListView(
+                    controller: _controller,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SubjectField(),
+                            StudentField(widget.year),
+                          ],
                         ),
-                        // OverflowBar(
-                        //   spacing: 100,
-                        //   overflowSpacing: 20,
-                        //   children: [
-                        //     SubjectField(),
-                        //     StudentField(),
-                        //   ],
-                        // ),
-                        SizedBox(height: 50,),
+                      ),
+                      // OverflowBar(
+                      //   spacing: 100,
+                      //   overflowSpacing: 20,
+                      //   children: [
+                      //     SubjectField(),
+                      //     StudentField(),
+                      //   ],
+                      // ),
+                      SizedBox(height: 50,),
 
-                        SizedBox(height: 20,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                      SizedBox(height: 20,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
 
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                             SportsField(),
-                              CulturalActivitiesField(),
-                            ],
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                           SportsField(),
+                            CulturalActivitiesField(),
+                          ],
                         ),
-                        SizedBox(height: 300,),
+                      ),
+                      SizedBox(height: 300,),
 
-                      ],
-                    ),
+                    ],
                   ),
-
-                ],
+                ),
               ),
-              /// ScrollBar
-              // Positioned(
-              //   right: 10,
-              //   child: Container(
-              //       alignment: Alignment.centerRight,
-              //       height: MediaQuery.of(context).size.height,
-              //       width: 20.0,
-              //       margin: EdgeInsets.only(left: MediaQuery.of(context).size.width - 20.0),
-              //       decoration: BoxDecoration(color: Colors.black12),
-              //       child: Container(
-              //         alignment: Alignment.topCenter,
-              //         child: GestureDetector(
-              //           child: Container(
-              //             height: 40.0,
-              //             width: 15.0,
-              //             margin:
-              //             EdgeInsets.only(left: 5.0, right: 5.0, top: _offset),
-              //             decoration: BoxDecoration(
-              //                 color: Colors.grey,
-              //                 borderRadius: BorderRadius.all(Radius.circular(3.0))),
-              //           ),
-              //           onVerticalDragUpdate: (dragUpdate) {
-              //             _controller.position.moveTo(dragUpdate.globalPosition.dy * .8);
-              //
-              //             setState(() {
-              //               if(dragUpdate.globalPosition.dy >= 0) {
-              //                 _offset = dragUpdate.globalPosition.dy;
-              //               }
-              //               print("View offset ${_controller.offset} scroll-bar offset ${_offset}");
-              //             });
-              //           },
-              //         ),
-              //       )
-              //   ),
-              // ),
+
             ],
           ),
         ));

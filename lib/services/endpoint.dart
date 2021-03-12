@@ -109,3 +109,21 @@ class AcademicStudentApi{
     return '/{:Id}/deleteStudent';
   }
 }
+
+class AcademicHomeTaskApi{
+  static String get academicTask{
+    return "/{:Id}/getAllHomeTasks";
+  }
+
+  static String get createTask{
+    return '/createHomeTasks';
+  }
+
+  static String get updateTask{
+    return '/{:Id}/updateHomeTasks';
+  }
+
+  static String get deleteTask{
+    return '/{:Id}/deleteHomeTasks';
+  }
+}

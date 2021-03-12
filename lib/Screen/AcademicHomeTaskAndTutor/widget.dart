@@ -1,8 +1,16 @@
+import 'dart:typed_data';
+
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Model/academic_hometask_model.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/endpoint.dart';
+import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
 
-addHomeTaskAndTutor(BuildContext context){
+addHomeTaskAndTutor(BuildContext context,DateTime date,String subjectId){
+  String subjectName , teacherName,topic,chapter,description,comment,fileName;
+  dynamic file;
   return showPopupWindow(
     context,
     gravity: KumiPopupGravity.leftBottom,
@@ -20,7 +28,7 @@ addHomeTaskAndTutor(BuildContext context){
     childFun: (pop) {
       return  StatefulBuilder(
           key: GlobalKey(),
-          builder: (context,StateSetter studentState){
+          builder: (context,StateSetter setState){
             return  Container(
               height: 700,
               color: Colors.transparent,
@@ -46,12 +54,34 @@ addHomeTaskAndTutor(BuildContext context){
                         children: [
                           Row(
                             children: [
-                              Container(
-                                height: 245,
-                                width:470,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  color:AppColors.appBackgroundColor,
+                              InkWell(
+                                onTap: () async {
+                                  file =
+                                      await ImagePickerWeb.getImage(outputType: ImageType.file);
+                                  print(file.name);
+
+                                  if (file != null) {
+                                    setState(() {
+                                      fileName = file.name;
+                                    });
+
+                                  }
+                                },
+                                child: Container(
+                                  height: 245,
+                                  width:470,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color:AppColors.appBackgroundColor,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.insert_drive_file,color: AppColors.gray,size: 55,),
+                                      fileName != null  ? Text(fileName):SizedBox(),
+                                    ],
+                                  ),
                                 ),
                               ),
 
@@ -78,7 +108,9 @@ addHomeTaskAndTutor(BuildContext context){
                                           Flexible(
                                             flex: 1,
                                             child: TextField(
-                                              //onChanged: onChanged,
+                                              onChanged: (value){
+                                                subjectName =value;
+                                              },
                                               decoration: InputDecoration(
                                                 filled: true,
                                                 fillColor: AppColors.white,
@@ -102,7 +134,9 @@ addHomeTaskAndTutor(BuildContext context){
                                           Flexible(
                                             flex: 1,
                                             child: TextField(
-                                              //onChanged: onChanged,
+                                              onChanged: (value){
+                                                teacherName = value;
+                                              },
                                               decoration: InputDecoration(
                                                 filled: true,
                                                 fillColor: AppColors.white,
@@ -129,7 +163,9 @@ addHomeTaskAndTutor(BuildContext context){
                                           Flexible(
                                             flex: 1,
                                             child: TextField(
-                                              //onChanged: onChanged,
+                                              onChanged: (value){
+                                                topic = value;
+                                              },
                                               decoration: InputDecoration(
                                                 filled: true,
                                                 fillColor: AppColors.white,
@@ -156,7 +192,9 @@ addHomeTaskAndTutor(BuildContext context){
                                           Flexible(
                                             flex: 1,
                                             child: TextField(
-                                              //    onChanged: onChanged,
+                                              onChanged: (value){
+                                                chapter = value;
+                                              },
                                               decoration: InputDecoration(
                                                 filled: true,
                                                 fillColor: AppColors.white,
@@ -194,7 +232,9 @@ addHomeTaskAndTutor(BuildContext context){
                                         ]),
                                     child: TextField(
                                       maxLines: 10,
-                                      //onChanged: onChanged,
+                                      onChanged: (value){
+                                         description = value;
+                                      },
                                       decoration: InputDecoration(
                                         hintText: "Write a short description....",
                                         hintStyle: TextStyle(fontSize: 20,color: AppColors.gray),
@@ -240,7 +280,9 @@ addHomeTaskAndTutor(BuildContext context){
                                         ]),
                                     child: TextField(
                                       maxLines: 10,
-                                      //onChanged: onChanged,
+                                      onChanged: (value){
+                                        comment = value;
+                                      },
                                       decoration: InputDecoration(
                                         hintText: "Comments",
                                         hintStyle: TextStyle(fontSize: 20,color: AppColors.gray),
@@ -290,7 +332,31 @@ addHomeTaskAndTutor(BuildContext context){
                                 ),
 
                                 InkWell(
-                                  onTap: (){
+                                  onTap: () async {
+                                    HomeTaskModel homeWork = HomeTaskModel(
+                                      subjectId: subjectId ,
+                                      subjectName: subjectName,
+                                      teacherName: teacherName,
+                                      description: description,
+                                      chapter: chapter,
+                                      date: date.toString(),
+                                      topic: topic,
+                                      comment: comment
+                                    );
+                                    try{
+                                      var response = await createAcademicHomeTasks(homeWork.toJson());
+                                      if(response["httpStatusCode"] == 201){
+                                        String id = response["responseJson"]["data"]["id"];
+                                        homeWork.id = id;
+                                      }
+                                      else {
+                                        String message = response["responseJson"]['message'];
+                                        showToast(context, message);
+                                      }
+                                    }
+                                    catch(error){
+                                      showToast(context, "Something went wrong!");
+                                    }
                                     Navigator.pop(context);
                                   },
                                   child: Container(
