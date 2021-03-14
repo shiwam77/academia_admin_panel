@@ -1,4 +1,5 @@
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Screen/AcademicAttendance/attendance.dart';
 
 import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/home_task.dart';
 import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/notifier/subjectNotifier.dart';
@@ -11,6 +12,7 @@ import 'package:academia_admin_panel/Screen/DashBoard/src/organization_name_logo
 import 'package:academia_admin_panel/Screen/Home/home_page.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/manage_class_screen.dart';
+import 'package:academia_admin_panel/Screen/TimeTable/routine_table.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -146,9 +148,14 @@ class _DashBoardPageState extends State<DashBoardPage> {
                               }
                               else if(navIndex.getIndex() == 2){
                                 return AddAcademicStudent(widget.yearId,widget.year);
+                              }  else if(navIndex.getIndex() == 3){
+                                return RoutineTable(yearId:widget.yearId);
                               } else if(navIndex.getIndex() == 4){
                                 return HomeTask(widget.yearId);
-                              }else if(navIndex.getIndex() == 6){
+                              } else if(navIndex.getIndex() == 5){
+                                return AttendanceScreen(widget.yearId);
+                              }
+                              else if(navIndex.getIndex() == 6){
                                 return AcademicTutor(widget.yearId);
                               }
                               return Login();

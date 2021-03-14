@@ -41,7 +41,8 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
   TextEditingController emailAddressController = TextEditingController();
   TextEditingController studentIDController = TextEditingController();
   TextEditingController contactController = TextEditingController();
-
+   
+   bool isLoading = false;
   int selectedIndex;
   String classId;
   String className;
@@ -707,6 +708,9 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                             InkWell(
                               onTap: () async{
                                 try{
+                                  setState(() {
+                                    isLoading = true;
+                                  });
                                   AcademicStudentModel newStudent = AcademicStudentModel(
                                       classId: classId,
                                       firstName: firstName,
@@ -756,6 +760,7 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                       String message = response["responseJson"]['message'];
                                       showToast(context, message);
                                     }
+                                   
                                   }
                                   else {
                                     String message = studentAsUserResponse["responseJson"]['message'];
@@ -771,27 +776,29 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                   }
 
                                 }finally{
-
+                                    setState(() {
+                                      isLoading = false;
+                                    });
 
                                 }
 
                               },
                               child: Container(
-                                height: 36,
+                                height: 45,
                                 width: 175,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
                                   color: AppColors.blue,
                                 ),
-                                child: Text("Save",style:
+                                child: !isLoading ? Text("Save",style:
                                 TextStyle(
                                     fontFamily: 'ProductSans',
                                     color: AppColors.white,
                                     fontSize: 23,
                                     fontWeight: FontWeight.bold
                                 ),
-                                ),
+                                ): CircularProgressIndicator(backgroundColor: AppColors.green600,),
                               ),
                             )
                           ],
@@ -863,106 +870,105 @@ class _AddAcademicStudentState extends State<AddAcademicStudent> {
                                           scrollDirection: Axis.horizontal,
                                             itemCount: classWiseStudent.length,
                                             itemBuilder: (context,index){
-                                          return LimitedBox(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(right: 20),
-                                              child: Container(
-                                                height: 130,
-                                                width: 350,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(30),
-                                                    color: AppColors.appBackgroundColor,
-                                                   ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                                                  child: Column(
-                                                    children: [
-                                                      Padding(
-                                                        padding: const EdgeInsets.fromLTRB(10, 30, 40, 0),
-                                                        child: Row(
-                                                          children: [
-                                                            Container(
-                                                              height: 75.0,
+                                          return Padding(
+                                            padding: const EdgeInsets.only(right: 20),
+                                            child: Container(
+                                              height: 130,
+                                             // width: 350,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(30),
+                                                  color: AppColors.appBackgroundColor,
+                                                 ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                child: Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.fromLTRB(10, 30, 40, 0),
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            height: 75.0,
+                                                            decoration: new BoxDecoration(
+                                                              shape: BoxShape.circle,
+                                                              color:AppColors.indigo700,
+                                                            ),
+                                                            alignment: Alignment.center,
+                                                            child: Container(
+                                                              width: 70,
+                                                              height: 70,
                                                               decoration: new BoxDecoration(
                                                                 shape: BoxShape.circle,
-                                                                color:AppColors.indigo700,
+                                                                color:AppColors.white,
                                                               ),
                                                               alignment: Alignment.center,
-                                                              child: Container(
-                                                                width: 70,
-                                                                height: 70,
-                                                                decoration: new BoxDecoration(
-                                                                  shape: BoxShape.circle,
-                                                                  color:AppColors.white,
-                                                                ),
-                                                                alignment: Alignment.center,
-                                                                child:bytesFromPicker != null ? ClipRRect(
-                                                                    borderRadius: BorderRadius.circular(40),
-                                                                    child: Image.memory(
-                                                                      bytesFromPicker,
-                                                                      fit:BoxFit.fill,width: 70,height: 70,
-                                                                      filterQuality: FilterQuality.high,
-                                                                    )):Icon(
-                                                                  Icons.add,
-                                                                  size: 48,
-                                                                  color: AppColors.indigo700,),
-                                                              ),
+                                                              child:bytesFromPicker != null ? ClipRRect(
+                                                                  borderRadius: BorderRadius.circular(40),
+                                                                  child: Image.memory(
+                                                                    bytesFromPicker,
+                                                                    fit:BoxFit.fill,width: 70,height: 70,
+                                                                    filterQuality: FilterQuality.high,
+                                                                  )):Icon(
+                                                                Icons.add,
+                                                                size: 48,
+                                                                color: AppColors.indigo700,),
                                                             ),
-                                                            SizedBox(width: 40,),
-                                                            Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                                                              textBaseline: TextBaseline.alphabetic,
-                                                              children: [
-                                                                Text("${classWiseStudent[index].firstName ?? ""} ${classWiseStudent[index].middleName ?? ""} ${classWiseStudent[index].lastName ?? ""}",
-                                                                 maxLines: 3,
-                                                                  style:  TextStyle(
+                                                          ),
+                                                          SizedBox(width: 40,),
+                                                          Column(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                                                            textBaseline: TextBaseline.alphabetic,
+                                                            children: [
+                                                              Text("${classWiseStudent[index].firstName ?? ""} ${classWiseStudent[index].middleName ?? ""} ${classWiseStudent[index].lastName ?? ""}",
+                                                               maxLines: 3,
+                                                               softWrap: true,
+                                                                style:  TextStyle(
+                                                                  fontFamily: 'ProductSans',
+                                                                  color: AppColors.indigo700,
+                                                                  fontSize: 23,
+                                                                  fontWeight: FontWeight.normal
+                                                                ),),
+                                                              Text("31,${classWiseStudent[index].gender}",
+                                                                style:  TextStyle(
                                                                     fontFamily: 'ProductSans',
-                                                                    color: AppColors.indigo700,
-                                                                    fontSize: 23,
-                                                                    fontWeight: FontWeight.bold
-                                                                  ),),
-                                                                Text("31,${classWiseStudent[index].gender}",
-                                                                  style:  TextStyle(
-                                                                      fontFamily: 'ProductSans',
-                                                                      color: Color(0xff9D949C),
-                                                                      fontSize: 15,
-                                                                  ),),
-                                                                 SizedBox(height: 25,),
-                                                                Row(
-                                                                  children: [
-                                                                    InkWell(
-                                                                      onTap: (){
-                                                                        editStudentInput(context,classWiseStudent[index],index,classes.id);
-                                                                      },
-                                                                      child: Text("Edit",
-                                                                        style:  TextStyle(
-                                                                          fontFamily: 'ProductSans',
-                                                                          color: AppColors.textColorBlack,
-                                                                          fontSize: 12,
-                                                                        ),),
-                                                                    ),
-                                                                    SizedBox(width: 10,),
-                                                                    InkWell(
-                                                                      onTap: (){
-                                                                        viewStudentInput(context,classWiseStudent[index],classes.className,widget.year);
-                                                                      },
-                                                                      child: Text("View",
-                                                                        style:  TextStyle(
-                                                                          fontFamily: 'ProductSans',
-                                                                          color: AppColors.indigo600,
-                                                                          fontSize: 12,
-                                                                        ),),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
+                                                                    color: Color(0xff9D949C),
+                                                                    fontSize: 15,
+                                                                ),),
+                                                               SizedBox(height: 25,),
+                                                              Row(
+                                                                children: [
+                                                                  InkWell(
+                                                                    onTap: (){
+                                                                      editStudentInput(context,classWiseStudent[index],index,classes.id);
+                                                                    },
+                                                                    child: Text("Edit",
+                                                                      style:  TextStyle(
+                                                                        fontFamily: 'ProductSans',
+                                                                        color: AppColors.textColorBlack,
+                                                                        fontSize: 12,
+                                                                      ),),
+                                                                  ),
+                                                                  SizedBox(width: 10,),
+                                                                  InkWell(
+                                                                    onTap: (){
+                                                                      viewStudentInput(context,classWiseStudent[index],classes.className,widget.year);
+                                                                    },
+                                                                    child: Text("View",
+                                                                      style:  TextStyle(
+                                                                        fontFamily: 'ProductSans',
+                                                                        color: AppColors.indigo600,
+                                                                        fontSize: 12,
+                                                                      ),),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),

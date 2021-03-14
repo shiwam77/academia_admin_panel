@@ -1,4 +1,5 @@
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/notifier/subjectNotifier.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/Notifier/screen_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +25,13 @@ class _NavBarItemState extends State<NavBarItem> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Consumer2<NavIndex,ClassNotifier>(
-        builder: (context,navIndex,_classNotifier,child){
+      child: Consumer3<NavIndex,ClassNotifier,SubjectNotifier>(
+        builder: (context,navIndex,_classNotifier,subjectNotifier,child){
           return InkWell(
             onTap: () {
               navIndex.changeIndex(widget.index);
               _classNotifier.setModelId(null);
+              subjectNotifier.setModelId(null);
               widget.touched();
             },
             splashColor: Colors.white,

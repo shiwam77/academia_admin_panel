@@ -127,3 +127,20 @@ class AcademicHomeTaskApi{
     return '/{:Id}/deleteHomeTasks';
   }
 }
+class AcademicHomeTutorApi{
+  static String get academicTutor{
+    return "/{:Id}/getAllTutor";
+  }
+
+  static String get createTutor{
+    return '/createTutor';
+  }
+
+  static String get updateTutor{
+    return '/{:Id}/updateTutor';
+  }
+
+  static String get deleteTutor{
+    return '/{:Id}/deleteTutor';
+  }
+}

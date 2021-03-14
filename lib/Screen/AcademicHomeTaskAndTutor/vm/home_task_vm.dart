@@ -15,24 +15,24 @@ class HomeTaskVm extends BaseVM {
   List<HomeTaskModel> homeTaskModel =[];
 
 
-  void init(String yearId,DateTime date) async {
+  void init(String subjectId,DateTime date) async {
     if (_isVmInitialised == true) {
       return;
     }
 
     setState(state: ViewState.Busy);
-    bool isComplete =  await fetchAcademicClass(yearId,date);
+    bool isComplete =  await fetchAcademicHomeTask(subjectId,date);
     setState(state: ViewState.Idle);
 
     _isVmInitialised = isComplete;
   }
 
-  void refresh(String yearId,DateTime date){
+  void refresh(String subjectId,DateTime date){
     _isVmInitialised = false;
-    init(yearId,date);
+    init(subjectId,date);
   }
 
-  Future<bool> fetchAcademicClass(String subjectId,DateTime date) async {
+  Future<bool> fetchAcademicHomeTask(String subjectId,DateTime date) async {
     Map<String,String> insightQuery ={"date":date.toString()};
     print(insightQuery);
     try{

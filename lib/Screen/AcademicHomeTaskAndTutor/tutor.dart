@@ -1,13 +1,13 @@
 import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Model/academic_class_model.dart';
+import 'package:academia_admin_panel/Model/academic_tutor.dart';
 import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/src/class.dart';
-import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/widget.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/vm/home_tutor_vm.dart';
+import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_class_vm.dart';
 import 'package:academia_admin_panel/vm_service/base_view.dart';
-import 'package:dio/dio.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:kumi_popup_window/kumi_popup_window.dart';
+import 'package:provider/provider.dart';
 
 class AcademicTutor extends StatefulWidget {
   final String yearId;
@@ -20,6 +20,9 @@ class _AcademicTutorState extends State<AcademicTutor> {
   List<AcademicClassModel> listOfClass =[];
   String classId;
   String preClassId;
+  List<HomeTutorModel> tutorList =[];
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -130,171 +133,215 @@ class _AcademicTutorState extends State<AcademicTutor> {
                   ],
                 ),
               ),
-              
+
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 1000,
-                      childAspectRatio: 7 / 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
-                      itemCount: 40,
-                      itemBuilder: (BuildContext ctx, index){
-                      return Row(
-                        children: [
-                          Container(
-                            width:365,
-                            height: 220,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.black12,
-                            ),
-                            child: Stack(children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Icon(Icons.play_circle_outline,size: 66,color: AppColors.white,),
-                              ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 15,right: 30),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.thumb_up_alt_outlined,size: 13,color: AppColors.white,),
-                                      SizedBox(width: 5,),
-                                      Text("2122",
-                                        style: TextStyle(
-                                            fontFamily: 'ProductSans',
-                                            color:AppColors.white,
-                                            fontSize:16,
-                                        ),),
-                                      SizedBox(width: 15,),
-                                      Icon(Icons.vertical_align_bottom,size: 13,color: AppColors.white,),
-                                      SizedBox(width: 5,),
-                                      Text("150",
-                                        style: TextStyle(
-                                            fontFamily: 'ProductSans',
-                                            color:AppColors.white,
-                                            fontSize:16,
-                                        ),),
-
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],),
-                          ),
-                          Spacer(flex: 1,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text("Theory Of Relativity",
-                                style: TextStyle(
-                                  fontFamily: 'ProductSans',
-                                  color:AppColors.textColorBlack,
-                                  fontSize:35,
-                                  fontWeight: FontWeight.bold
-                                ),),
-                              Spacer(flex: 1,),
-                              Row(
-                                children: [
-                                  Icon(Icons.watch_later_outlined,size: 12,color: AppColors.textColorBlack,),
-                                  SizedBox(width: 5,),
-                                  Text("1 month ago",
-                                    style: TextStyle(
-                                      fontFamily: 'ProductSans',
-                                      color:AppColors.gray,
-                                      fontSize:14,
-                                    ),),
-
-                                ],
-                              ),
-                              Spacer(flex: 2,),
-                              Row(
-                                children: [
-                                  Icon(Icons.backup_table_sharp,size: 14,color: AppColors.textColorBlack,),
-                                  SizedBox(width: 8,),
-                                  Text("Physics",
-                                    style: TextStyle(
-                                      fontFamily: 'ProductSans',
-                                      color:AppColors.gray,
-                                      fontSize:20,
-                                    ),),
-
-                                ],
-                              ),
-                              Spacer(flex: 2,),
-                              Row(
-                                children: [
-                                  Icon(Icons.person,size: 14,color: AppColors.textColorBlack,),
-                                  SizedBox(width: 8,),
-                                  Text("Shiwam Karn",
-                                    style: TextStyle(
-                                      fontFamily: 'ProductSans',
-                                      color:AppColors.gray,
-                                      fontSize:20,
-                                    ),),
-
-                                ],
-                              ),
-                              Spacer(flex: 5,),
-                              Row(
-                                children: [
-                                  InkWell(
-                                    onTap:(){
-                                     // addHomeTaskAndTutor(context);
-                                    },
-                                    child: Container(
-                                      height: 30,
-                                      width: 88,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: AppColors.blue,
-                                      ),
-                                      child: Text("Edit",style: TextStyle(
-                                          fontFamily: 'ProductSans',
-                                          color: AppColors.white,
-                                          fontSize: 16,
-                                      )),
-                                    ),
-                                  ),
-                                  SizedBox(width: 20,),
-                                  Container(
-                                    height: 30,
-                                    width: 88,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(color: AppColors.blue)
-                                    ),
-                                    child: Text("Delete",style: TextStyle(
-                                        fontFamily: 'ProductSans',
-                                        color:AppColors.blue,
-                                        fontSize: 16,
-                                    )),
-                                  ),
-                                ],
-                              ),
-                              Spacer(flex: 1,),
-                            ],
-                          ),
-                          Spacer(flex: 2,),
-                        ],
-                      );
-                      }),
-                ),
-              )
+                child: Consumer<ClassNotifier>(
+                    builder: (context,classNotifier,child){
+                      classId = classNotifier.getModelId();
+                      return tutorApiBuilder(classId);
+                    }),
+              ),
             ],
           ),
         ),
       ],
     );
   }
+  Widget tutorApiBuilder(String classId){
+    Map<String,String>  insightQuery = {};
+    return BaseView<TutorVm>(
+        loaderWidget: Center(child: CircularProgressIndicator()),
+        onVMReady: (TutorVm vm){
+          vm.init(classId,insightQuery);
+        },
+        builder: (_, vm, child) {
+          if(classId != null) {
+            if (classId == preClassId) {
+              if (vm.isError == false) {
+                tutorList  = vm.tutorList ;
+                return tutorItemBuilder(tutorList);
+              }
+              return SizedBox();
+            }
+            else {
+              preClassId = classId;
+              vm.refresh(classId,insightQuery);
+              return SizedBox();
+            }
+          }
+          else{
+            return SizedBox(
+                height: 60,
+                child: Center(child: Text("Please select the Class!",
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.clip,
+                )));
+          }
+
+        }
+    );
+  }
+
+  Widget tutorItemBuilder(List<HomeTutorModel> tutorList){
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 1000,
+              childAspectRatio: 7 / 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20),
+          itemCount: 40,
+          itemBuilder: (BuildContext ctx, index){
+            return Row(
+              children: [
+                Container(
+                  width:365,
+                  height: 220,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.black12,
+                  ),
+                  child: Stack(children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Icon(Icons.play_circle_outline,size: 66,color: AppColors.white,),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 15,right: 30),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.thumb_up_alt_outlined,size: 13,color: AppColors.white,),
+                            SizedBox(width: 5,),
+                            Text("2122",
+                              style: TextStyle(
+                                fontFamily: 'ProductSans',
+                                color:AppColors.white,
+                                fontSize:16,
+                              ),),
+                            SizedBox(width: 15,),
+                            Icon(Icons.vertical_align_bottom,size: 13,color: AppColors.white,),
+                            SizedBox(width: 5,),
+                            Text("150",
+                              style: TextStyle(
+                                fontFamily: 'ProductSans',
+                                color:AppColors.white,
+                                fontSize:16,
+                              ),),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],),
+                ),
+                Spacer(flex: 1,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text("Theory Of Relativity",
+                      style: TextStyle(
+                          fontFamily: 'ProductSans',
+                          color:AppColors.textColorBlack,
+                          fontSize:35,
+                          fontWeight: FontWeight.bold
+                      ),),
+                    Spacer(flex: 1,),
+                    Row(
+                      children: [
+                        Icon(Icons.watch_later_outlined,size: 12,color: AppColors.textColorBlack,),
+                        SizedBox(width: 5,),
+                        Text("1 month ago",
+                          style: TextStyle(
+                            fontFamily: 'ProductSans',
+                            color:AppColors.gray,
+                            fontSize:14,
+                          ),),
+
+                      ],
+                    ),
+                    Spacer(flex: 2,),
+                    Row(
+                      children: [
+                        Icon(Icons.backup_table_sharp,size: 14,color: AppColors.textColorBlack,),
+                        SizedBox(width: 8,),
+                        Text("Physics",
+                          style: TextStyle(
+                            fontFamily: 'ProductSans',
+                            color:AppColors.gray,
+                            fontSize:20,
+                          ),),
+
+                      ],
+                    ),
+                    Spacer(flex: 2,),
+                    Row(
+                      children: [
+                        Icon(Icons.person,size: 14,color: AppColors.textColorBlack,),
+                        SizedBox(width: 8,),
+                        Text("Shiwam Karn",
+                          style: TextStyle(
+                            fontFamily: 'ProductSans',
+                            color:AppColors.gray,
+                            fontSize:20,
+                          ),),
+
+                      ],
+                    ),
+                    Spacer(flex: 5,),
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap:(){
+                            // addHomeTaskAndTutor(context);
+                          },
+                          child: Container(
+                            height: 30,
+                            width: 88,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.blue,
+                            ),
+                            child: Text("Edit",style: TextStyle(
+                              fontFamily: 'ProductSans',
+                              color: AppColors.white,
+                              fontSize: 16,
+                            )),
+                          ),
+                        ),
+                        SizedBox(width: 20,),
+                        Container(
+                          height: 30,
+                          width: 88,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: AppColors.blue)
+                          ),
+                          child: Text("Delete",style: TextStyle(
+                            fontFamily: 'ProductSans',
+                            color:AppColors.blue,
+                            fontSize: 16,
+                          )),
+                        ),
+                      ],
+                    ),
+                    Spacer(flex: 1,),
+                  ],
+                ),
+                Spacer(flex: 2,),
+              ],
+            );
+          }),
+    );
+  }
+  
   Widget classApiBuilder(){
     return BaseView<ManageClassVm>(
         loaderWidget: Center(child: CircularProgressIndicator()),
@@ -310,4 +357,5 @@ class _AcademicTutorState extends State<AcademicTutor> {
         }
     );
   }
+
 }

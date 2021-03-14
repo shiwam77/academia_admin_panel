@@ -235,6 +235,7 @@ class _StudentFieldState extends State<StudentField> {
    }
   addStudentInput(BuildContext context){
       int admissionNo = academicStudentModel.length + 1;
+      bool isLoading = false;
     return showPopupWindow(
       context,
       gravity: KumiPopupGravity.leftBottom,
@@ -885,6 +886,9 @@ class _StudentFieldState extends State<StudentField> {
                           InkWell(
                             onTap: () async{
                               try{
+                                studentState((){
+                                  isLoading = true;
+                                });
                                   AcademicStudentModel newStudent = AcademicStudentModel(
                                     classId: classId,
                                     firstName: firstName,
@@ -949,6 +953,10 @@ class _StudentFieldState extends State<StudentField> {
                                   showToast(context, 'Something went wrong!');
                                 }
 
+                              }finally{
+                                studentState((){
+                                  isLoading = false;
+                                });
                               }
 
 
@@ -961,14 +969,14 @@ class _StudentFieldState extends State<StudentField> {
                                 borderRadius: BorderRadius.circular(12),
                                 color: AppColors.blue,
                               ),
-                              child: Text("Save",style:
+                              child: !isLoading ? Text("Save",style:
                               TextStyle(
                                   fontFamily: 'ProductSans',
                                   color: AppColors.white,
                                   fontSize: 23,
                                   fontWeight: FontWeight.bold
                               ),
-                              ),
+                              ):CircularProgressIndicator(backgroundColor: AppColors.green600,) 
                             ),
                           )
                         ],))
@@ -1004,6 +1012,7 @@ class _StudentFieldState extends State<StudentField> {
     String gender=  student.gender;
     String imageUrl =  student.imageUrl;
     int admissionNo = student.admissionNo;
+    bool isLoading = false;
     List <String> getGender = [
       'Male',
       'Female',
@@ -1680,6 +1689,9 @@ class _StudentFieldState extends State<StudentField> {
                               InkWell(
                                 onTap: () async{
                                   try{
+                                     editStudentState(() {
+                                      isLoading = true;
+                                  });
                                     AcademicStudentModel newStudent = AcademicStudentModel(
                                       id: student.id,
                                       classId: classId,
@@ -1741,6 +1753,10 @@ class _StudentFieldState extends State<StudentField> {
                                   }
                                   catch(error){
                                       showToast(context, '$error!');
+                                  }finally{
+                                      editStudentState(() {
+                                      isLoading = false;
+                                  });
                                   }
 
 
@@ -1753,14 +1769,14 @@ class _StudentFieldState extends State<StudentField> {
                                     borderRadius: BorderRadius.circular(12),
                                     color: AppColors.blue,
                                   ),
-                                  child: Text("Update",style:
+                                  child: !isLoading ? Text("Update",style:
                                   TextStyle(
                                       fontFamily: 'ProductSans',
                                       color: AppColors.white,
                                       fontSize: 23,
                                       fontWeight: FontWeight.bold
                                   ),
-                                  ),
+                                  ):CircularProgressIndicator(backgroundColor: AppColors.green600,),
                                 ),
                               )
                             ],))

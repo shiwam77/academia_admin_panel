@@ -228,7 +228,7 @@ class _ClassFieldState extends State<ClassField> {
 
   }
   addClassInput(BuildContext context){
-
+    bool isLoading = false;
     TextEditingController _textEditingController = TextEditingController();
     String subject;
     return showPopupWindow(
@@ -263,101 +263,110 @@ class _ClassFieldState extends State<ClassField> {
                   blurRadius: 10,
                 )
               ]),
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: InkWell(
-                  onTap: (){
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: AppColors.textColorBlack,
-                        width: 2,
-                      ),
-                      color: AppColors.white,
-                    ),
-                    child: Icon(Icons.close,size: 25,color: AppColors.textColorBlack,),),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30,left: 20,right: 20),
-                child: Column(
-                  children: [
-                    Form(
-                      key: _formKey,
-                      child: TextFormField(
-                        controller: _textEditingController,
-                        decoration: InputDecoration(
-                          hintText: "Add class",
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter classState) {
+              return Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: AppColors.textColorBlack,
+                            width: 2,
+                          ),
+                          color: AppColors.white,
                         ),
-                        onChanged: (value){
-                          setState(() {
-                            subject = value;
-                          });
-                        },
-                        validator: (value){
-                          if (value.isEmpty || value == "") {
-                            return 'Please provide class name';
-                          }
-                          return null;
-                        },
-                      ),
+                        child: Icon(Icons.close,size: 25,color: AppColors.textColorBlack,),),
                     ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30,left: 20,right: 20),
+                    child: Column(
                       children: [
-                        MaterialButton(
-                          height: 50.0,
-                          minWidth:150,
-                          color:AppColors.indigo700,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                        Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            controller: _textEditingController,
+                            decoration: InputDecoration(
+                              hintText: "Add class",
+                            ),
+                            onChanged: (value){
+                                subject = value;
+                            },
+                            validator: (value){
+                              if (value.isEmpty || value == "") {
+                                return 'Please provide class name';
+                              }
+                              return null;
+                            },
                           ),
-                          child: Text(
-                            'Save',
-                            style: TextStyle(fontSize: 25),
-                          ),
-                          onPressed: () async {
-                            if(_formKey.currentState.validate()){
-                              AcademicClassModel newClass = AcademicClassModel(className: subject,yearId: widget.yearId);
-                              try{
-                                var response =  await createAcademicClass(newClass.toJson());
-                                if(response["httpStatusCode"] == 201){
-                                  String id = response["responseJson"]["data"]["id"];
-                                  newClass.id = id;
-                                  setState(() {
-                                    academicClassModel.add(newClass);
-                                  });
-                                  Navigator.of(context).pop();
+                        ),
+                        Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            MaterialButton(
+                              height: 50.0,
+                              minWidth:150,
+                              color:AppColors.indigo700,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: !isLoading ? Text(
+                                'Save',
+                                style: TextStyle(fontSize: 25,color: AppColors.white),
+                              ) : CircularProgressIndicator(backgroundColor: AppColors.green600,),
+                              onPressed: () async {
+                                if(_formKey.currentState.validate()){
+                                  AcademicClassModel newClass = AcademicClassModel(className: subject,yearId: widget.yearId);
+                                  try{
+                                    classState(() {
+                                      isLoading = true;
+                                    });
+                                    var response =  await createAcademicClass(newClass.toJson());
+                                    if(response["httpStatusCode"] == 201){
+                                      String id = response["responseJson"]["data"]["id"];
+                                      newClass.id = id;
+                                      setState(() {
+                                        academicClassModel.add(newClass);
+                                      });
+                                      Navigator.of(context).pop();
+                                    }
+
+                                  }
+                                  catch(error){
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Something went wrong!'),
+                                        ));
+                                  }finally{
+                                    classState(() {
+                                      isLoading = false;
+                                    });
+                                  }
+
                                 }
 
-                              }
-                              catch(error){
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Something went wrong!'),
-                                    ));
-                              }
-
-                            }
-
-                          },
+                              },
+                            ),
+                          ],
                         ),
+
                       ],
                     ),
-
-                  ],
-                ),
-              )
-            ],
+                  )
+                ],
+              );
+            }
           ),
         );
       },

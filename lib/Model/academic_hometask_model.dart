@@ -58,28 +58,28 @@ class HomeTaskModel {
   String subjectId;
 
   factory HomeTaskModel.fromJson(Map<String, dynamic> json) => HomeTaskModel(
-    subjectName: json["subjectName"] == null ? null : json["subjectName"],
-    teacherName: json["teacherName"] == null ? null : json["teacherName"],
-    description: json["description"] == null ? null : json["description"],
-    chapter: json["chapter"] == null ? null : json["chapter"],
-    file: json["file"] == null ? null : json["file"],
-    date: json["Date"] == null ? null : json["Date"],
+    subjectName: json["subjectName"] == null ? "" : json["subjectName"],
+    teacherName: json["teacherName"] == null ? "" : json["teacherName"],
+    description: json["description"] == null ? "" : json["description"],
+    chapter: json["chapter"] == null ? "" : json["chapter"],
+    file: json["file"] == null ? "" : json["file"],
+    date: json["Date"] == null ? "" : json["Date"],
     id: json["id"],
-    comment: json["comment"] == null ? null : json["comment"],
-    topic: json["topic"] == null ? null : json["topic"],
-    subjectId: json["subjectId"] == null ? null : json["subjectId"],
+    comment: json["comment"] == null ? "" : json["comment"],
+    topic: json["topic"] == null ? "" : json["topic"],
+    subjectId: json["subjectId"] == "" ? null : json["subjectId"],
   );
 
   Map<String, dynamic> toJson() => {
-    "subjectName": subjectName == null ? null : subjectName,
-    "teacherName": teacherName == null ? null : teacherName,
-    "description": description == null ? null : description,
-    "chapter": chapter == null ? null : chapter,
-    "file": file == null ? null : file,
-    "Date": date == null ? null : date,
+    "subjectName": subjectName == null ? "" : subjectName,
+    "teacherName": teacherName == null ? "" : teacherName,
+    "description": description == null ? "" : description,
+    "chapter": chapter == null ? "" : chapter,
+    "file": file == null ? "" : file,
+    "Date": date == null ? "" : date,
     "id": id,
-    "comment": comment == null ? null : comment,
-    "topic": topic == null ? null : topic,
-    "subjectId": subjectId == null ? null : subjectId,
+    "comment": comment == null ? "" : comment,
+    "topic": topic == null ? "" : topic,
+    "subjectId": subjectId == null ? "" : subjectId,
   };
 }
