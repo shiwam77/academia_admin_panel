@@ -111,7 +111,7 @@ class _StudentFieldState extends State<StudentField> {
               child: Consumer<ClassNotifier>(
                  builder: (context,classNotifier,child){
                  classId = classNotifier.getModelId();
-                  className = classNotifier.getClassNAme();
+                  className = classNotifier.getName();
                    return  BaseView<ManageStudentVm>(
                      loaderWidget: Center(child: CircularProgressIndicator()),
                      onVMReady: (ManageStudentVm vm){

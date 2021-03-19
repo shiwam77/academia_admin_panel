@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 
 class ClassNotifier extends ChangeNotifier {
   String _modelId;
-  String _className;
+  String _name;
   getModelId() => _modelId;
-  getClassNAme() => _className;
+  getName() => _name;
   void setModelId(String modelId) async {
     _modelId = modelId;
     notifyListeners();
   }
-  void setClassName(String className) async {
-    _className = className;
+  void setClassName(String name) async {
+    _name = name;
     notifyListeners();
   }
 }

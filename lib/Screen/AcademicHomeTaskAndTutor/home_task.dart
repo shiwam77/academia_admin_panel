@@ -1,3 +1,5 @@
+
+ import 'dart:io';
 import 'package:academia_admin_panel/Color.dart';
 import 'package:academia_admin_panel/Model/academic_class_model.dart';
 import 'package:academia_admin_panel/Model/academic_hometask_model.dart';
@@ -9,10 +11,12 @@ import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/vm/home_tas
 import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_class_vm.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_subject_vm.dart';
+import 'package:academia_admin_panel/services/service.dart';
 import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:academia_admin_panel/vm_service/base_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
 
@@ -312,7 +316,7 @@ class _HomeTaskState extends State<HomeTask> {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text("${homeTask.subjectName}",
+                        Text("${homeTask.topic}",
                           style: TextStyle(
                             fontFamily: 'ProductSans',
                             color:AppColors.textColorBlack,
@@ -420,7 +424,8 @@ class _HomeTaskState extends State<HomeTask> {
     );
   }
   addHomeTaskAndTutor(BuildContext context,DateTime date,String subjectId){
-    String subjectName , teacherName,topic,chapter,description,comment,fileName;
+     var notifierProvider = Provider.of<SubjectNotifier>(context,listen: false);
+    String subjectName = notifierProvider.getName(), teacherName,topic,chapter,description,comment,fileName;
     dynamic file;
     return showPopupWindow(
       context,
@@ -467,14 +472,27 @@ class _HomeTaskState extends State<HomeTask> {
                               children: [
                                 InkWell(
                                   onTap: () async {
-                                    file =
-                                    await ImagePickerWeb.getImage(outputType: ImageType.file);
-                                    print(file.name);
+                                    // file =
+                                    // await ImagePickerWeb.getImage(outputType: ImageType.file);
+                                    //  print(file);
+                                      File _image;
+                                     final picker = ImagePicker();   
+                                     final pickedFile = await picker.getImage(source: ImageSource.gallery);
+                                      
 
-                                    if (file != null) {
+                                    if (pickedFile != null) {
+                                     
                                       taskState(() {
-                                        fileName = file.name;
+                                        fileName = pickedFile.path.split("/").last;
                                       });
+                                      try{
+                                       // await uploadImage( file : pickedFile);
+                                       await uploadImages(pickedFile.path, await pickedFile.readAsBytes());
+
+                                      }
+                                      catch(er){
+                                        print(er);
+                                      }
 
                                     }
                                   },
@@ -519,6 +537,7 @@ class _HomeTaskState extends State<HomeTask> {
                                             Flexible(
                                               flex: 1,
                                               child: TextField(
+                                                controller: TextEditingController(text: subjectName),
                                                 onChanged: (value){
                                                   subjectName =value;
                                                 },
@@ -744,6 +763,7 @@ class _HomeTaskState extends State<HomeTask> {
 
                                   InkWell(
                                     onTap: () async {
+                                     
                                       HomeTaskModel homeWork = HomeTaskModel(
                                           subjectId: subjectId ,
                                           subjectName: subjectName,
@@ -827,6 +847,7 @@ class _HomeTaskState extends State<HomeTask> {
     );
 
   }
+
 
   updateHomeTaskAndTutor(BuildContext context,HomeTaskModel homeTask,int index){
     String date = homeTask.date,id = homeTask.id,subjectId = homeTask.subjectId , fileName = homeTask.file;
@@ -1301,7 +1322,7 @@ class FilledEditIcon extends StatelessWidget {
    String subjectId;
    @override
    Widget build(BuildContext context) {
-     var notifierProvider = Provider.of<SubjectNotifier>(context);
+     var notifierProvider = Provider.of<SubjectNotifier>(context,listen: false);
      if(widget.listOfSubjects != null && widget.listOfSubjects.isNotEmpty){
        return ListView.builder(
          scrollDirection: Axis.horizontal,
@@ -1315,10 +1336,11 @@ class FilledEditIcon extends StatelessWidget {
                onTap: (){
                  setState(() {
                    subjectId = widget.listOfSubjects[index].id;
-                   String className = widget.listOfSubjects[index].subjectName;
+                   String subjectName = widget.listOfSubjects[index].subjectName;
                    print(subjectId);
                    selectedIndex = index;
                    notifierProvider.setModelId(subjectId);
+                   notifierProvider.setClassName(subjectName);
                  });
                },
                splashColor: Colors.white,
