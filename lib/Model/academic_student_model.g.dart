@@ -31,6 +31,9 @@ Map<String, dynamic> _$GetStudentModelToJson(GetStudentModel instance) =>
 
 AcademicStudentModel _$AcademicStudentModelFromJson(Map<String, dynamic> json) {
   return AcademicStudentModel(
+    studentAsUserId: json['studentAsUserId'] as String,
+    studentID: json['studentID'] as String,
+    admissionNo: json['admissionNo'] as int,
     id: json['id'] as String,
     classId: json['classId'] as String,
     email: json['email'] as String,
@@ -39,7 +42,6 @@ AcademicStudentModel _$AcademicStudentModelFromJson(Map<String, dynamic> json) {
     confirmPassword: json['confirmPassword'] as String,
     contact: json['contact'] as String,
     dateOfBirth: json['dateOfBirth'] as String,
-
     fatherContact: json['fatherContact'] as String,
     fatherDesignation: json['fatherDesignation'] as String,
     fatherName: json['fatherName'] as String,
@@ -52,11 +54,8 @@ AcademicStudentModel _$AcademicStudentModelFromJson(Map<String, dynamic> json) {
     motherDesignation: json['motherDesignation'] as String,
     motherName: json['motherName'] as String,
     rollNo: json['rollNo'] as String,
-      studentID:json['studentId'] as String,
-    admissionNo:json['admissionNo'] as int,
-    batch:json['batch'] as int,
-    studentAsUserId:json['studentAsUserId'] as String,
-    className:json['className'] as String,
+    batch: json['batch'] as int,
+    className: json['className'] as String,
   );
 }
 
@@ -78,15 +77,14 @@ Map<String, dynamic> _$AcademicStudentModelToJson(
       'password': instance.password,
       'confirmPassword': instance.confirmPassword,
       'address': instance.address,
-
       'dateOfBirth': instance.dateOfBirth,
       'contact': instance.contact,
       'gender': instance.gender,
       'imageUrl': instance.imageUrl,
       'classId': instance.classId,
-      'studentId': instance.studentID,
+      'studentID': instance.studentID,
       'admissionNo': instance.admissionNo,
-      'studentAsUserId': instance.studentAsUserId,
       'batch': instance.batch,
+      'studentAsUserId': instance.studentAsUserId,
       'className': instance.className,
     };
