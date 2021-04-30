@@ -538,3 +538,49 @@ void serviceErrorLogger(error, stackTrace) {
 //     return response.data['id'];
 // }
 
+// Future<String> uploadImage({dynamic file ,String apiHostedUrl,String reuestedUrl}) async {
+//
+//      HttpMiddleware httpMiddleware = HttpMiddleware();
+//       Response response;
+//        if (apiHostedUrl == null) {
+//         apiHostedUrl = Api.apiHostedUrl;
+//       }
+//
+//       try{
+//          var stream = ByteStream(DelegatingStream(file.openRead()));
+//         Dio http = await httpMiddleware.getHttpClient(apiHostedUrl,);
+//         String fileName = file.path.split('/').last;
+//
+//           FormData formData = FormData.fromMap({
+//           "name_image":fileName,
+//
+//           "image": await MultipartFile.fromFile(file.path, filename:fileName, contentType: MediaType('image', 'png')),
+//     });
+//         response = await http.post("/info", data: formData);
+//       }catch(error){
+//        print(error);
+//       }
+//
+//     return response.data['id'];
+// }
+
+Future<bool> uploadImages(
+    String imageFilePath,
+    Uint8List imageBytes,
+  ) async {
+    String url =  Api.apiHostedUrl + "/info";
+    PickedFile imageFile = PickedFile(imageFilePath);
+    var stream =
+        new http.ByteStream(DelegatingStream(imageFile.openRead()));
+
+    var uri = Uri.parse(url);
+    int length = imageBytes.length;
+    var request = new http.MultipartRequest("POST", uri);
+    var multipartFile = new http.MultipartFile('files', stream, length,
+        filename: basename(imageFile.path),
+        contentType: MediaType('image', 'png'));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print(response.stream);
+  }
