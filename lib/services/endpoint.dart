@@ -29,6 +29,13 @@ class AuthApi {
   static String get resetPassword {
     return apiView + Api.apiV1 + "/resetPassword";
   }
+  static String get updateUser {
+    return "/{:Id}/updateUser";
+  }
+
+  static String get deleteUser {
+    return "/{:Id}/deleteUser";
+  }
 }
 
 class AcademicYearApi{
@@ -82,5 +89,58 @@ class AcademicSubjectApi{
 
   static String get deleteSubject{
     return '/{:Id}/deleteSubject';
+  }
+}
+
+class AcademicStudentApi{
+  static String get academicStudents{
+    return "/{:Id}/getAllStudents";
+  }
+
+  static String get createStudent{
+    return '/createStudent';
+  }
+
+  static String get updateStudent{
+    return '/{:Id}/updateStudent';
+  }
+
+  static String get deleteStudent{
+    return '/{:Id}/deleteStudent';
+  }
+}
+
+class AcademicHomeTaskApi{
+  static String get academicTask{
+    return "/{:Id}/getAllHomeTasks";
+  }
+
+  static String get createTask{
+    return '/createHomeTasks';
+  }
+
+  static String get updateTask{
+    return '/{:Id}/updateHomeTasks';
+  }
+
+  static String get deleteTask{
+    return '/{:Id}/deleteHomeTasks';
+  }
+}
+class AcademicHomeTutorApi{
+  static String get academicTutor{
+    return "/{:Id}/getAllTutor";
+  }
+
+  static String get createTutor{
+    return '/createTutor';
+  }
+
+  static String get updateTutor{
+    return '/{:Id}/updateTutor';
+  }
+
+  static String get deleteTutor{
+    return '/{:Id}/deleteTutor';
   }
 }

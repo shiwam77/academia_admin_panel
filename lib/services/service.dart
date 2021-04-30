@@ -1,5 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
 import 'package:academia_admin_panel/error.dart';
 import 'package:academia_admin_panel/services/endpoint.dart';
 import 'package:academia_admin_panel/services/middleware.dart';
@@ -51,14 +57,14 @@ Future getHttpServiceFuture(String requestUrl, responseSerializer,
     var responseJson = httpResponse.data, responseObject;
 
     if(returnRaw){
-      print(responseObject);
+
       return responseJson;
     }
 
     if (isJson) {
       try {
         responseObject = responseSerializer(responseJson);
-        print(responseObject);
+
       } catch (error, stackTrace) {
         // Error HTTP Code 5XX
         serviceErrorLogger(error, stackTrace);
@@ -121,6 +127,7 @@ Future postHttpServiceFuture(String requestUrl, responseSerializer,
 
   } on DioError catch (error, stackTrace) {
     dioError = error;
+
     serviceErrorLogger(error, stackTrace);
     if (dioError.response != null) {
       httpResponse = dioError.response;
@@ -504,3 +511,76 @@ void serviceErrorLogger(error, stackTrace) {
     logger.e(error);
   }
 }
+
+// Future<String> uploadImage({dynamic file ,String apiHostedUrl,String reuestedUrl}) async {
+
+//      HttpMiddleware httpMiddleware = HttpMiddleware();
+//       Response response;
+//        if (apiHostedUrl == null) {
+//         apiHostedUrl = Api.apiHostedUrl;
+//       }
+
+//       try{
+//         Dio http = await httpMiddleware.getHttpClient(apiHostedUrl,);
+//         String fileName = file.path.split('/').last;
+//         print("upload file");
+//         print(file.path);
+//           FormData formData = FormData.fromMap({
+//           "name_image":fileName,
+         
+//           "image": await MultipartFile.fromFile(file.path, filename:fileName, ),
+//     });
+//         response = await http.post("/info", data: formData);
+//       }catch(error){
+//        print(error);
+//       }
+  
+//     return response.data['id'];
+// }
+
+Future<String> uploadImage({dynamic file ,String apiHostedUrl,String reuestedUrl}) async {
+
+     HttpMiddleware httpMiddleware = HttpMiddleware();
+      Response response;
+       if (apiHostedUrl == null) {
+        apiHostedUrl = Api.apiHostedUrl;
+      }
+
+      try{
+         var stream = ByteStream(DelegatingStream(file.openRead()));
+        Dio http = await httpMiddleware.getHttpClient(apiHostedUrl,);
+        String fileName = file.path.split('/').last;
+       
+          FormData formData = FormData.fromMap({
+          "name_image":fileName,
+         
+          "image": await MultipartFile.fromFile(file.path, filename:fileName, contentType: MediaType('image', 'png')),
+    });
+        response = await http.post("/info", data: formData);
+      }catch(error){
+       print(error);
+      }
+  
+    return response.data['id'];
+}
+
+Future<bool> uploadImages(
+    String imageFilePath,
+    Uint8List imageBytes,
+  ) async {
+    String url =  Api.apiHostedUrl + "/info";
+    PickedFile imageFile = PickedFile(imageFilePath);
+    var stream =
+        new http.ByteStream(DelegatingStream(imageFile.openRead()));
+
+    var uri = Uri.parse(url);
+    int length = imageBytes.length;
+    var request = new http.MultipartRequest("POST", uri);
+    var multipartFile = new http.MultipartFile('files', stream, length,
+        filename: basename(imageFile.path),
+        contentType: MediaType('image', 'png'));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print(response.stream);
+  }

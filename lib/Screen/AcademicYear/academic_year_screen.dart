@@ -4,6 +4,7 @@ import 'package:academia_admin_panel/Screen/Api/api_end_point.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/dashboard.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:academia_admin_panel/error.dart';
+import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:search_page/search_page.dart';
@@ -102,12 +103,27 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                   onTap: () async{
                     AcademicYearModel newYear =  AcademicYearModel(year: int.parse(_yearEditingController.text),userId: widget.userId);
                     if(_formKey.currentState.validate()){
-                      await createAcademicYear(newYear.toJson());
-                      setState(() {
-                        getListOfYears.add(newYear);
-                        print(getListOfYears.length);
-                        _yearEditingController.clear();
-                      });
+                      try{
+                        var response =  await createAcademicYear(newYear.toJson());
+                        if(response["httpStatusCode"] == 201){
+                          newYear.id = response["responseJson"]["data"]["id"];
+                          setState(() {
+                            getListOfYears.add(newYear);
+                            print(getListOfYears.length);
+                            _yearEditingController.clear();
+                          });
+                        }
+                        else if(response["httpStatusCode"] == 500){
+                          String message = response["responseJson"]['message'];
+                          showToast(context, message);
+                        }
+                      }
+                      catch(error){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Something went wrong!'),
+                            ));
+                      }
                     }
                   },
                   child: Container(
@@ -158,27 +174,7 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                       suffixIcon: GestureDetector(
                           onTap: (){
                             print("searching...");
-                            showSearch(
-                              context: context,
-                              delegate: SearchPage<AcademicYearModel>(
-                                items: getListOfYears,
-                                searchLabel: 'Search people',
-                                suggestion: Center(
-                                  child: Text('Filter people by name, surname or age'),
-                                ),
-                                failure: Center(
-                                  child: Text('No person found :('),
-                                ),
-                                filter: (person) => [
-                                  person.year.toString()
-                                ],
-                                builder: (person) => ListTile(
-                                  title: Text(person.year.toString()),
-                                  subtitle: Text(person.year.toString()),
-                                  trailing: Text('${person.year.toString()} yo'),
-                                ),
-                              ),
-                            );
+
                             },
                           child: Icon(Icons.search_rounded,color: AppColors.indigo700,)),
                       border: OutlineInputBorder(
@@ -205,7 +201,7 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                 print("future");
                 if(snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null){
                   getIgYears = GetAcademicYear.fromJson(snapshot.data);
-                  if(getIgYears != null){
+                  if(getIgYears.data != null){
                     getListOfYears = getIgYears.data;
 
                     return yearListViewBuilder( getIgYears, getListOfYears,);
@@ -276,66 +272,67 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                       ),
                       SizedBox(width: 30,),
                       Container(
-                        width: 150,
-                        height: 55,
+                        width: 160,
+                        height: 60,
+                        alignment: Alignment.center,
                         decoration: !isReadOnly ? BoxDecoration(
                           border:Border.all(
                             color: AppColors.indigo700, //                   <--- border color
                             width: 2.0,
                           ),
                         ):BoxDecoration(),
-                        child: EditableText(
-                          cursorHeight: 40,
-                          autofocus: isEditable,
-                          readOnly: isReadOnly,
-                           cursorColor: AppColors.indigo700,
-                          style: TextStyle(
-                                fontFamily: 'ProductSans',
-                                color: AppColors.textColorBlack,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold
-                            ),
-                           focusNode: FocusNode(),
-                           backgroundCursorColor: AppColors.blackeyGray,
-                           controller: TextEditingController(text:"${getYears[getYears.length - 1].year}"),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                          child: EditableText(
+                            cursorHeight: 40,
+                            autofocus: isEditable,
+                            readOnly: isReadOnly,
+                             cursorColor: AppColors.indigo700,
+                            style: TextStyle(
+                                  fontFamily: 'ProductSans',
+                                  color: AppColors.textColorBlack,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold
+                              ),
+                             focusNode: FocusNode(),
+                             backgroundCursorColor: AppColors.blackeyGray,
+                             controller: TextEditingController(text:"${getYears[getYears.length - 1].year}"),
 
-                          onSubmitted: (value){
-                            String id = getYears[getYears.length - 1].id;
-                            AcademicYearModel updateYear = AcademicYearModel(year:int.parse(value),userId:widget.userId,id: id);
-                            updateAcademicYear(id,updateYear.toJson()).then((apiResponse) {
+                            onSubmitted: (value){
+                              String id = getYears[getYears.length - 1].id;
+                              AcademicYearModel updateYear = AcademicYearModel(year:int.parse(value),userId:widget.userId,id: id);
+                               updateAcademicYear(id,updateYear.toJson()).then((apiResponse) {
 
-                              print("apiResponse");
-                              print(apiResponse);
-                              if(apiResponse["httpStatusCode"] == 200){
-                                getListOfYears.removeAt(getYears.length - 1);
-                                getListOfYears.add(updateYear);
-                                setState(() {
-                                });
-                              }
+                                print("apiResponse");
+                                print(apiResponse);
+                                if(apiResponse["httpStatusCode"] == 200){
+                                  setState(() {
+                                    getListOfYears.removeAt(getYears.length - 1);
+                                    getListOfYears.add(updateYear);
+                                    isReadOnly = true;
+                                  });
+                                }
 
-                            }).catchError((error, stackTracke) {
+                              }).catchError((error, stackTracke) {
 
-                              if (error is ApiError) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(error.dioErrorMsg.toString()),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Something went wrong!,'),
-                                  ),
-                                );
-                                //logger.e(error);
-                              }
-                            });
-                            setState(() {
-                              isReadOnly = true;
-                              yearEditValue = value;
-                            });
-                          },
+                                if (error is ApiError) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(error.dioErrorMsg.toString()),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Something went wrong!,'),
+                                    ),
+                                  );
+                                  //logger.e(error);
+                                }
+                              });
+                            },
 
+                          ),
                         ),
                       ),
 
@@ -363,9 +360,8 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                               print("apiResponse");
                                print(apiResponse);
                                if(apiResponse["httpStatusCode"] == 204){
-                                 getYears.removeAt(getYears.length - 1);
                                  setState(() {
-
+                                   getYears.removeAt(getYears.length - 1);
                                  });
                                }
 
@@ -461,9 +457,8 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                                     print("apiResponse");
                                     print(apiResponse);
                                     if(apiResponse["httpStatusCode"] == 204){
-                                      getYears.removeAt(index);
                                       setState(() {
-
+                                        getYears.removeAt(index);
                                       });
                                     }
 
@@ -503,43 +498,6 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
     return Expanded(
       child: Center(child: Text("null"),),
     );
-  }
-
-
-  editYear(String value,{String id}){
-    AcademicYearModel updateYear = AcademicYearModel(year:int.parse(value),userId:widget.userId);
-    updateAcademicYear(id,updateYear.toJson()).then((apiResponse) {
-
-      print("apiResponse");
-      print(apiResponse);
-      if(apiResponse["httpStatusCode"] == 200){
-        getListOfYears.removeAt(getListOfYears.length - 1);
-        getListOfYears.add(updateYear);
-        setState(() {
-        });
-      }
-
-    }).catchError((error, stackTracke) {
-
-      if (error is ApiError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error.dioErrorMsg.toString()),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Something went wrong!,'),
-          ),
-        );
-        //logger.e(error);
-      }
-    });
-    setState(() {
-      isReadOnly = true;
-      yearEditValue = value;
-    });
   }
 }
 

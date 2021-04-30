@@ -9,7 +9,7 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  List<bool> selected = [true, false, false, false, false,false,false,false];
+  List<bool> selected = [true, false, false, false, false,false,false,false,false];
   void select(int n) {
     for (int i = 0; i < 8; i++) {
       if (i != n) {
@@ -57,7 +57,7 @@ class _NavBarState extends State<NavBar> {
           ),
           NavBarItem(
             index: 3,
-            icon:Icons.format_list_bulleted,
+            icon:Feather.book_open,
             active: selected[3],
             touched: () {
               setState(() {
@@ -65,9 +65,10 @@ class _NavBarState extends State<NavBar> {
               });
             },
           ),
+
           NavBarItem(
             index: 4,
-            icon:Feather.book_open,
+            icon:Icons.format_list_bulleted,
             active: selected[4],
             touched: () {
               setState(() {
@@ -89,7 +90,7 @@ class _NavBarState extends State<NavBar> {
 
           NavBarItem(
             index: 6,
-            icon: Icons.notifications,
+            icon: Icons.videocam,
             active: selected[6],
             touched: () {
               setState(() {
@@ -97,14 +98,24 @@ class _NavBarState extends State<NavBar> {
               });
             },
           ),
-
           NavBarItem(
             index: 7,
-            icon: Icons.settings,
+            icon: Icons.notifications,
             active: selected[7],
             touched: () {
               setState(() {
                 select(7);
+              });
+            },
+          ),
+
+          NavBarItem(
+            index: 8,
+            icon: Icons.settings,
+            active: selected[8],
+            touched: () {
+              setState(() {
+                select(8);
               });
             },
           ),

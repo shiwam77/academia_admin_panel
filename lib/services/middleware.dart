@@ -13,14 +13,11 @@ class HttpMiddleware {
     dio.options.receiveTimeout = 60000;
     dio.interceptors.add(InterceptorsWrapper(
       onRequest:(RequestOptions options) async {
+        print("token for opn $accessToken");
         // Do something before request is sent
         String requestUrl = options.baseUrl + options.path;
           options.headers['Authorization'] = 'Bearer $accessToken';
         return options; //continue
-        // If you want to resolve the request with some custom data，
-        // you can return a `Response` object or return `dio.resolve(data)`.
-        // If you want to reject the request with a error message,
-        // you can return a `DioError` object or return `dio.reject(errMsg)`
       },
         onError: (DioError error) async {
           return error;

@@ -32,6 +32,7 @@ class AppColors {
 
 
 
+ 
   static const Color primaryColorDark = const Color(0xFF3F51B5);
 
   static const Color statusBarColor = const Color(0xFF1A237E);
@@ -91,10 +92,12 @@ class AppColors {
   static const Color lightSkyBlue = const Color(0xFFE3F2FD);
 
   static const Color red500 = const Color(0xFFF56565);
+  static const Color red600 = const Color(0xFFFF3B3B);
   static const Color red200 = const Color(0xFFFED7D7);
   static const Color green500 = const Color(0xFF48BB78);
   static const Color green200 = const Color(0xFFC6F6D5);
   static const Color green400 = const Color(0xFF68D391);
+  static const Color green600 = const  Color(0xff39CE15);
 
   static const Color oceanBlue = const Color(0xFF2196F3);
   static const Color blue400 = const Color(0xFF63B3ED);

@@ -1,19 +1,27 @@
 import 'package:academia_admin_panel/Color.dart';
+import 'package:academia_admin_panel/Screen/AcademicAttendance/attendance.dart';
+
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/home_task.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/notifier/subjectNotifier.dart';
+import 'package:academia_admin_panel/Screen/AcademicHomeTaskAndTutor/tutor.dart';
+import 'package:academia_admin_panel/Screen/AcademicStudent/add_academic_student.dart';
+
 import 'package:academia_admin_panel/Screen/DashBoard/Notifier/screen_notifier.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/src/navigation_bar.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/src/organization_name_logo.dart';
 import 'package:academia_admin_panel/Screen/Home/home_page.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/Notifier/class_notifier.dart';
 import 'package:academia_admin_panel/Screen/ManageClass/manage_class_screen.dart';
+import 'package:academia_admin_panel/Screen/TimeTable/routine_table.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:academia_admin_panel/Screen/manage_class.dart';
 
 class DashBoardPage extends StatefulWidget {
   final String yearId;
   final int year;
+
   DashBoardPage(this.yearId,this.year);
   @override
   _DashBoardPageState createState() => _DashBoardPageState();
@@ -29,6 +37,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
             providers: [
               ChangeNotifierProvider<NavIndex>(create: (_) => NavIndex()),
               ChangeNotifierProvider<ClassNotifier>(create: (_) => ClassNotifier()),
+              ChangeNotifierProvider<SubjectNotifier>(create: (_) => SubjectNotifier()),
               // Provider<NavIndex>(create: (_) => NavIndex()),
               // Provider<ClassNotifier>(create: (_) => ClassNotifier()),
             ],
@@ -130,14 +139,24 @@ class _DashBoardPageState extends State<DashBoardPage> {
                         width: MediaQuery.of(context).size.width,
                         child: Consumer<NavIndex>(
                             builder: (context,navIndex,child){
+                              print(navIndex.getIndex());
                               if(navIndex.getIndex() == 0){
                                 return HomePage();
                               }
                               else if(navIndex.getIndex() == 1){
-                                return ManageClassPage(widget.yearId);
+                                return ManageClassPage(widget.yearId,widget.year);
                               }
                               else if(navIndex.getIndex() == 2){
-                                return AddStudent();
+                                return AddAcademicStudent(widget.yearId,widget.year);
+                              }  else if(navIndex.getIndex() == 3){
+                                return RoutineTable(yearId:widget.yearId);
+                              } else if(navIndex.getIndex() == 4){
+                                return HomeTask(widget.yearId);
+                              } else if(navIndex.getIndex() == 5){
+                                return AttendanceScreen(widget.yearId);
+                              }
+                              else if(navIndex.getIndex() == 6){
+                                return AcademicTutor(widget.yearId);
                               }
                               return Login();
                             })),

@@ -22,8 +22,8 @@ class UserModel {
   final String password;
   final String email;
   final String name;
-  final String role;
-  UserModel({this.password, this.email,this.name,this.role});
+  final String userType;
+  UserModel({this.password, this.email,this.name,this.userType});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 

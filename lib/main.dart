@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'dart:html' show window;
+import 'package:academia_admin_panel/Screen/AcademicYear/academic_year_screen.dart';
 import 'package:academia_admin_panel/Screen/DashBoard/dashboard.dart';
-import 'package:academia_admin_panel/Screen/Home/home_page.dart';
 import 'package:academia_admin_panel/Screen/login.dart';
 import 'package:academia_admin_panel/utils/utils.dart';
 import 'package:academia_admin_panel/vm_service/locator.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import 'Screen/AcademicYear/academic_year_screen.dart';
-import 'Screen/ManageClass/src/student.dart';
+
 
 
 void main() {
@@ -62,12 +60,12 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity
       ),
        home: InteractiveViewer(
-            minScale: .5,
+         minScale: .5,
            alignPanAxis: true,
-           child: DashBoardPage("",2012),
-       ),//MaterialApp(home: Scaffold(body: StudentField()))//Academia(),
+           child: Academia(),)//DashBoardPage("",2012)),//MaterialApp(home: Scaffold(body: StudentField()))//Academia(),
     );
   }
 }
@@ -84,11 +82,15 @@ class _AcademiaState extends State<Academia> {
     var token = window.localStorage.containsKey("token") ? window.localStorage["token"] : "";
     if(token != "") {
       print(token);
+      if(window.localStorage.containsKey("userId")){
         return  AcademicYearPage(window.localStorage["userId"]);
+      }
+      return Login();
     }
     else{
       window.localStorage.remove("token");
-      return StudentField();
+      window.localStorage.remove("userId");
+      return Login();
     }
 
   }

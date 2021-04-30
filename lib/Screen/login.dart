@@ -22,12 +22,14 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool exit = true;
   final _formKey = GlobalKey<FormState>();
-  @override
-  Widget build(BuildContext context) {
+  bool isLoading = false;
     String email;
     String password;
     TextEditingController _emailTextController = TextEditingController();
     TextEditingController _passwordTextController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+  
     return Scaffold(
       backgroundColor: AppColors.appBackgroundColor,
       body: Container(
@@ -140,8 +142,11 @@ class _LoginState extends State<Login> {
 
                           InkWell(
                            onTap: () async{
-
-                                if (_formKey.currentState.validate()) {
+                                try{
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  if (_formKey.currentState.validate()) {
                                     var jwt = await attemptLogin(
                                         email: email, password: password);
                                     print("token");
@@ -165,6 +170,16 @@ class _LoginState extends State<Login> {
                                      );
                                     }
                                 }
+                                }
+                                catch(error){
+                                  showToast(context, "Something went wrong");
+                                }
+                                finally{
+                                    setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                                
                            },
                             child: Container(
                               height: 60,
@@ -174,12 +189,12 @@ class _LoginState extends State<Login> {
                                 borderRadius: BorderRadius.circular(15),
                                 color: AppColors.blue,
                               ),
-                              child: Text("Login",style: TextStyle(
+                              child: !isLoading ? Text("Login",style: TextStyle(
                                   fontFamily: 'ProductSans',
                                   color: AppColors.white,
                                   fontSize: MediaQuery.of(context).size.width * .015,
                                   fontWeight: FontWeight.bold
-                              )),
+                              )):CircularProgressIndicator(backgroundColor: AppColors.green600,),
                             ),
                           ),
 
