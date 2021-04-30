@@ -9,9 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'Screen/AcademicYear/academic_year_screen.dart';
-import 'Screen/ManageClass/manage_class_screen.dart';
 import 'Screen/ManageClass/src/student.dart';
-import 'Screen/manage_class.dart';
 
 
 void main() {
@@ -65,7 +63,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-       home: InteractiveViewer(child: DashBoardPage("",2012)),//MaterialApp(home: Scaffold(body: StudentField()))//Academia(),
+       home: InteractiveViewer(
+            minScale: .5,
+           alignPanAxis: true,
+           child: DashBoardPage("",2012),
+       ),//MaterialApp(home: Scaffold(body: StudentField()))//Academia(),
     );
   }
 }
@@ -86,7 +88,7 @@ class _AcademiaState extends State<Academia> {
     }
     else{
       window.localStorage.remove("token");
-      return Login();
+      return StudentField();
     }
 
   }
