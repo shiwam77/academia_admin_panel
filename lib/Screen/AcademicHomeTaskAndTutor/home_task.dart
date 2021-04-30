@@ -487,7 +487,7 @@ class _HomeTaskState extends State<HomeTask> {
                                       });
                                       try{
                                        // await uploadImage( file : pickedFile);
-                                       await uploadImages(pickedFile.path, await pickedFile.readAsBytes());
+
 
                                       }
                                       catch(er){
