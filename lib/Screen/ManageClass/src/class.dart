@@ -9,6 +9,7 @@ import 'package:academia_admin_panel/Screen/ManageClass/vm/manage_class_vm.dart'
 import 'package:academia_admin_panel/vm_service/base_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:kumi_popup_window/kumi_popup_window.dart';
 import 'package:provider/provider.dart';
 
@@ -148,7 +149,7 @@ class _ClassFieldState extends State<ClassField> {
           }
         }
         catch(error){
-          ScaffoldMessenger.of(context).showSnackBar(
+          Scaffold.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Something went wrong!'),
               ));
@@ -208,7 +209,7 @@ class _ClassFieldState extends State<ClassField> {
                         PopupMenuButton(
                           padding: EdgeInsets.zero,
                           elevation: 0.0,
-                          icon: Icon(Icons.adaptive.more),
+                          icon: Icon(Icons.arrow_drop_down_circle_outlined),
                           // key: _menuKey,
                           color: AppColors.white,
                           onSelected: (selectedDropDownItem) async => handlePopUpChanged(selectedDropDownItem,listOfClass[index].id,index),
@@ -344,7 +345,7 @@ class _ClassFieldState extends State<ClassField> {
 
                                   }
                                   catch(error){
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    Scaffold.of(context).showSnackBar(
                                         const SnackBar(
                                           content: Text('Something went wrong!'),
                                         ));

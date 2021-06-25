@@ -21,7 +21,7 @@ class ApiError extends Error {
     if (message != null && errorCode != null) {
       return '$message. Code($errorCode)';
     } else if (dioErrorMsg != null && dioErrorType != null) {
-      if (dioErrorType == DioErrorType.CONNECT_TIMEOUT) {
+      if (dioErrorType == DioErrorType.connectTimeout) {
         return 'Check your internet connection';
       }
       String dioErrorTypeStr = getDioErrorType();

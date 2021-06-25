@@ -167,10 +167,10 @@ logout(){
     {String action = "OK", Color color, Function toastAction }) {
   // SnackBar not showing? Try: https://stackoverflow.com/a/51304732/5129047
 
-  final scaffold = ScaffoldMessenger.of(context);
+  final scaffold =  Scaffold.of(context);
 
   if(color != null){
-    ScaffoldMessenger.of(context).showSnackBar(
+    Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text(text),
         backgroundColor: color,
@@ -185,7 +185,7 @@ logout(){
     );
   } else {
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text(text),
         action: SnackBarAction(

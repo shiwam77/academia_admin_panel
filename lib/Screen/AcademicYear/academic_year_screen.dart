@@ -119,7 +119,7 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                         }
                       }
                       catch(error){
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        Scaffold.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Something went wrong!'),
                             ));
@@ -316,13 +316,13 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                               }).catchError((error, stackTracke) {
 
                                 if (error is ApiError) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  Scaffold.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(error.dioErrorMsg.toString()),
                                     ),
                                   );
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  Scaffold.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Something went wrong!,'),
                                     ),
@@ -368,13 +368,13 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                             }).catchError((error, stackTracke) {
 
                               if (error is ApiError) {
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                Scaffold.of(context).showSnackBar(
                                    SnackBar(
                                     content: Text(error.dioErrorMsg.toString()),
                                   ),
                                 );
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                Scaffold.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('Something went wrong!,'),
                                   ),
@@ -465,13 +465,13 @@ class _AcademicYearPageState extends State<AcademicYearPage> {
                                   }).catchError((error, stackTracke) {
 
                                     if (error is ApiError) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      Scaffold.of(context).showSnackBar(
                                         SnackBar(
                                           content: Text(error.dioErrorMsg.toString()),
                                         ),
                                       );
                                     } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      Scaffold.of(context).showSnackBar(
                                         const SnackBar(
                                           content: Text('Something went wrong!,'),
                                         ),

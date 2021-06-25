@@ -492,7 +492,7 @@ class HttpCalls {
     if(responseCode >= 200 && responseCode < 300 && status == 'success'){
       return data;
     }else{
-      throw ApiError(responseCode, "", DioErrorType.DEFAULT, status, message, errorCode,);
+      throw ApiError(responseCode, "", DioErrorType.response, status, message, errorCode,);
     }
   }
 

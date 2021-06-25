@@ -35,18 +35,15 @@ IgUser _$IgUserFromJson(Map<String, dynamic> json) {
     is_deleted: json['is_deleted'] as bool,
     is_active: json['is_active'] as bool,
     email: json['email'] as String,
-
     creator_details: json['creator_details'] == null
         ? null
         : IgCreatorDetails.fromJson(
             json['creator_details'] as Map<String, dynamic>),
     contact_no: json['contact_no'] as String,
-
     business_details: json['business_details'] == null
         ? null
         : IgBusinessDetails.fromJson(
             json['business_details'] as Map<String, dynamic>),
-
     updated_at: json['updated_at'] == null
         ? null
         : DateTime.parse(json['updated_at'] as String),

@@ -163,7 +163,7 @@ class _LoginState extends State<Login> {
                                       _emailTextController.clear();
                                       _passwordTextController.clear();
                                     } else {
-                                     ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context).showSnackBar(
                                        const SnackBar(
                                          content: Text('An Error Occurred,No account was found matching that username and password'),
                                        ),

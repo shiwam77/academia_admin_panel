@@ -12,14 +12,14 @@ class HttpMiddleware {
     dio.options.connectTimeout = 60000; //60s
     dio.options.receiveTimeout = 60000;
     dio.interceptors.add(InterceptorsWrapper(
-      onRequest:(RequestOptions options) async {
+      onRequest:(RequestOptions options, RequestInterceptorHandler requestInterceptorHandler) async {
         print("token for opn $accessToken");
         // Do something before request is sent
         String requestUrl = options.baseUrl + options.path;
           options.headers['Authorization'] = 'Bearer $accessToken';
         return options; //continue
       },
-        onError: (DioError error) async {
+        onError: (DioError error,ErrorInterceptorHandler errorInterceptorHandler) async {
           return error;
         }
     ));

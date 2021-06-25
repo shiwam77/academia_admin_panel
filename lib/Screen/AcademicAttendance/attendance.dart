@@ -142,16 +142,17 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                          width: 2,
                        ),
                      ),
-                     child: CircleAvatar(
-                       radius: 40,
-                       backgroundColor: AppColors.transparent,
-                       child: ClipRRect(
-                         borderRadius: BorderRadius.circular(100),
-                         child:Image.asset('Assets/images/visionLogo.png',
-                           fit:BoxFit.contain,
-                           filterQuality: FilterQuality.high,),
-                       ),
-                     ),
+
+                           child: CircleAvatar(
+                             radius: 40,
+                             backgroundColor: AppColors.transparent,
+                             child: ClipRRect(
+                               borderRadius: BorderRadius.circular(100),
+                               child:Image.asset('Assets/images/visionLogo.png',
+                                 fit:BoxFit.contain,
+                                 filterQuality: FilterQuality.high,),
+                             ),
+                           ),
                  ),
                          Spacer(),
                         Icon(Icons.adaptive.more),
@@ -224,7 +225,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                      child: Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                          atttendanceButton(
+                          attendanceButton(
                             label: "P",
                             onTapp: (){
                              setState(() {
@@ -241,7 +242,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                           isTrueColor: AppColors.green600,
                            index: index
                           ),
-                           atttendanceButton(
+                           attendanceButton(
                             label: "A",
                             onTapp: (){
                              setState(() {
@@ -259,7 +260,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                           index: index
                           ),
                        
-                       atttendanceButton(
+                       attendanceButton(
                             label: "L",
                             onTapp: (){
                              setState(() {
@@ -302,7 +303,9 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
   }
 
-  Widget atttendanceButton({Function onTapp,Color isTrueColor,bool isTrue = false,String label,int index}){
+
+
+  Widget attendanceButton({Function onTapp,Color isTrueColor,bool isTrue = false,String label,int index}){
  
     return InkWell(
       onTap: onTapp,

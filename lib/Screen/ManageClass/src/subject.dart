@@ -225,7 +225,7 @@ class _SubjectFieldState extends State<SubjectField> {
                                     }
                                   }
                                   catch(error){
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    Scaffold.of(context).showSnackBar(
                                         const SnackBar(
                                           content: Text('Something went wrong!'),
                                         ));
@@ -345,7 +345,7 @@ class _SubjectFieldState extends State<SubjectField> {
                                       }
                                     }
                                     catch(error){
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      Scaffold.of(context).showSnackBar(
                                           const SnackBar(
                                             content: Text('Something went wrong!'),
                                           ));
@@ -381,7 +381,7 @@ class _SubjectFieldState extends State<SubjectField> {
                                      }
                                     }
                                     catch(error,stacktrace){
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      Scaffold.of(context).showSnackBar(
                                           const SnackBar(
                                             content: Text('Something went wrong!'),
                                           ));
